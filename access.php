@@ -24,14 +24,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-    'local/timeshift:manage' => array(
+$capabilities = [
+    'local/timeshift:manage' => [
         'riskbitmask' => RISK_DATALOSS | RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    )
-);
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+];

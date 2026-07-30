@@ -54,17 +54,17 @@ try {
         if (isset($update['duedate']) && $update['duedate'] !== '') {
             $duedate = clean_param($update['duedate'], PARAM_INT);
         }
-        
+
         $allowfromdate = null;
         if (isset($update['allowfromdate']) && $update['allowfromdate'] !== '') {
             $allowfromdate = clean_param($update['allowfromdate'], PARAM_INT);
         }
-        
+
         $cutoffdate = null;
         if (isset($update['cutoffdate']) && $update['cutoffdate'] !== '') {
             $cutoffdate = clean_param($update['cutoffdate'], PARAM_INT);
         }
-        
+
         $status = isset($update['status']) && $update['status'] !== '' ? clean_param($update['status'], PARAM_INT) : null;
         $availability = isset($update['availability']) ? $update['availability'] : null;
         $delete = isset($update['delete']) ? (bool)$update['delete'] : false;
@@ -84,7 +84,6 @@ try {
             );
         }
     }
-    
     // Rebuild the course cache so that name changes and visibility reflect immediately in the UI and Calendar.
     rebuild_course_cache($courseid, true);
 } catch (\Throwable $e) {

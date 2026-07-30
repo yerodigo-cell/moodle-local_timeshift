@@ -81,7 +81,7 @@ class manager {
                 }
             }
 
-            $status = 0; // hidden
+            $status = 0; // Hidden.
             if ($cm->visible) {
                 $status = isset($cm->visibleoncoursepage) && !$cm->visibleoncoursepage ? 2 : 1;
             }
@@ -97,7 +97,7 @@ class manager {
                 'duedate' => $duedate,
                 'allowfromdate' => $allowfromdate,
                 'cutoffdate' => $cutoffdate,
-                'availability' => $cm->availability
+                'availability' => $cm->availability,
             ];
         }
 
@@ -118,24 +118,33 @@ class manager {
      * @param string|null $availability The new availability JSON string
      * @return bool True if successful
      */
-    public static function update_activity($cmid, $modname, $instanceid, $newname, $duedate, $allowfromdate, $status = null, $cutoffdate = null, $availability = null) {
+    public static function update_activity(
+        $cmid,
+        $modname,
+        $instanceid,
+        $newname,
+        $duedate,
+        $allowfromdate,
+        $status = null,
+        $cutoffdate = null,
+        $availability = null
+    ) {
         global $DB;
 
         // 0. Update availability
         if ($availability !== null) {
-            $avail_val = ($availability === '') ? null : $availability;
-            $DB->set_field('course_modules', 'availability', $avail_val, ['id' => $cmid]);
+            $availval = ($availability === '') ? null : $availability;
+            $DB->set_field('course_modules', 'availability', $availval, ['id' => $cmid]);
         }
 
         // 0. Update visibility
         if ($status !== null) {
             $visible = ($status == 1 || $status == 2) ? 1 : 0;
             $visibleoncoursepage = ($status == 2) ? 0 : 1;
-            
+
             $DB->set_field('course_modules', 'visible', $visible, ['id' => $cmid]);
             $DB->set_field('course_modules', 'visibleold', $visible, ['id' => $cmid]);
-            
-            // Check if column exists (Moodle 3.3+)
+            // Check if column exists (Moodle 3.3+).
             $columns = $DB->get_columns('course_modules');
             if (array_key_exists('visibleoncoursepage', $columns)) {
                 $DB->set_field('course_modules', 'visibleoncoursepage', $visibleoncoursepage, ['id' => $cmid]);
@@ -150,7 +159,7 @@ class manager {
             if ($DB->get_manager()->table_exists($table)) {
                 $record = $DB->get_record($table, ['id' => $instanceid], '*', MUST_EXIST);
                 $oldname = $record->name;
-                
+
                 if ($oldname !== $newname) {
                     $record->name = $newname;
                     $DB->update_record($table, $record);
@@ -161,36 +170,51 @@ class manager {
         // 2. Update dates according to the module type
         if ($modname === 'assign') {
             $assign = $DB->get_record('assign', ['id' => $instanceid], '*', MUST_EXIST);
-            $needs_update = false;
-            if ($duedate !== null) { $assign->duedate = $duedate; $needs_update = true; }
-            if ($allowfromdate !== null) { $assign->allowsubmissionsfromdate = $allowfromdate; $needs_update = true; }
-            if ($cutoffdate !== null && isset($assign->cutoffdate)) { $assign->cutoffdate = $cutoffdate; $needs_update = true; }
-            
-            if ($needs_update) {
+            $needsupdate = false;
+            if ($duedate !== null) {
+                $assign->duedate = $duedate;
+                $needsupdate = true;
+            }
+            if ($allowfromdate !== null) {
+                $assign->allowsubmissionsfromdate = $allowfromdate;
+                $needsupdate = true;
+            }
+            if ($cutoffdate !== null && isset($assign->cutoffdate)) {
+                $assign->cutoffdate = $cutoffdate;
+                $needsupdate = true;
+            }
+
+            if ($needsupdate) {
                 $DB->update_record('assign', $assign);
             }
         } else if ($modname === 'quiz') {
             $quiz = $DB->get_record('quiz', ['id' => $instanceid], '*', MUST_EXIST);
-            $needs_update = false;
-            if ($duedate !== null) { $quiz->timeclose = $duedate; $needs_update = true; }
-            if ($allowfromdate !== null) { $quiz->timeopen = $allowfromdate; $needs_update = true; }
-            
-            if ($needs_update) {
+            $needsupdate = false;
+            if ($duedate !== null) {
+                $quiz->timeclose = $duedate;
+                $needsupdate = true;
+            }
+            if ($allowfromdate !== null) {
+                $quiz->timeopen = $allowfromdate;
+                $needsupdate = true;
+            }
+
+            if ($needsupdate) {
                 $DB->update_record('quiz', $quiz);
             }
         } else if ($modname === 'forum') {
             $forum = $DB->get_record('forum', ['id' => $instanceid], '*', MUST_EXIST);
-            $needs_update = false;
+            $needsupdate = false;
             if (isset($forum->duedate) && $duedate !== null) {
                 $forum->duedate = $duedate;
-                $needs_update = true;
+                $needsupdate = true;
             }
             if (isset($forum->cutoffdate) && $cutoffdate !== null) {
                 $forum->cutoffdate = $cutoffdate;
-                $needs_update = true;
+                $needsupdate = true;
             }
-            
-            if ($needs_update) {
+
+            if ($needsupdate) {
                 $DB->update_record('forum', $forum);
             }
         }
