@@ -1,33 +1,34 @@
 /* Timeshift Pro Custom Table CSS */
 @media (max-width: 768px) {
     body {
-        overflow-x: hidden !important; /* Prevent horizontal scroll from 100vw */
+        overflow-x: hidden; /* Prevent horizontal scroll from 100vw */
     }
     #region-main,
     #page-content,
     .card,
     .region-main-content {
-        padding: 0 !important;
-        border: 0 !important;
-        margin: 0 !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
+        padding: 0;
+        border: 0;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
     }
     .local-timeshift-container {
-        width: 100vw !important;
-        max-width: 100vw !important;
-        position: relative !important;
-        left: 50% !important;
-        right: 50% !important;
-        margin-left: -50vw !important;
-        margin-right: -50vw !important;
-        padding: 15px 5px !important;
-        border-radius: 0 !important;
-        box-sizing: border-box !important;
+        width: 100vw;
+        max-width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        padding: 15px 5px;
+        border-radius: 0;
+        box-sizing: border-box;
     }
-    .timeshift-clean-table th, .timeshift-clean-table td {
-        padding: 8px 4px !important; /* Even tighter padding for mobile */
-        font-size: 13px !important; /* Slightly smaller text for better fit */
+    .timeshift-clean-table th,
+.timeshift-clean-table td {
+        padding: 8px 4px; /* Even tighter padding for mobile */
+        font-size: 13px; /* Slightly smaller text for better fit */
     }
 }
 #btn-clear-filters {
@@ -54,22 +55,23 @@
     border: 1px solid #eaedf1;
 }
 .timeshift-clean-table {
-    border-collapse: separate !important;
-    border-spacing: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
     /* Border moved to wrapper */
     background: #fff;
     margin-bottom: 0;
 }
-.timeshift-clean-table th, .timeshift-clean-table td {
-    border-top: none !important;
+.timeshift-clean-table th,
+.timeshift-clean-table td {
+    border-top: none;
     border-right: 1px solid #eaedf1;
     border-bottom: 1px solid #eaedf1;
-    vertical-align: middle !important;
-    padding: 12px 16px !important;
+    vertical-align: middle;
+    padding: 12px 16px;
     color: #333;
 }
 .timeshift-clean-table th {
-    background-color: #f8f9fa !important;
+    background-color: #f8f9fa;
     font-weight: 600;
     color: #495057;
     position: sticky;
@@ -83,7 +85,8 @@
 .timeshift-clean-table th:last-child {
     border-top-right-radius: 5px;
 }
-.timeshift-clean-table th:last-child, .timeshift-clean-table td:last-child {
+.timeshift-clean-table th:last-child,
+.timeshift-clean-table td:last-child {
     border-right: none;
 }
 .timeshift-clean-table tbody tr:last-child td:first-child {
@@ -96,7 +99,7 @@
     border-bottom: none;
 }
 .timeshift-clean-table tbody tr:hover {
-    background-color: #fbfcfd !important;
+    background-color: #fbfcfd;
 }
 .timeshift-clean-table .form-control {
     border: 1px solid #dee2e6;
@@ -106,7 +109,7 @@
 }
 .timeshift-clean-table .form-control:focus {
     border-color: #86b7fe;
-    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, .25);
 }
 .timeshift-clean-table .field-name {
     background-color: #fff;
@@ -121,7 +124,7 @@
 .timeshift-clean-table .field-name:focus {
     background-color: #fff;
     border-color: #86b7fe;
-    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, .25);
 }
 .timeshift-clean-table input[type="checkbox"] {
     width: 16px;
@@ -155,17 +158,16 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%23495057' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 14px;
-    padding-right: 32px !important;
+    padding-right: 32px;
     border-radius: 6px;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     cursor: pointer;
 }
 .timeshift-clean-table .field-status:focus {
-    border-color: rgba(0,0,0,0.1);
+    border-color: rgba(0, 0, 0, 0.1);
 }
 
 /* New Modal Styles */
@@ -200,9 +202,9 @@
     margin-bottom: 8px;
 }
 .modal-shift-clean .form-check-input:checked {
-    background-color: #0d6efd !important;
-    border-color: #0d6efd !important;
-    accent-color: #0d6efd !important;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    accent-color: #0d6efd;
 }
 .modal-shift-clean .example-box {
     background-color: #f0fdf4;
@@ -244,34 +246,34 @@
     padding: 0 24px;
 }
 .btn.btn-timeshift-save {
-    background-color: #3f7e44 !important;
-    border-color: #3f7e44 !important;
-    color: #ffffff !important;
+    background-color: #3f7e44;
+    border-color: #3f7e44;
+    color: #fff;
 }
 .btn.btn-timeshift-save:hover {
-    background-color: #336636 !important;
-    border-color: #336636 !important;
-    color: #ffffff !important;
+    background-color: #336636;
+    border-color: #336636;
+    color: #fff;
 }
 .btn.btn-timeshift-bulk {
-    background-color: #bf8b2e !important;
-    border-color: #bf8b2e !important;
-    color: #ffffff !important;
+    background-color: #bf8b2e;
+    border-color: #bf8b2e;
+    color: #fff;
 }
 .btn.btn-timeshift-bulk:hover {
-    border-color: #a37627 !important;
-    color: #ffffff !important;
+    border-color: #a37627;
+    color: #fff;
 }
 .btn.btn-timeshift-clear {
-    background-color: #ffffff !important;
-    border-color: #b6d4fe !important;
-    color: #084298 !important;
+    background-color: #fff;
+    border-color: #b6d4fe;
+    color: #084298;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 .btn.btn-timeshift-clear:hover {
-    background-color: #6c757d !important;
-    border-color: #6c757d !important;
-    color: #ffffff !important;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
 }
 .td-modified {
     position: relative;
@@ -286,11 +288,16 @@
     background-color: #0d6efd;
     border-radius: 50%;
     z-index: 10;
-    box-shadow: 0 0 2px rgba(255,255,255,0.8);
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
 }
 
 /* Availability Form Modal Fixes */
 /* Hide the left label column */
-#fitem_id_availabilityconditionsjson > .col-md-3 { display: none !important; }
+#fitem_id_availabilityconditionsjson > .col-md-3 {
+    display: none;
+}
 /* Expand the restriction UI to full width */
-#fitem_id_availabilityconditionsjson > .col-md-9 { flex: 0 0 100% !important; max-width: 100% !important; }
+#fitem_id_availabilityconditionsjson > .col-md-9 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}

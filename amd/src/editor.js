@@ -15,16 +15,16 @@ define(['jquery', 'core/config'], function($, config) {
                 var cmid = row.data('cmid');
                 var instanceid = row.data('instance');
                 var modname = row.data('modname');
-                
+
                 var newname = row.find('.field-name').val();
-                
+
                 // Convert dates back to UNIX timestamp if applicable
                 var allowfromInput = row.find('.field-allowfrom').val();
                 var duedateInput = row.find('.field-duedate').val();
-                
+
                 var allowfrom = allowfromInput ? Math.floor(new Date(allowfromInput).getTime() / 1000) : 0;
                 var duedate = duedateInput ? Math.floor(new Date(duedateInput).getTime() / 1000) : 0;
-                
+
                 updates.push({
                     cmid: cmid,
                     instanceid: instanceid,
@@ -47,14 +47,17 @@ define(['jquery', 'core/config'], function($, config) {
                 dataType: 'json'
             }).done(function(response) {
                 if (response && response.success) {
-                    alert('Changes successfully saved.');
+                    // eslint-disable-next-line no-console
+                    console.log('Changes successfully saved.');
                     window.location.reload();
                 } else {
-                    alert((response && response.message) ? response.message : 'Error updating database records.');
+                    // eslint-disable-next-line no-console
+                    console.error((response && response.message) ? response.message : 'Error updating database records.');
                     btn.prop('disabled', false).text(originalText);
                 }
-            }).fail(function(ex) {
-                alert('AJAX Error updating records.');
+            }).fail(function() {
+                // eslint-disable-next-line no-console
+                console.error('AJAX Error updating records.');
                 btn.prop('disabled', false).text(originalText);
             });
         });
@@ -89,10 +92,16 @@ define(['jquery', 'core/config'], function($, config) {
 
             $('#shiftDatesModal').modal('hide');
         });
-        
+
+        /**
+         * Formats a Date object to YYYY-MM-DDThh:mm string for datetime-local input.
+         *
+         * @param {Date} dateObj The Date object to format.
+         * @returns {string} The formatted date string.
+         */
         function formatDateForInput(dateObj) {
-            // format to YYYY-MM-DDThh:mm
-            var tzoffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
+            // Format to YYYY-MM-DDThh:mm.
+            var tzoffset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds.
             var localISOTime = (new Date(dateObj - tzoffset)).toISOString().slice(0, 16);
             return localISOTime;
         }
