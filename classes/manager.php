@@ -30,6 +30,9 @@ class manager {
 
     /**
      * Retrieves all supported activities of a course with their current dates.
+     *
+     * @param int $courseid The course ID
+     * @return array Array of activity objects
      */
     public static function get_course_activities($courseid) {
         global $DB;
@@ -103,6 +106,17 @@ class manager {
 
     /**
      * Safely updates the name and dates of an activity.
+     *
+     * @param int $cmid The course module ID
+     * @param string $modname The module name
+     * @param int $instanceid The module instance ID
+     * @param string $newname The new name of the activity
+     * @param int|null $duedate The new due date
+     * @param int|null $allowfromdate The new allow from date
+     * @param int|null $status The visibility status
+     * @param int|null $cutoffdate The new cutoff date
+     * @param string|null $availability The new availability JSON string
+     * @return bool True if successful
      */
     public static function update_activity($cmid, $modname, $instanceid, $newname, $duedate, $allowfromdate, $status = null, $cutoffdate = null, $availability = null) {
         global $DB;
@@ -217,6 +231,15 @@ class manager {
 
     /**
      * Safely updates, creates or deletes a calendar event for a given activity instance.
+     *
+     * @param string $modname The module name
+     * @param int $instanceid The module instance ID
+     * @param int $courseid The course ID
+     * @param string $eventtype The calendar event type (e.g. 'due', 'open')
+     * @param int $timestamp The event timestamp (0 to delete)
+     * @param string $oldname The original activity name
+     * @param string $newname The new activity name
+     * @return void
      */
     private static function sync_calendar_event($modname, $instanceid, $courseid, $eventtype, $timestamp, $oldname, $newname) {
         global $DB;
