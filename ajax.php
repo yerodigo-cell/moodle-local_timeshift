@@ -28,45 +28,65 @@ require_once($CFG->dirroot . '/course/lib.php');
 require_once($CFG->dirroot . '/local/timeshift/classes/manager.php');
 
 $courseid = required_param('courseid', PARAM_INT);
-$updates = required_param('updates', PARAM_RAW); // JSON string
+$updates = required_param('updates', PARAM_RAW); // JSON string.
 
 require_login($courseid);
 $context = context_course::instance($courseid);
 require_capability('moodle/course:update', $context);
 require_sesskey();
 
-$updates_array = json_decode($updates, true);
+$updatesarray = json_decode($updates, true);
 
-if (!is_array($updates_array)) {
+if (!is_array($updatesarray)) {
     echo json_encode(['error' => true, 'message' => 'Invalid data payload.']);
     die();
 }
 
 $success = true;
 try {
-    foreach ($updates_array as $update) {
+    foreach ($updatesarray as $update) {
         $cmid = clean_param($update['cmid'], PARAM_INT);
         $modname = clean_param($update['modname'], PARAM_ALPHA);
         $instanceid = clean_param($update['instanceid'], PARAM_INT);
         $newname = clean_param($update['newname'], PARAM_TEXT);
         
-        $duedate = isset($update['duedate']) && $update['duedate'] !== '' ? clean_param($update['duedate'], PARAM_INT) : null;
-        $allowfromdate = isset($update['allowfromdate']) && $update['allowfromdate'] !== '' ? clean_param($update['allowfromdate'], PARAM_INT) : null;
-        $cutoffdate = isset($update['cutoffdate']) && $update['cutoffdate'] !== '' ? clean_param($update['cutoffdate'], PARAM_INT) : null;
+        $duedate = null;
+        if (isset($update['duedate']) && $update['duedate'] !== '') {
+            $duedate = clean_param($update['duedate'], PARAM_INT);
+        }
+        
+        $allowfromdate = null;
+        if (isset($update['allowfromdate']) && $update['allowfromdate'] !== '') {
+            $allowfromdate = clean_param($update['allowfromdate'], PARAM_INT);
+        }
+        
+        $cutoffdate = null;
+        if (isset($update['cutoffdate']) && $update['cutoffdate'] !== '') {
+            $cutoffdate = clean_param($update['cutoffdate'], PARAM_INT);
+        }
+        
         $status = isset($update['status']) && $update['status'] !== '' ? clean_param($update['status'], PARAM_INT) : null;
         $availability = isset($update['availability']) ? $update['availability'] : null;
         $delete = isset($update['delete']) ? (bool)$update['delete'] : false;
-        
         if ($delete) {
             course_delete_module($cmid);
         } else {
-            \local_timeshift\manager::update_activity($cmid, $modname, $instanceid, $newname, $duedate, $allowfromdate, $status, $cutoffdate, $availability);
+            \local_timeshift\manager::update_activity(
+                $cmid,
+                $modname,
+                $instanceid,
+                $newname,
+                $duedate,
+                $allowfromdate,
+                $status,
+                $cutoffdate,
+                $availability
+            );
         }
     }
     
-    // Rebuild the course cache so that name changes and visibility reflect immediately in the UI and Calendar
+    // Rebuild the course cache so that name changes and visibility reflect immediately in the UI and Calendar.
     rebuild_course_cache($courseid, true);
-
 } catch (\Throwable $e) {
     $success = false;
     $errormsg = $e->getMessage();

@@ -29,11 +29,9 @@ if ($hassiteconfig) {
     // Note: We don't necessarily need a global admin setting tree if we just want a course tool.
     // However, if we want an admin page, we can add it here.
     // Let's create an empty settings file since it was specified in the structure.
-    
     // For a local plugin that works at course level, often the link is added via local_timeshift_extend_navigation_course
     // inside lib.php, but settings.php is loaded for site admin block. We can leave this empty or add a simple setting.
     $settings = new admin_settingpage('local_timeshift', get_string('pluginname', 'local_timeshift'));
-    
     // We add a link to the tool instead of real settings, or we just leave the settings page empty.
     $ADMIN->add('localplugins', $settings);
 }

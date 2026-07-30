@@ -187,15 +187,29 @@ class manager {
         $courseid = $cm->course;
         
         if ($modname === 'assign') {
-            if ($duedate !== null) self::sync_calendar_event($modname, $instanceid, $courseid, 'due', $duedate, $oldname, $newname);
-            if ($allowfromdate !== null) self::sync_calendar_event($modname, $instanceid, $courseid, 'allowsubmissionsfrom', $allowfromdate, $oldname, $newname);
-            if ($cutoffdate !== null) self::sync_calendar_event($modname, $instanceid, $courseid, 'cutoff', $cutoffdate, $oldname, $newname);
+            if ($duedate !== null) {
+                self::sync_calendar_event($modname, $instanceid, $courseid, 'due', $duedate, $oldname, $newname);
+            }
+            if ($allowfromdate !== null) {
+                self::sync_calendar_event($modname, $instanceid, $courseid, 'allowsubmissionsfrom', $allowfromdate, $oldname, $newname);
+            }
+            if ($cutoffdate !== null) {
+                self::sync_calendar_event($modname, $instanceid, $courseid, 'cutoff', $cutoffdate, $oldname, $newname);
+            }
         } else if ($modname === 'quiz') {
-            if ($duedate !== null) self::sync_calendar_event($modname, $instanceid, $courseid, 'close', $duedate, $oldname, $newname);
-            if ($allowfromdate !== null) self::sync_calendar_event($modname, $instanceid, $courseid, 'open', $allowfromdate, $oldname, $newname);
+            if ($duedate !== null) {
+                self::sync_calendar_event($modname, $instanceid, $courseid, 'close', $duedate, $oldname, $newname);
+            }
+            if ($allowfromdate !== null) {
+                self::sync_calendar_event($modname, $instanceid, $courseid, 'open', $allowfromdate, $oldname, $newname);
+            }
         } else if ($modname === 'forum') {
-            if ($duedate !== null) self::sync_calendar_event($modname, $instanceid, $courseid, 'due', $duedate, $oldname, $newname);
-            if ($cutoffdate !== null) self::sync_calendar_event($modname, $instanceid, $courseid, 'cutoff', $cutoffdate, $oldname, $newname);
+            if ($duedate !== null) {
+                self::sync_calendar_event($modname, $instanceid, $courseid, 'due', $duedate, $oldname, $newname);
+            }
+            if ($cutoffdate !== null) {
+                self::sync_calendar_event($modname, $instanceid, $courseid, 'cutoff', $cutoffdate, $oldname, $newname);
+            }
         }
 
         return true;
@@ -210,7 +224,7 @@ class manager {
         $events = $DB->get_records('event', [
             'modulename' => $modname,
             'instance' => $instanceid,
-            'eventtype' => $eventtype
+            'eventtype' => $eventtype,
         ]);
         
         if ($timestamp > 0) {
@@ -225,12 +239,16 @@ class manager {
                         if (strpos($event->name, $oldname) !== false) {
                             $event->name = str_replace($oldname, $newname, $event->name);
                         } else {
-                            // Fallback if strpos fails (e.g. Moodle didn't store the exact old name)
-                            $nameSuffix = '';
-                            if ($eventtype === 'due' || $eventtype === 'close') $nameSuffix = ' is due';
-                            else if ($eventtype === 'open' || $eventtype === 'allowsubmissionsfrom') $nameSuffix = ' opens';
-                            else if ($eventtype === 'cutoff') $nameSuffix = ' cutoff';
-                            $event->name = $newname . $nameSuffix;
+                            // Fallback if strpos fails (e.g. Moodle didn't store the exact old name).
+                            $namesuffix = '';
+                            if ($eventtype === 'due' || $eventtype === 'close') {
+                                $namesuffix = ' is due';
+                            } else if ($eventtype === 'open' || $eventtype === 'allowsubmissionsfrom') {
+                                $namesuffix = ' opens';
+                            } else if ($eventtype === 'cutoff') {
+                                $namesuffix = ' cutoff';
+                            }
+                            $event->name = $newname . $namesuffix;
                         }
                         $updated = true;
                     }
@@ -241,12 +259,16 @@ class manager {
                     }
                 }
             } else {
-                // Event does not exist, so create it manually
+                // Event does not exist, so create it manually.
                 $name = !empty($newname) ? $newname : (!empty($oldname) ? $oldname : ucfirst($modname));
                 
-                if ($eventtype === 'due' || $eventtype === 'close') $name .= ' is due';
-                else if ($eventtype === 'open' || $eventtype === 'allowsubmissionsfrom') $name .= ' opens';
-                else if ($eventtype === 'cutoff') $name .= ' cutoff';
+                if ($eventtype === 'due' || $eventtype === 'close') {
+                    $name .= ' is due';
+                } else if ($eventtype === 'open' || $eventtype === 'allowsubmissionsfrom') {
+                    $name .= ' opens';
+                } else if ($eventtype === 'cutoff') {
+                    $name .= ' cutoff';
+                }
                 
                 $newevent = new \stdClass();
                 $newevent->name = $name;
@@ -270,7 +292,7 @@ class manager {
                     $newevent->priority = null; 
                 }
                 if (array_key_exists('type', $columns)) {
-                    // CALENDAR_EVENT_TYPE_ACTION is 1
+                    // CALENDAR_EVENT_TYPE_ACTION is 1.
                     $newevent->type = 1;
                 }
                 
@@ -283,7 +305,7 @@ class manager {
                 $DB->insert_record('event', $newevent);
             }
         } else {
-            // Timestamp is 0, delete events
+            // Timestamp is 0, delete events.
             if ($events) {
                 foreach ($events as $event) {
                     $DB->delete_records('event', ['id' => $event->id]);
