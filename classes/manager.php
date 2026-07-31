@@ -232,7 +232,13 @@ class manager {
             }
             if ($allowfromdate !== null) {
                 self::sync_calendar_event(
-                    $modname, $instanceid, $courseid, 'allowsubmissionsfrom', $allowfromdate, $oldname, $newname
+                    $modname,
+                    $instanceid,
+                    $courseid,
+                    'allowsubmissionsfrom',
+                    $allowfromdate,
+                    $oldname,
+                    $newname
                 );
             }
             if ($cutoffdate !== null) {

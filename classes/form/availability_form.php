@@ -24,33 +24,33 @@ require_once($CFG->libdir . '/formslib.php');
 class availability_form extends \core_form\dynamic_form {
     public function definition() {
         global $DB, $CFG;
-        
+
         $mform = $this->_form;
-        
+
         $cmid = $this->optional_param('cmid', 0, PARAM_INT);
         if (!$cmid) {
             $cmid = optional_param('cmid', 0, PARAM_INT);
         }
-        
+
         $courseid = $this->optional_param('courseid', 0, PARAM_INT);
         if (!$courseid) {
             $courseid = optional_param('courseid', 0, PARAM_INT);
         }
-        
+
         $mform->addElement('hidden', 'cmid', $cmid);
         $mform->setType('cmid', PARAM_INT);
-        
+
         $mform->addElement('hidden', 'courseid', $courseid);
         $mform->setType('courseid', PARAM_INT);
-        
+
         $pending = $this->optional_param('pending', null, PARAM_RAW);
         $mform->addElement('hidden', 'pending', $pending);
         $mform->setType('pending', PARAM_RAW);
 
         $mform->addElement('textarea', 'availabilityconditionsjson', '', ['class' => 'd-none', 'id' => 'id_availabilityconditionsjson']);
-        
 
-        
+
+
         global $OUTPUT;
         $loadingcontainer = $OUTPUT->container(
             $OUTPUT->render_from_template('core/loading', []),
@@ -58,58 +58,76 @@ class availability_form extends \core_form\dynamic_form {
             'availabilityconditions-loading'
         );
         $mform->addElement('html', $loadingcontainer);
-        
+
         // Include Javascript for availability UI during rendering.
         if ($courseid && $cmid) {
             $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
             $modinfo = get_fast_modinfo($course);
             $cm = $modinfo->get_cm($cmid);
-            
+
             \core_availability\frontend::include_all_javascript($course, $cm);
         }
     }
-    
+
+    /**
+     * Get the context for dynamic submission.
+     *
+     * @return \context
+     */
     public function get_context_for_dynamic_submission(): \context {
         $courseid = $this->optional_param('courseid', 0, PARAM_INT);
         if (!$courseid) {
             $courseid = optional_param('courseid', 0, PARAM_INT);
         }
-        
+
         if (!$courseid) {
             return \context_system::instance();
         }
         return \context_course::instance($courseid);
     }
 
+    /**
+     * Check access for dynamic submission.
+     *
+     * @throws \moodle_exception
+     */
     protected function check_access_for_dynamic_submission(): void {
         $courseid = $this->optional_param('courseid', 0, PARAM_INT);
         if (!$courseid) {
             $courseid = optional_param('courseid', 0, PARAM_INT);
         }
-        
+
         if (!$courseid) {
             throw new \moodle_exception('nopermissionform', 'core_form');
         }
         require_capability('moodle/course:update', $this->get_context_for_dynamic_submission());
     }
 
+    /**
+     * Process the dynamic submission.
+     *
+     * @return array
+     */
     public function process_dynamic_submission() {
         global $DB;
         $data = $this->get_data();
-        
+
         if ($data && isset($data->cmid)) {
             $availability = $data->availabilityconditionsjson ?? null;
             return ['availability' => $availability];
         }
-        
+
         return ['availability' => null];
     }
 
+    /**
+     * Set data for dynamic submission.
+     */
     public function set_data_for_dynamic_submission(): void {
         global $DB;
         $cmid = $this->optional_param('cmid', 0, PARAM_INT);
         $pending = $this->optional_param('pending', null, PARAM_RAW);
-        
+
         if ($pending !== null && $pending !== 'null' && $pending !== '') {
             $this->set_data(['availabilityconditionsjson' => $pending]);
         } else if ($cmid) {
@@ -119,7 +137,7 @@ class availability_form extends \core_form\dynamic_form {
             }
         }
     }
-    
+
     /**
      * Get the page URL for dynamic submission.
      *

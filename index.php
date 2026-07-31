@@ -42,13 +42,15 @@ $activities = \local_timeshift\manager::get_course_activities($courseid);
 
 echo $OUTPUT->header();
 
-// Start container
+// Start container.
 echo '<div class="local-timeshift-container" style="margin: 0 auto 80px auto; max-width: 1600px;">';
 
-$icon_url = new moodle_url('/local/timeshift/pix/icon.jpg');
-$icon_img = '<img src="' . $icon_url . '" alt="Timeshift Pro Logo" style="width: 32px; height: 32px; border-radius: 6px; box-shadow: 0px 2px 4px rgba(0,0,0,0.2);">';
+$iconurl = new moodle_url('/local/timeshift/pix/icon.jpg');
+$iconimg = '<img src="' . $iconurl . '" alt="Timeshift Pro Logo" ' .
+           'style="width: 32px; height: 32px; border-radius: 6px; box-shadow: 0px 2px 4px rgba(0,0,0,0.2);">';
 
-echo '<h3 style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #1e293b;">' . $icon_img . ' ' . get_string('pagetitle', 'local_timeshift') . '</h3>';
+echo '<h3 style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #1e293b;">' .
+     $iconimg . ' ' . get_string('pagetitle', 'local_timeshift') . '</h3>';
 echo '<p style="color: #6c757d; margin-bottom: 20px;">' . get_string('pagedescription', 'local_timeshift') . '</p>';
 
 // Build a unique list of activity types for the filter dropdown
@@ -121,7 +123,6 @@ echo '    <button type="button" class="btn btn-timeshift-clear" id="btn-clear-se
 echo '  </div>';
 echo '</div>';
 
-
 // Table
 echo '<div class="table-responsive timeshift-table-wrapper">';
 echo '<table class="table timeshift-clean-table" id="timeshift-table">';
@@ -144,10 +145,10 @@ foreach ($activities as $act) {
     $allowfrom = !empty($act->allowfromdate) ? date('Y-m-d\TH:i', $act->allowfromdate) : '';
     $due = !empty($act->duedate) ? date('Y-m-d\TH:i', $act->duedate) : '';
     $cutoff = !empty($act->cutoffdate) ? date('Y-m-d\TH:i', $act->cutoffdate) : '';
-    
+
     echo '<tr data-cmid="'.$act->cmid.'" data-instance="'.$act->instance.'" data-modname="'.$act->modname.'">';
     echo '<td style="vertical-align: middle; text-align: center;"><input type="checkbox" class="row-checkbox"></td>';
-    
+
     // Column 1: Type
     echo '<td style="vertical-align: middle;">';
     echo '<div style="display: flex; align-items: center; gap: 10px;">';
@@ -182,7 +183,7 @@ foreach ($activities as $act) {
         ];
         $purpose = isset($mod_purposes[$act->modname]) ? $mod_purposes[$act->modname] : 'default';
         $icon_bg = $purpose_colors[$purpose];
-        
+
         if ($act->modname === 'hvp') {
             // HVP plugin comes with its own colored square icon, so we don't wrap it or invert it.
             echo '<img src="' . $act->iconurl . '" alt="' . $act->modname . ' icon" style="width: 32px; height: 32px; border-radius: 6px;">';
@@ -203,25 +204,25 @@ foreach ($activities as $act) {
     echo '<span style="font-weight: 500; color: #495057; min-width: 70px;">' . $displayname . '</span>';
     echo '</div>';
     echo '</td>';
-    
+
     // Column 2: Activity
     echo '<td style="vertical-align: middle;">';
     echo '<input type="text" class="form-control field-name" value="'.s($act->name).'" style="width: 100%; min-width: 120px; max-width: 300px;">';
     echo '</td>';
-    
+
     // Dates editable for assign/quiz/forum. Others can be extended later.
     if ($act->modname === 'assign' || $act->modname === 'quiz' || $act->modname === 'forum') {
         $allowDisabled = ($act->modname === 'forum');
         $cutoffDisabled = ($act->modname === 'quiz');
-        
+
         if ($allowDisabled) {
             echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
         } else {
             echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-allowfrom" value="'.$allowfrom.'"></td>';
         }
-        
+
         echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-duedate" value="'.$due.'"></td>';
-        
+
         if ($cutoffDisabled) {
             echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
         } else {
@@ -232,7 +233,7 @@ foreach ($activities as $act) {
         echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
         echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
     }
-    
+
     // Restrictions Column
     echo '<td style="vertical-align: middle; text-align: center; white-space: nowrap;">';
     $has_restrictions = !empty($act->availability) && $act->availability !== '{"op":"&","c":[],"showc":[]}';
@@ -245,26 +246,26 @@ foreach ($activities as $act) {
     echo '<i class="fa fa-pencil"></i>';
     echo '</button>';
     echo '</td>';
-    
+
     // Status Column
     $visibleSelected = ($act->status == 1) ? 'selected' : '';
     $stealthSelected = ($act->status == 2) ? 'selected' : '';
     $hiddenSelected = ($act->status == 0) ? 'selected' : '';
-    
+
     $statusColor = ($act->status == 1) ? 'background-color: #d4edda; color: #155724;' : (($act->status == 0) ? 'background-color: #e2e3e5; color: #383d41;' : 'background-color: #fff3cd; color: #856404;');
-    
+
     echo '<td style="vertical-align: middle;"><select class="form-control field-status" style="'.$statusColor.' font-weight: 500;" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor; this.style.color = this.options[this.selectedIndex].style.color;">';
     echo '<option value="1" ' . $visibleSelected . ' style="background-color: #d4edda; color: #155724;">' . get_string('visible', 'local_timeshift') . '</option>';
     echo '<option value="0" ' . $hiddenSelected . ' style="background-color: #e2e3e5; color: #383d41;">' . get_string('hidden', 'local_timeshift') . '</option>';
-    
+
     // Only show the Stealth option if allowed globally or if the activity is already stealth
     global $CFG;
     if (!empty($CFG->allowstealth) || $act->status == 2) {
         echo '<option value="2" ' . $stealthSelected . ' style="background-color: #fff3cd; color: #856404;">' . get_string('stealth', 'local_timeshift') . '</option>';
     }
-    
+
     echo '</select></td>';
-    
+
     echo '</tr>';
 }
 
@@ -282,8 +283,6 @@ echo '</div>';
 
 // Right side: Action buttons
 echo '<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">';
-
-
 
 // Discard Changes
 echo '<button type="button" class="btn btn-outline-secondary" id="btn-discard-changes" style="border-radius: 6px; padding: 8px 16px; font-weight: 500;">' . get_string('discard', 'local_timeshift') . '</button>';
@@ -332,7 +331,7 @@ echo '
         </h5>
       </div>
       <div class="modal-body">
-        
+
         <div class="info-box alert alert-primary">
             <i class="fa fa-info-circle" style="margin-top: 3px; font-size: 16px;"></i>
             <span id="shift-modal-count-text">' . get_string('action_shift_dates_selected', 'local_timeshift') . '</span>
@@ -525,7 +524,7 @@ echo '
 document.addEventListener('DOMContentLoaded', function() {
     var strSingular = '<?php echo get_string('activitiesselected_singular', 'local_timeshift'); ?>';
     var strPlural = '<?php echo get_string('activitiesselected_plural', 'local_timeshift'); ?>';
-    
+
     function showMoodleAlert(title, msg, callback) {
         if (typeof require !== 'undefined') {
             require(['core/notification'], function(Notification) {
@@ -549,13 +548,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var filterType = document.getElementById('filter-type');
     var filterStatus = document.getElementById('filter-status');
     var btnClearFilters = document.getElementById('btn-clear-filters');
-    
+
     function applyFilters() {
         var nameQuery = filterName ? filterName.value.toLowerCase() : '';
         var typeQuery = filterType ? filterType.value.toLowerCase() : '';
         var statusQuery = filterStatus ? filterStatus.value : '';
         var rows = document.querySelectorAll('#timeshift-table tbody tr');
-        
+
         if (btnClearFilters) {
             if (nameQuery !== '' || typeQuery !== '' || statusQuery !== '') {
                 btnClearFilters.style.display = 'flex';
@@ -563,20 +562,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 btnClearFilters.style.display = 'none';
             }
         }
-        
+
         var visibleCount = 0;
-        
+
         rows.forEach(function(row) {
             var modname = row.getAttribute('data-modname').toLowerCase();
             var nameInput = row.querySelector('.field-name');
             var name = nameInput ? nameInput.value.toLowerCase() : '';
             var statusSelect = row.querySelector('.field-status');
             var status = statusSelect ? statusSelect.value : '';
-            
+
             var matchName = name.indexOf(nameQuery) > -1;
             var matchType = typeQuery === '' || modname === typeQuery;
             var matchStatus = statusQuery === '' || status === statusQuery;
-            
+
             if (matchName && matchType && matchStatus) {
                 row.style.display = '';
                 visibleCount++;
@@ -584,12 +583,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.style.display = 'none';
             }
         });
-        
+
         var totalActivitiesCount = document.getElementById('total-activities-count');
         if (totalActivitiesCount) {
             totalActivitiesCount.textContent = visibleCount;
         }
-        
+
         if (typeof updateSelectionState === 'function') {
             updateSelectionState();
         }
@@ -598,7 +597,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (filterName) filterName.addEventListener('input', applyFilters);
     if (filterType) filterType.addEventListener('change', applyFilters);
     if (filterStatus) filterStatus.addEventListener('change', applyFilters);
-    
+
     if (btnClearFilters) {
         btnClearFilters.addEventListener('click', function() {
             if (filterName) filterName.value = '';
@@ -607,19 +606,19 @@ document.addEventListener('DOMContentLoaded', function() {
             applyFilters();
         });
     }
-    
+
     // Checkbox and Bulk Actions Toolbar Logic
     var selectAllCheckbox = document.getElementById('select-all-checkbox');
     var rowCheckboxes = document.querySelectorAll('.row-checkbox');
     var bulkActionsToolbar = document.getElementById('bulk-actions-toolbar');
     var selectedCountText = document.getElementById('selected-count');
     var btnClearSelection = document.getElementById('btn-clear-selection');
-    
+
     function updateSelectionState() {
         var selectedCount = 0;
         var visibleCount = 0;
         var visibleSelectedCount = 0;
-        
+
         rowCheckboxes.forEach(function(cb) {
             var row = cb.closest('tr');
             if (row.style.display !== 'none') {
@@ -634,12 +633,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-        
+
         if (selectAllCheckbox) {
             selectAllCheckbox.checked = (visibleCount > 0 && visibleSelectedCount === visibleCount);
             selectAllCheckbox.indeterminate = (visibleSelectedCount > 0 && visibleSelectedCount < visibleCount);
         }
-        
+
         if (selectedCount > 0) {
             bulkActionsToolbar.style.display = 'flex';
             if (selectedCountText) {
@@ -650,7 +649,7 @@ document.addEventListener('DOMContentLoaded', function() {
             bulkActionsToolbar.style.display = 'none';
         }
     }
-    
+
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', function() {
             var isChecked = this.checked;
@@ -663,11 +662,11 @@ document.addEventListener('DOMContentLoaded', function() {
             updateSelectionState();
         });
     }
-    
+
     rowCheckboxes.forEach(function(cb) {
         cb.addEventListener('change', updateSelectionState);
     });
-    
+
     if (btnClearSelection) {
         btnClearSelection.addEventListener('click', function() {
             rowCheckboxes.forEach(function(cb) {
@@ -676,11 +675,11 @@ document.addEventListener('DOMContentLoaded', function() {
             updateSelectionState();
         });
     }
-    
+
     var courseid = <?php echo json_encode($courseid); ?>;
     var sesskey = (typeof M !== 'undefined' && M.cfg && M.cfg.sesskey) ? M.cfg.sesskey : '';
     var wwwroot = (typeof M !== 'undefined' && M.cfg && M.cfg.wwwroot) ? M.cfg.wwwroot : '';
-    
+
     // Flag for unsaved changes
     var hasUnsavedChanges = false;
 
@@ -691,7 +690,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.returnValue = ''; // Required for some browsers
         }
     });
-    
+
     // Helper to mark a field as modified
     function markFieldAsModified(field) {
         if (!field) return;
@@ -710,7 +709,7 @@ document.addEventListener('DOMContentLoaded', function() {
         field.addEventListener('change', function() { markFieldAsModified(this); });
         field.addEventListener('input', function() { markFieldAsModified(this); });
     });
-    
+
     // Discard Changes Handler
     var btnDiscard = document.getElementById('btn-discard-changes');
     if (btnDiscard) {
@@ -736,7 +735,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Save Changes Handler
     var btnSave = document.getElementById('btn-save-changes');
     if (btnSave) {
@@ -752,26 +751,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 var cmid = row.getAttribute('data-cmid');
                 var instanceid = row.getAttribute('data-instance');
                 var modname = row.getAttribute('data-modname');
-                
+
                 var nameInput = row.querySelector('.field-name');
                 var statusInput = row.querySelector('.field-status');
                 var allowfromInput = row.querySelector('.field-allowfrom');
                 var duedateInput = row.querySelector('.field-duedate');
                 var cutoffdateInput = row.querySelector('.field-cutoffdate');
-                
+
                 var newname = nameInput ? nameInput.value : '';
                 var statusVal = statusInput ? statusInput.value : '';
                 var allowval = allowfromInput ? allowfromInput.value : '';
                 var dueval = duedateInput ? duedateInput.value : '';
                 var cutoffval = cutoffdateInput ? cutoffdateInput.value : '';
-                
+
                 var allowfrom = allowval ? Math.floor(new Date(allowval).getTime() / 1000) : 0;
                 var duedate = dueval ? Math.floor(new Date(dueval).getTime() / 1000) : 0;
                 var cutoffdate = cutoffval ? Math.floor(new Date(cutoffval).getTime() / 1000) : 0;
-                
+
                 var pendingAvailability = row.getAttribute('data-pending-availability');
                 var deleteFlag = row.dataset.delete === "1" ? true : false;
-                
+
                 updates.push({
                     cmid: cmid,
                     instanceid: instanceid,
@@ -789,7 +788,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var xhr = new XMLHttpRequest();
             xhr.open('POST', wwwroot + '/local/timeshift/ajax.php', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            
+
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
@@ -817,9 +816,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             };
-            
-            var params = 'courseid=' + encodeURIComponent(courseid) + 
-                         '&updates=' + encodeURIComponent(JSON.stringify(updates)) + 
+
+            var params = 'courseid=' + encodeURIComponent(courseid) +
+                         '&updates=' + encodeURIComponent(JSON.stringify(updates)) +
                          '&sesskey=' + encodeURIComponent(sesskey);
             xhr.send(params);
         });
@@ -832,7 +831,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var shiftModalCountText = document.getElementById('shift-modal-count-text');
     var exCurrent = document.getElementById('shift-ex-current');
     var exNew = document.getElementById('shift-ex-new');
-    
+
     function getSelectedCount() {
         var count = 0;
         document.querySelectorAll('.row-checkbox').forEach(function(cb) {
@@ -843,10 +842,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         return count;
     }
-    
+
     // Bulk Delete Action Logic
     var strPendingDeletion = '<?php echo get_string('pending_deletion', 'local_timeshift'); ?>';
-    
+
     var btnConfirmBulkDelete = document.getElementById('btn-confirm-bulk-delete');
     if (btnConfirmBulkDelete) {
         btnConfirmBulkDelete.addEventListener('click', function() {
@@ -857,11 +856,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     row.dataset.delete = "1";
                     row.classList.add('table-danger');
                     row.classList.add('text-decoration-line-through');
-                    
+
                     var badge = document.createElement('span');
                     badge.className = 'badge bg-danger ms-2';
                     badge.innerText = strPendingDeletion;
-                    
+
                     var nameInputContainer = row.querySelector('.field-name').parentNode;
                     // Prevent adding multiple badges if clicked multiple times
                     if (!nameInputContainer.querySelector('.badge.bg-danger')) {
@@ -878,7 +877,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     function updateShiftModalUI() {
         var mode = shiftModeInput ? shiftModeInput.value : 'all';
         var count = 0;
@@ -897,51 +896,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         updateLiveExample();
     }
-    
+
     if (btnShiftDatesAll) {
         btnShiftDatesAll.addEventListener('click', function() {
             if (shiftModeInput) shiftModeInput.value = 'all';
             updateShiftModalUI();
         });
     }
-    
+
     if (actionShiftDates) {
         actionShiftDates.addEventListener('click', function() {
             if (shiftModeInput) shiftModeInput.value = 'selected';
             updateShiftModalUI();
         });
     }
-    
+
     // Live Example Updater
     var shiftAmountInput = document.getElementById('shift-amount-input');
     var shiftUnitInput = document.getElementById('shift-unit-input');
     var shiftDirAdd = document.getElementById('shift-dir-add');
     var shiftDirSub = document.getElementById('shift-dir-sub');
-    
+
     function pad(n) { return n < 10 ? '0' + n : n; }
     function formatExampleDate(d) {
         return pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
     }
-    
+
     function updateLiveExample() {
         if (!exCurrent || !exNew || !shiftAmountInput) return;
-        
+
         var baseDate = new Date();
         // find a valid date from table if possible
         var firstValid = document.querySelector('.field-allowfrom, .field-duedate');
         if (firstValid && firstValid.value) {
             baseDate = new Date(firstValid.value);
         }
-        
+
         exCurrent.innerText = formatExampleDate(baseDate);
-        
+
         var amt = parseInt(shiftAmountInput.value, 10);
         if (isNaN(amt)) amt = 0;
-        
+
         var unit = shiftUnitInput ? shiftUnitInput.value : 'days';
         var isSub = shiftDirSub && shiftDirSub.checked;
         if (isSub) amt = -amt;
-        
+
         var newD = new Date(baseDate.getTime());
         if (unit === 'days') {
             newD.setDate(newD.getDate() + amt);
@@ -950,30 +949,30 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (unit === 'months') {
             newD.setMonth(newD.getMonth() + amt);
         }
-        
+
         exNew.innerText = formatExampleDate(newD);
     }
-    
+
     if (shiftAmountInput) shiftAmountInput.addEventListener('input', updateLiveExample);
     if (shiftUnitInput) shiftUnitInput.addEventListener('change', updateLiveExample);
     if (shiftDirAdd) shiftDirAdd.addEventListener('change', updateLiveExample);
     if (shiftDirSub) shiftDirSub.addEventListener('change', updateLiveExample);
-    
+
     // Preview Changes Button logic
     var btnApply = document.getElementById('btn-apply-shift');
     if (btnApply) {
         btnApply.addEventListener('click', function() {
             var amt = parseInt(shiftAmountInput.value, 10);
             if (isNaN(amt) || amt === 0) return;
-            
+
             var unit = shiftUnitInput ? shiftUnitInput.value : 'days';
             var isSub = shiftDirSub && shiftDirSub.checked;
             if (isSub) amt = -amt;
-            
+
             var shiftOpen = document.getElementById('shift-opt-open').checked;
             var shiftDue = document.getElementById('shift-opt-due').checked;
             var shiftClose = document.getElementById('shift-opt-close').checked;
-            
+
             var rows = document.querySelectorAll('#timeshift-table tbody tr');
             var mode = shiftModeInput ? shiftModeInput.value : 'all';
 
@@ -1004,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     dueField.value = formatDateForInput(d2);
                     markFieldAsModified(dueField);
                 }
-                
+
                 if (shiftClose && cutoffField && !cutoffField.disabled && cutoffField.value) {
                     var d3 = new Date(cutoffField.value);
                     if (unit === 'days') d3.setDate(d3.getDate() + amt);
@@ -1016,7 +1015,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
+
     // Set Allow From Date Handler
     var btnApplyAllowFrom = document.getElementById('btn-apply-allowfrom');
     if (btnApplyAllowFrom) {
@@ -1026,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeModal('#setAllowFromModal');
                 return;
             }
-            
+
             var rows = document.querySelectorAll('#timeshift-table tbody tr');
             rows.forEach(function(row) {
                 var cb = row.querySelector('.row-checkbox');
@@ -1038,7 +1037,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
-            
+
             closeModal('#setAllowFromModal');
         });
     }
@@ -1052,7 +1051,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeModal('#setDueDateModal');
                 return;
             }
-            
+
             var rows = document.querySelectorAll('#timeshift-table tbody tr');
             rows.forEach(function(row) {
                 var cb = row.querySelector('.row-checkbox');
@@ -1064,11 +1063,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
-            
+
             closeModal('#setDueDateModal');
         });
     }
-    
+
     // Set Cut-off Date Handler
     var btnApplyCutoffDate = document.getElementById('btn-apply-cutoffdate');
     if (btnApplyCutoffDate) {
@@ -1078,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeModal('#setCutoffDateModal');
                 return;
             }
-            
+
             var rows = document.querySelectorAll('#timeshift-table tbody tr');
             rows.forEach(function(row) {
                 var cb = row.querySelector('.row-checkbox');
@@ -1090,23 +1089,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
-            
+
             closeModal('#setCutoffDateModal');
         });
     }
-    
+
     // Find & Replace Handler
     var btnApplyFindReplace = document.getElementById('btn-apply-findreplace');
     if (btnApplyFindReplace) {
         btnApplyFindReplace.addEventListener('click', function() {
             var findText = document.getElementById('fr-find-input').value;
             var replaceText = document.getElementById('fr-replace-input').value;
-            
+
             if (findText === '') {
                 closeModal('#findReplaceModal');
                 return;
             }
-            
+
             var rows = document.querySelectorAll('#timeshift-table tbody tr');
             rows.forEach(function(row) {
                 var cb = row.querySelector('.row-checkbox');
@@ -1123,7 +1122,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
-            
+
             closeModal('#findReplaceModal');
         });
     }
@@ -1133,7 +1132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnApplyAvailability) {
         btnApplyAvailability.addEventListener('click', function() {
             var newStatus = document.getElementById('ca-status-input').value;
-            
+
             var rows = document.querySelectorAll('#timeshift-table tbody tr');
             rows.forEach(function(row) {
                 var cb = row.querySelector('.row-checkbox');
@@ -1148,11 +1147,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
-            
+
             closeModal('#changeAvailabilityModal');
         });
     }
-    
+
     // ModalForm for Restrictions
     var editRestrictionsBtns = document.querySelectorAll('.btn-edit-restrictions');
     if (editRestrictionsBtns.length > 0 && typeof require !== 'undefined') {
@@ -1162,16 +1161,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
                     var cmid = parseInt(btn.getAttribute('data-cmid'), 10);
                     var courseid = parseInt(btn.getAttribute('data-courseid'), 10);
-                    
+
                     var pending = btn.closest('tr').getAttribute('data-pending-availability') || null;
-                    
+
                     var form = new ModalForm({
                         formClass: 'local_timeshift\\form\\availability_form',
                         args: { cmid: cmid, courseid: courseid, pending: pending },
                         modalConfig: { title: 'Edit Restrictions' },
                         returnFocus: btn
                     });
-                    
+
                     form.addEventListener(form.events.FORM_SUBMITTED, function(event) {
                         var newAvail = event.detail.availability;
                         var row = btn.closest('tr');
@@ -1194,22 +1193,22 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         }
                     });
-                    
+
                     form.show();
                 });
             });
-            
+
             // Bulk Set Restrictions Handler
             var btnBulkRestrictions = document.getElementById('action-set-restrictions');
             if (btnBulkRestrictions) {
                 btnBulkRestrictions.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
+
                     // Find first selected cmid to use as context
                     var rows = document.querySelectorAll('#timeshift-table tbody tr');
                     var firstSelectedCmid = null;
                     var courseid = null;
-                    
+
                     rows.forEach(function(row) {
                         var cb = row.querySelector('.row-checkbox');
                         if (cb && cb.checked && !firstSelectedCmid) {
@@ -1217,25 +1216,25 @@ document.addEventListener('DOMContentLoaded', function() {
                             courseid = parseInt(row.getAttribute('data-courseid') || row.querySelector('.btn-edit-restrictions').getAttribute('data-courseid'), 10);
                         }
                     });
-                    
+
                     if (!firstSelectedCmid) {
                         alert('Please select at least one activity to edit restrictions.');
                         return;
                     }
-                    
+
                     var pending = null;
                     var firstRow = document.querySelector('tr[data-cmid="' + firstSelectedCmid + '"]');
                     if (firstRow) pending = firstRow.getAttribute('data-pending-availability') || null;
-                    
+
                     var form = new ModalForm({
                         formClass: 'local_timeshift\\form\\availability_form',
                         args: { cmid: firstSelectedCmid, courseid: courseid, pending: pending },
                         modalConfig: { title: 'Set Bulk Restrictions' }
                     });
-                    
+
                     form.addEventListener(form.events.FORM_SUBMITTED, function(event) {
                         var newAvail = event.detail.availability;
-                        
+
                         rows.forEach(function(row) {
                             var cb = row.querySelector('.row-checkbox');
                             if (cb && cb.checked) {
@@ -1260,7 +1259,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         });
                     });
-                    
+
                     form.show();
                 });
             }
@@ -1280,9 +1279,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
+
     function formatDateForInput(dateObj) {
-        var tzoffset = (new Date()).getTimezoneOffset() * 60000; 
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000;
         var localISOTime = (new Date(dateObj - tzoffset)).toISOString().slice(0, 16);
         return localISOTime;
     }
