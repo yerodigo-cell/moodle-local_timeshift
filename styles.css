@@ -26,7 +26,7 @@
         box-sizing: border-box;
     }
     .timeshift-clean-table th,
-.timeshift-clean-table td {
+    .timeshift-clean-table td {
         padding: 8px 4px; /* Even tighter padding for mobile */
         font-size: 13px; /* Slightly smaller text for better fit */
     }
