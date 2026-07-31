@@ -53,24 +53,25 @@ echo '<h3 style="display: flex; align-items: center; gap: 12px; font-weight: 800
      $iconimg . ' ' . get_string('pagetitle', 'local_timeshift') . '</h3>';
 echo '<p style="color: #6c757d; margin-bottom: 20px;">' . get_string('pagedescription', 'local_timeshift') . '</p>';
 
-// Build a unique list of activity types for the filter dropdown
+// Build a unique list of activity types for the filter dropdown.
 $modtypes = [];
 foreach ($activities as $act) {
     $modtypes[$act->modname] = $act->modname;
 }
 asort($modtypes);
 
-// Modal, top buttons, and filters
+// Modal, top buttons, and filters.
 echo '<div style="margin-bottom: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">';
 echo '<div style="display: flex; gap: 10px; align-items: center;">';
 echo '<div style="position: relative; width: 100%; max-width: 250px; min-width: 140px;">';
-echo '<input type="text" id="filter-name" class="form-control" placeholder="' . get_string('searchbyname', 'local_timeshift') . '" style="width: 100%; border-radius: 6px;">';
+echo '<input type="text" id="filter-name" class="form-control" placeholder="' . 
+     get_string('searchbyname', 'local_timeshift') . '" style="width: 100%; border-radius: 6px;">';
 echo '</div>';
 echo '<select id="filter-type" class="form-control" style="max-width: 200px; border-radius: 6px;">';
 echo '<option value="">' . get_string('alltypes', 'local_timeshift') . '</option>';
-        foreach ($modtypes as $type) {
-            echo '<option value="' . s($type) . '">' . ucfirst(s($type)) . '</option>';
-        }
+foreach ($modtypes as $type) {
+    echo '<option value="' . s($type) . '">' . ucfirst(s($type)) . '</option>';
+}
 echo '</select>';
 
 echo '<select id="filter-status" class="form-control" style="max-width: 150px; border-radius: 6px;">';
@@ -84,15 +85,20 @@ if (!empty($CFG->allowstealth)) {
 echo '</select>';
 
 echo '<button type="button" id="btn-clear-filters" title="Clear filters" style="display: none;">';
-echo '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#292d32"/><path d="M8.5 8.5L15.5 15.5M15.5 8.5L8.5 15.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+echo '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' . 
+     '<circle cx="12" cy="12" r="12" fill="#292d32"/>' . 
+     '<path d="M8.5 8.5L15.5 15.5M15.5 8.5L8.5 15.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' . 
+     '</svg>';
 echo '</button>';
 
 echo '</div>';
 
-// Bulk Shift All
+// Bulk Shift All.
 echo '<div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">';
 echo $OUTPUT->help_icon('shiftmodaltitle', 'local_timeshift');
-echo '<button type="button" class="btn btn-timeshift-bulk" id="btn-shift-dates-all" data-toggle="modal" data-target="#shiftDatesModal" data-bs-toggle="modal" data-bs-target="#shiftDatesModal" style="border-radius: 6px; font-weight: 500;">' . get_string('bulkshiftall', 'local_timeshift') . '</button>';
+echo '<button type="button" class="btn btn-timeshift-bulk" id="btn-shift-dates-all" data-toggle="modal" ' . 
+     'data-target="#shiftDatesModal" data-bs-toggle="modal" data-bs-target="#shiftDatesModal" ' . 
+     'style="border-radius: 6px; font-weight: 500;">' . get_string('bulkshiftall', 'local_timeshift') . '</button>';
 echo '</div>';
 
 echo '</div>';
@@ -1213,7 +1219,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         var cb = row.querySelector('.row-checkbox');
                         if (cb && cb.checked && !firstSelectedCmid) {
                             firstSelectedCmid = parseInt(row.getAttribute('data-cmid'), 10);
-                            courseid = parseInt(row.getAttribute('data-courseid') || row.querySelector('.btn-edit-restrictions').getAttribute('data-courseid'), 10);
+                            var restrictionsBtn = row.querySelector('.btn-edit-restrictions');
+                            courseid = parseInt(row.getAttribute('data-courseid') || restrictionsBtn.getAttribute('data-courseid'), 10);
                         }
                     });
 
@@ -1287,6 +1294,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+// phpcs:disable moodle.Commenting.MissingDocblock.File
 <?php
 
 echo $OUTPUT->footer();

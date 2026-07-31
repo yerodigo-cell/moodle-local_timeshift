@@ -22,7 +22,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Extends the course navigation to add a link to the bulk editor.
@@ -34,7 +33,6 @@ defined('MOODLE_INTERNAL') || die();
 function local_timeshift_extend_navigation_course($navigation, $course, $context) {
     if (has_capability('moodle/course:update', $context)) {
         $url = new moodle_url('/local/timeshift/index.php', ['courseid' => $course->id]);
-        
         $node = navigation_node::create(
             get_string('pagetitle', 'local_timeshift'),
             $url,
@@ -43,7 +41,6 @@ function local_timeshift_extend_navigation_course($navigation, $course, $context
             'local_timeshift_bulk',
             new pix_icon('t/edit', '')
         );
-        
         $navigation->add_node($node);
     }
 }

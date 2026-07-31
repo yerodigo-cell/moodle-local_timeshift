@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * TimeShift Pro (local_timeshift)
+ *
+ * @package     local_timeshift
+ * @copyright   2026 EduPlugins Studio
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace local_timeshift\form;
 
 defined('MOODLE_INTERNAL') || die();
@@ -21,7 +29,13 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Availability form class
+ */
 class availability_form extends \core_form\dynamic_form {
+    /**
+     * Form definition.
+     */
     public function definition() {
         global $DB, $CFG;
 
@@ -47,9 +61,12 @@ class availability_form extends \core_form\dynamic_form {
         $mform->addElement('hidden', 'pending', $pending);
         $mform->setType('pending', PARAM_RAW);
 
-        $mform->addElement('textarea', 'availabilityconditionsjson', '', ['class' => 'd-none', 'id' => 'id_availabilityconditionsjson']);
-
-
+        $mform->addElement(
+            'textarea', 
+            'availabilityconditionsjson', 
+            '', 
+            ['class' => 'd-none', 'id' => 'id_availabilityconditionsjson']
+        );
 
         global $OUTPUT;
         $loadingcontainer = $OUTPUT->container(
