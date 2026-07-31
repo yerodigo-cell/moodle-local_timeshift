@@ -172,12 +172,12 @@ foreach ($activities as $act) {
             'book' => 'content', 'folder' => 'content', 'label' => 'content', 'page' => 'content', 'qbank' => 'content', 'resource' => 'content', 'url' => 'content', 'emubook' => 'content', 'videotrack' => 'content', 'codeframe' => 'content',
             // Collaboration.
             'data' => 'collaboration', 'database' => 'collaboration', 'forum' => 'collaboration', 'glossary' => 'collaboration', 'wiki' => 'collaboration', 'diary' => 'collaboration',
-            // Interactive content.
+            // Interactive content..
             'h5pactivity' => 'interactive_content', 'imscp' => 'interactive_content', 'lesson' => 'interactive_content', 'scorm' => 'interactive_content',
-            // Administration & Other.
+            // Administration & Other..
             'attendance' => 'administration', 'lti' => 'other',
-            // Custom.
-            'hvp' => 'hvp_black'
+            // Custom..
+            'hvp' => 'hvp_black',
         ];
         $purposecolors = [
             'assessment' => '#fa0086',
@@ -188,7 +188,7 @@ foreach ($activities as $act) {
             'hvp_black' => '#212529',
             'administration' => '#5d63f6',
             'other' => '#6c757d',
-            'default' => '#6c757d'
+            'default' => '#6c757d',
         ];
         $purpose = isset($modpurposes[$act->modname]) ? $modpurposes[$act->modname] : 'default';
         $iconbg = $purposecolors[$purpose];
@@ -203,7 +203,7 @@ foreach ($activities as $act) {
         }
     }
     $displayname = isset($act->modfullname) ? $act->modfullname : ucfirst($act->modname);
-    // Explicitly handle H5pactivity just in case the localized string still says H5P activity.
+    // Explicitly handle H5pactivity just in case the localized string still says H5P activity..
     if (strtolower($displayname) === 'h5pactivity' || strtolower($displayname) === 'h5p activity') {
         $displayname = 'H5p';
     }
@@ -214,12 +214,12 @@ foreach ($activities as $act) {
     echo '</div>';
     echo '</td>';
 
-    // Column 2: Activity.
+    // Column 2: Activity..
     echo '<td style="vertical-align: middle;">';
-    echo '<input type="text" class="form-control field-name" value="'.s($act->name).'" style="width: 100%; min-width: 120px; max-width: 300px;">';
+    echo '<input type="text" class="form-control field-name" value="' . s($act->name) . '" style="width: 100%; min-width: 120px; max-width: 300px;">';
     echo '</td>';
 
-    // Dates editable for assign/quiz/forum. Others can be extended later.
+    // Dates editable for assign/quiz/forum. Others can be extended later..
     if ($act->modname === 'assign' || $act->modname === 'quiz' || $act->modname === 'forum') {
         $allowdisabled = ($act->modname === 'forum');
         $cutoffdisabled = ($act->modname === 'quiz');
@@ -227,15 +227,15 @@ foreach ($activities as $act) {
         if ($allowdisabled) {
             echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
         } else {
-            echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-allowfrom" value="'.$allowfrom.'"></td>';
+            echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-allowfrom" value="' . $allowfrom . '"></td>';
         }
 
-        echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-duedate" value="'.$due.'"></td>';
+        echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-duedate" value="' . $due . '"></td>';
 
         if ($cutoffdisabled) {
             echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
         } else {
-            echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-cutoffdate" value="'.$cutoff.'"></td>';
+            echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-cutoffdate" value="' . $cutoff . '"></td>';
         }
     } else {
         echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
@@ -243,7 +243,7 @@ foreach ($activities as $act) {
         echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
     }
 
-    // Restrictions Column.
+    // Restrictions Column..
     echo '<td style="vertical-align: middle; text-align: center; white-space: nowrap;">';
     $hasrestrictions = !empty($act->availability) && $act->availability !== '{"op":"&","c":[],"showc":[]}';
     if ($hasrestrictions) {
@@ -251,23 +251,23 @@ foreach ($activities as $act) {
     } else {
         echo '<i class="fa fa-unlock-alt text-muted restrictions-icon" title="No restrictions" style="margin-right: 8px; font-size: 16px; opacity: 0.3;"></i>';
     }
-    echo '<button type="button" class="btn btn-sm btn-outline-secondary btn-edit-restrictions" data-cmid="'.$act->cmid.'" data-courseid="'.$courseid.'" title="Edit Restrictions">';
+    echo '<button type="button" class="btn btn-sm btn-outline-secondary btn-edit-restrictions" data-cmid="' . $act->cmid . '" data-courseid="' . $courseid . '" title="Edit Restrictions">';
     echo '<i class="fa fa-pencil"></i>';
     echo '</button>';
     echo '</td>';
 
-    // Status Column.
+    // Status Column..
     $visibleselected = ($act->status == 1) ? 'selected' : '';
     $stealthselected = ($act->status == 2) ? 'selected' : '';
     $hiddenselected = ($act->status == 0) ? 'selected' : '';
 
     $statuscolor = ($act->status == 1) ? 'background-color: #d4edda; color: #155724;' : (($act->status == 0) ? 'background-color: #e2e3e5; color: #383d41;' : 'background-color: #fff3cd; color: #856404;');
 
-    echo '<td style="vertical-align: middle;"><select class="form-control field-status" style="'.$statuscolor.' font-weight: 500;" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor; this.style.color = this.options[this.selectedIndex].style.color;">';
+    echo '<td style="vertical-align: middle;"><select class="form-control field-status" style="' . $statuscolor . ' font-weight: 500;" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor; this.style.color = this.options[this.selectedIndex].style.color;">';
     echo '<option value="1" ' . $visibleselected . ' style="background-color: #d4edda; color: #155724;">' . get_string('visible', 'local_timeshift') . '</option>';
     echo '<option value="0" ' . $hiddenselected . ' style="background-color: #e2e3e5; color: #383d41;">' . get_string('hidden', 'local_timeshift') . '</option>';
 
-    // Only show the Stealth option if allowed globally or if the activity is already stealth.
+    // Only show the Stealth option if allowed globally or if the activity is already stealth..
     global $CFG;
     if (!empty($CFG->allowstealth) || $act->status == 2) {
         echo '<option value="2" ' . $stealthselected . ' style="background-color: #fff3cd; color: #856404;">' . get_string('stealth', 'local_timeshift') . '</option>';
@@ -282,21 +282,21 @@ echo '</tbody>';
 echo '</table>';
 echo '</div>';
 
-// Table Footer Toolbar.
+// Table Footer Toolbar..
 echo '<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 16px;">';
 
-// Left side: Total count.
+// Left side: Total count..
 echo '<div style="color: #6c757d; font-size: 14px; font-weight: 500;">';
 echo get_string('totalactivities', 'local_timeshift') . ' <span id="total-activities-count">' . count($activities) . '</span>';
 echo '</div>';
 
-// Right side: Action buttons.
+// Right side: Action buttons..
 echo '<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">';
 
-// Discard Changes.
+// Discard Changes..
 echo '<button type="button" class="btn btn-outline-secondary" id="btn-discard-changes" style="border-radius: 6px; padding: 8px 16px; font-weight: 500;">' . get_string('discard', 'local_timeshift') . '</button>';
 
-// Save Changes.
+// Save Changes..
 echo '<button type="button" class="btn btn-timeshift-save" id="btn-save-changes" style="border-radius: 6px; padding: 8px 24px; font-weight: 500;">';
 echo get_string('savechanges', 'local_timeshift');
 echo '</button>';
@@ -719,7 +719,7 @@ document.addEventListener('DOMContentLoaded', function() {
         field.addEventListener('input', function() { markFieldAsModified(this); });
     });
 
-    // Discard Changes Handler
+    // Discard Changes. Handler
     var btnDiscard = document.getElementById('btn-discard-changes');
     if (btnDiscard) {
         btnDiscard.addEventListener('click', function() {
@@ -745,7 +745,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Save Changes Handler
+    // Save Changes. Handler
     var btnSave = document.getElementById('btn-save-changes');
     if (btnSave) {
         btnSave.addEventListener('click', function() {
