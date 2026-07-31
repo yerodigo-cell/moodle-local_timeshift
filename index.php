@@ -343,7 +343,7 @@ echo '
 
         <div class="info-box alert alert-primary">
             <i class="fa fa-info-circle" style="margin-top: 3px; font-size: 16px;"></i>
-            <span id="shift-modal-count-text">' . get_string('action_shift_dates_selected', 'local_timeshift') . '</span>
+            <span id="shift-modal-count-text">' . get_string('action_shift_dates_all', 'local_timeshift') . '</span>
         </div>
 
         <div class="section-title">' . get_string('selectwhattoshift', 'local_timeshift') . '</div>
@@ -855,6 +855,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Bulk Delete Action Logic
     var strPendingDeletion = '<?php echo get_string('pending_deletion', 'local_timeshift'); ?>';
 
+    // Shift Modal Strings
+    var strShiftSelected = '<?php echo get_string('action_shift_dates_selected', 'local_timeshift'); ?>';
+    var strShiftAll = '<?php echo get_string('action_shift_dates_all', 'local_timeshift'); ?>';
+
     var btnConfirmBulkDelete = document.getElementById('btn-confirm-bulk-delete');
     if (btnConfirmBulkDelete) {
         btnConfirmBulkDelete.addEventListener('click', function() {
@@ -889,18 +893,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateShiftModalUI() {
         var mode = shiftModeInput ? shiftModeInput.value : 'all';
-        var count = 0;
-        if (mode === 'selected') {
-            count = getSelectedCount();
+        var count = getSelectedCount();
+
+        if (mode === 'selected' && count > 0) {
             if (shiftModalCountText) {
                 shiftModalCountText.innerHTML = strShiftSelected.replace('{$a}', count);
             }
         } else {
-            document.querySelectorAll('#timeshift-table tbody tr').forEach(function(row) {
-                if (row.style.display !== 'none') count++;
-            });
             if (shiftModalCountText) {
-                shiftModalCountText.innerHTML = strShiftAll.replace('{$a}', count);
+                shiftModalCountText.innerHTML = strShiftAll;
             }
         }
         updateLiveExample();
@@ -1297,7 +1298,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-// phpcs:disable moodle.Commenting.MissingDocblock.File
+
 <?php
 
 echo $OUTPUT->footer();
