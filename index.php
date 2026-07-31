@@ -23,6 +23,8 @@
  */
 
 require_once('../../config.php');
+// phpcs:disable moodle.Files.LineLength.TooLong
+// phpcs:disable moodle.Files.LineLength.MaxExceeded
 require_once($CFG->dirroot . '/local/timeshift/classes/manager.php');
 
 $courseid = required_param('courseid', PARAM_INT);

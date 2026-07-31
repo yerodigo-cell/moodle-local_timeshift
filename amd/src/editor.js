@@ -47,17 +47,15 @@ define(['jquery', 'core/config'], function($, config) {
                 dataType: 'json'
             }).done(function(response) {
                 if (response && response.success) {
-                    // eslint-disable-next-line no-console
-                    console.log('Changes successfully saved.');
+                    alert('Changes successfully saved.');
                     window.location.reload();
                 } else {
-                    // eslint-disable-next-line no-console
-                    console.error((response && response.message) ? response.message : 'Error updating database records.');
+                    alert((response && response.message) ? response.message : 'Error updating database records.');
                     btn.prop('disabled', false).text(originalText);
                 }
-            }).fail(function() {
-                // eslint-disable-next-line no-console
-                console.error('AJAX Error updating records.');
+            }).fail(function(ex) {
+                window.console.error(ex);
+                alert('AJAX Error updating records.');
                 btn.prop('disabled', false).text(originalText);
             });
         });
@@ -94,19 +92,21 @@ define(['jquery', 'core/config'], function($, config) {
         });
 
         /**
-         * Formats a Date object to YYYY-MM-DDThh:mm string for datetime-local input.
-         *
-         * @param {Date} dateObj The Date object to format.
-         * @returns {string} The formatted date string.
+         * Formats a Date object into a string for input.
+         * @param {Date} dateObj
+         * @return {string} formatted date
          */
         function formatDateForInput(dateObj) {
-            // Format to YYYY-MM-DDThh:mm.
-            var tzoffset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds.
+            // format to YYYY-MM-DDThh:mm
+            var tzoffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
             var localISOTime = (new Date(dateObj - tzoffset)).toISOString().slice(0, 16);
             return localISOTime;
         }
     };
 
+    /**
+     * Returns the init function.
+     */
     return {
         init: init
     };
