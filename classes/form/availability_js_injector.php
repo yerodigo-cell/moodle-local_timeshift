@@ -16,8 +16,6 @@
 
 namespace local_timeshift\form;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Custom QuickForm element to inject availability JS at render time.
  *
@@ -36,8 +34,8 @@ class availability_js_injector extends \HTML_QuickForm_static {
      * Render the element.
      *
      * @return string
-     * phpcs:ignore moodle.NamingConventions.ValidFunctionName.LowercaseMethod
      */
+    // phpcs:ignore moodle.NamingConventions.ValidFunctionName.LowercaseMethod
     public function toHtml() {
         if ($this->course && $this->cm) {
             \core_availability\frontend::include_all_javascript($this->course, $this->cm);

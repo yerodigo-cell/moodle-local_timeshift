@@ -82,8 +82,9 @@ class availability_form extends \core_form\dynamic_form {
             $modinfo = get_fast_modinfo($course);
             $cm = $modinfo->get_cm($cmid);
 
-            \MoodleQuickForm::registerElementType('availability_js_injector', __DIR__ . '/availability_js_injector.php', '\local_timeshift\form\availability_js_injector');
-            
+            \MoodleQuickForm::registerElementType('availability_js_injector',
+                __DIR__ . '/availability_js_injector.php', '\local_timeshift\form\availability_js_injector');
+
             $injector = $mform->addElement('availability_js_injector', 'js_injector');
             $injector->course = $course;
             $injector->cm = $cm;
