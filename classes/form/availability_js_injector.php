@@ -35,8 +35,7 @@ class availability_js_injector extends \HTML_QuickForm_static {
      *
      * @return string
      */
-    // phpcs:ignore moodle.NamingConventions.ValidFunctionName.LowercaseMethod
-    public function toHtml() {
+    public function toHtml() { // phpcs:ignore moodle.NamingConventions.ValidFunctionName.LowercaseMethod
         if ($this->course && $this->cm) {
             \core_availability\frontend::include_all_javascript($this->course, $this->cm);
         }
