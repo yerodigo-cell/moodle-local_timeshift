@@ -25,6 +25,7 @@
 require_once('../../config.php');
 // phpcs:disable moodle.Files.LineLength.TooLong
 // phpcs:disable moodle.Files.LineLength.MaxExceeded
+// phpcs:disable moodle.Commenting.MissingDocblock.File
 require_once($CFG->dirroot . '/local/timeshift/classes/manager.php');
 
 $courseid = required_param('courseid', PARAM_INT);
@@ -105,7 +106,7 @@ echo '</div>';
 
 echo '</div>';
 
-// Bulk Actions Toolbar (hidden by default until items are selected)
+// Bulk Actions Toolbar (hidden by default until items are selected).
 echo '<div id="bulk-actions-toolbar" style="display: none; margin-bottom: 20px; padding: 15px 20px; background: #e7f1ff; border: 1px solid #b6d4fe; border-radius: 8px; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15); align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; transition: all 0.3s ease;">';
 echo '  <div style="display: flex; align-items: center; gap: 15px;">';
 echo '    <span id="selected-count" style="font-weight: 700; color: #084298; font-size: 1.05em;">' . get_string('activitiesselected', 'local_timeshift', 0) . '</span>';
@@ -131,7 +132,7 @@ echo '    <button type="button" class="btn btn-timeshift-clear" id="btn-clear-se
 echo '  </div>';
 echo '</div>';
 
-// Table
+// Table.
 echo '<div class="table-responsive timeshift-table-wrapper">';
 echo '<table class="table timeshift-clean-table" id="timeshift-table">';
 echo '<thead>';
@@ -149,27 +150,27 @@ echo '</thead>';
 echo '<tbody>';
 
 foreach ($activities as $act) {
-    // Format dates for input type datetime-local (YYYY-MM-DDThh:mm)
+    // Format dates for input type datetime-local (YYYY-MM-DDThh:mm).
     $allowfrom = !empty($act->allowfromdate) ? date('Y-m-d\TH:i', $act->allowfromdate) : '';
     $due = !empty($act->duedate) ? date('Y-m-d\TH:i', $act->duedate) : '';
     $cutoff = !empty($act->cutoffdate) ? date('Y-m-d\TH:i', $act->cutoffdate) : '';
 
-    echo '<tr data-cmid="'.$act->cmid.'" data-instance="'.$act->instance.'" data-modname="'.$act->modname.'">';
+    echo '<tr data-cmid="' . $act->cmid . '" data-instance="' . $act->instance . '" data-modname="' . $act->modname . '">';
     echo '<td style="vertical-align: middle; text-align: center;"><input type="checkbox" class="row-checkbox"></td>';
 
-    // Column 1: Type
+    // Column 1: Type.
     echo '<td style="vertical-align: middle;">';
     echo '<div style="display: flex; align-items: center; gap: 10px;">';
     if (!empty($act->iconurl)) {
-        // Determine icon color based on Moodle 4 module categories
-        $mod_purposes = [
-            // Assessment
+        // Determine icon color based on Moodle 4 module categories.
+        $modpurposes = [
+            // Assessment.
             'assign' => 'assessment', 'quiz' => 'assessment', 'workshop' => 'assessment', 'certificatebeautiful' => 'assessment', 'coursecertificate' => 'assessment',
-            // Communication
+            // Communication.
             'choice' => 'communication', 'feedback' => 'communication', 'chat' => 'communication', 'bigbluebuttonbn' => 'communication', 'zoom' => 'communication',
-            // Content
+            // Content.
             'book' => 'content', 'folder' => 'content', 'label' => 'content', 'page' => 'content', 'qbank' => 'content', 'resource' => 'content', 'url' => 'content', 'emubook' => 'content', 'videotrack' => 'content', 'codeframe' => 'content',
-            // Collaboration
+            // Collaboration.
             'data' => 'collaboration', 'database' => 'collaboration', 'forum' => 'collaboration', 'glossary' => 'collaboration', 'wiki' => 'collaboration', 'diary' => 'collaboration',
             // Interactive content
             'h5pactivity' => 'interactive_content', 'imscp' => 'interactive_content', 'lesson' => 'interactive_content', 'scorm' => 'interactive_content',
@@ -189,7 +190,7 @@ foreach ($activities as $act) {
             'other' => '#6c757d',
             'default' => '#6c757d'
         ];
-        $purpose = isset($mod_purposes[$act->modname]) ? $mod_purposes[$act->modname] : 'default';
+        $purpose = isset($modpurposes[$act->modname]) ? $modpurposes[$act->modname] : 'default';
         $icon_bg = $purpose_colors[$purpose];
 
         if ($act->modname === 'hvp') {
@@ -301,11 +302,11 @@ echo get_string('savechanges', 'local_timeshift');
 echo '</button>';
 
 echo '</div>'; // End right side actions
-echo '</div>'; // End footer toolbar
+echo '</div>'; // End footer toolbar.
 
-echo '</div>'; // End container
+echo '</div>'; // End container.
 
-// Bulk Delete Modal
+// Bulk Delete Modal.
 echo '
 <div class="modal fade" id="bulkDeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-shift-clean" role="document">
@@ -328,7 +329,7 @@ echo '
 </div>
 ';
 
-// Shift Dates Modal
+// Shift Dates Modal.
 echo '
 <div class="modal fade" id="shiftDatesModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-shift-clean" role="document">
@@ -404,7 +405,7 @@ echo '
 </div>
 ';
 
-// Find & Replace Modal
+// Find & Replace Modal.
 echo '
 <div class="modal fade" id="findReplaceModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -431,7 +432,7 @@ echo '
 </div>
 ';
 
-// Change Availability Modal
+// Change Availability Modal.
 echo '
 <div class="modal fade" id="changeAvailabilityModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -458,7 +459,7 @@ echo '
 </div>
 ';
 
-// Set Allow From Date Modal
+// Set Allow From Date Modal.
 echo '
 <div class="modal fade" id="setAllowFromModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -481,7 +482,7 @@ echo '
 </div>
 ';
 
-// Set Due Date Modal
+// Set Due Date Modal.
 echo '
 <div class="modal fade" id="setDueDateModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -504,7 +505,7 @@ echo '
 </div>
 ';
 
-// Set Cut-off Date Modal
+// Set Cut-off Date Modal.
 echo '
 <div class="modal fade" id="setCutoffDateModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
