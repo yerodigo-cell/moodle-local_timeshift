@@ -172,14 +172,14 @@ foreach ($activities as $act) {
             'book' => 'content', 'folder' => 'content', 'label' => 'content', 'page' => 'content', 'qbank' => 'content', 'resource' => 'content', 'url' => 'content', 'emubook' => 'content', 'videotrack' => 'content', 'codeframe' => 'content',
             // Collaboration.
             'data' => 'collaboration', 'database' => 'collaboration', 'forum' => 'collaboration', 'glossary' => 'collaboration', 'wiki' => 'collaboration', 'diary' => 'collaboration',
-            // Interactive content
+            // Interactive content.
             'h5pactivity' => 'interactive_content', 'imscp' => 'interactive_content', 'lesson' => 'interactive_content', 'scorm' => 'interactive_content',
-            // Administration & Other
+            // Administration & Other.
             'attendance' => 'administration', 'lti' => 'other',
-            // Custom
+            // Custom.
             'hvp' => 'hvp_black'
         ];
-        $purpose_colors = [
+        $purposecolors = [
             'assessment' => '#fa0086',
             'communication' => '#fe5701',
             'content' => '#00a5ad',
@@ -191,19 +191,19 @@ foreach ($activities as $act) {
             'default' => '#6c757d'
         ];
         $purpose = isset($modpurposes[$act->modname]) ? $modpurposes[$act->modname] : 'default';
-        $icon_bg = $purpose_colors[$purpose];
+        $iconbg = $purposecolors[$purpose];
 
         if ($act->modname === 'hvp') {
             // HVP plugin comes with its own colored square icon, so we don't wrap it or invert it.
             echo '<img src="' . $act->iconurl . '" alt="' . $act->modname . ' icon" style="width: 32px; height: 32px; border-radius: 6px;">';
         } else {
-            echo '<div style="background-color: ' . $icon_bg . '; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">';
+            echo '<div style="background-color: ' . $iconbg . '; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">';
             echo '<img src="' . $act->iconurl . '" alt="' . $act->modname . ' icon" style="width: 20px; height: 20px; filter: brightness(0) invert(1);">';
             echo '</div>';
         }
     }
     $displayname = isset($act->modfullname) ? $act->modfullname : ucfirst($act->modname);
-    // Explicitly handle H5pactivity just in case the localized string still says H5P activity
+    // Explicitly handle H5pactivity just in case the localized string still says H5P activity.
     if (strtolower($displayname) === 'h5pactivity' || strtolower($displayname) === 'h5p activity') {
         $displayname = 'H5p';
     }
@@ -214,17 +214,17 @@ foreach ($activities as $act) {
     echo '</div>';
     echo '</td>';
 
-    // Column 2: Activity
+    // Column 2: Activity.
     echo '<td style="vertical-align: middle;">';
     echo '<input type="text" class="form-control field-name" value="'.s($act->name).'" style="width: 100%; min-width: 120px; max-width: 300px;">';
     echo '</td>';
 
     // Dates editable for assign/quiz/forum. Others can be extended later.
     if ($act->modname === 'assign' || $act->modname === 'quiz' || $act->modname === 'forum') {
-        $allowDisabled = ($act->modname === 'forum');
-        $cutoffDisabled = ($act->modname === 'quiz');
+        $allowdisabled = ($act->modname === 'forum');
+        $cutoffdisabled = ($act->modname === 'quiz');
 
-        if ($allowDisabled) {
+        if ($allowdisabled) {
             echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
         } else {
             echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-allowfrom" value="'.$allowfrom.'"></td>';
@@ -232,7 +232,7 @@ foreach ($activities as $act) {
 
         echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-duedate" value="'.$due.'"></td>';
 
-        if ($cutoffDisabled) {
+        if ($cutoffdisabled) {
             echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
         } else {
             echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-cutoffdate" value="'.$cutoff.'"></td>';
@@ -243,10 +243,10 @@ foreach ($activities as $act) {
         echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
     }
 
-    // Restrictions Column
+    // Restrictions Column.
     echo '<td style="vertical-align: middle; text-align: center; white-space: nowrap;">';
-    $has_restrictions = !empty($act->availability) && $act->availability !== '{"op":"&","c":[],"showc":[]}';
-    if ($has_restrictions) {
+    $hasrestrictions = !empty($act->availability) && $act->availability !== '{"op":"&","c":[],"showc":[]}';
+    if ($hasrestrictions) {
         echo '<i class="fa fa-lock text-warning restrictions-icon" title="Has restrictions" style="margin-right: 8px; font-size: 16px;"></i>';
     } else {
         echo '<i class="fa fa-unlock-alt text-muted restrictions-icon" title="No restrictions" style="margin-right: 8px; font-size: 16px; opacity: 0.3;"></i>';
@@ -256,21 +256,21 @@ foreach ($activities as $act) {
     echo '</button>';
     echo '</td>';
 
-    // Status Column
-    $visibleSelected = ($act->status == 1) ? 'selected' : '';
-    $stealthSelected = ($act->status == 2) ? 'selected' : '';
-    $hiddenSelected = ($act->status == 0) ? 'selected' : '';
+    // Status Column.
+    $visibleselected = ($act->status == 1) ? 'selected' : '';
+    $stealthselected = ($act->status == 2) ? 'selected' : '';
+    $hiddenselected = ($act->status == 0) ? 'selected' : '';
 
-    $statusColor = ($act->status == 1) ? 'background-color: #d4edda; color: #155724;' : (($act->status == 0) ? 'background-color: #e2e3e5; color: #383d41;' : 'background-color: #fff3cd; color: #856404;');
+    $statuscolor = ($act->status == 1) ? 'background-color: #d4edda; color: #155724;' : (($act->status == 0) ? 'background-color: #e2e3e5; color: #383d41;' : 'background-color: #fff3cd; color: #856404;');
 
-    echo '<td style="vertical-align: middle;"><select class="form-control field-status" style="'.$statusColor.' font-weight: 500;" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor; this.style.color = this.options[this.selectedIndex].style.color;">';
-    echo '<option value="1" ' . $visibleSelected . ' style="background-color: #d4edda; color: #155724;">' . get_string('visible', 'local_timeshift') . '</option>';
-    echo '<option value="0" ' . $hiddenSelected . ' style="background-color: #e2e3e5; color: #383d41;">' . get_string('hidden', 'local_timeshift') . '</option>';
+    echo '<td style="vertical-align: middle;"><select class="form-control field-status" style="'.$statuscolor.' font-weight: 500;" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor; this.style.color = this.options[this.selectedIndex].style.color;">';
+    echo '<option value="1" ' . $visibleselected . ' style="background-color: #d4edda; color: #155724;">' . get_string('visible', 'local_timeshift') . '</option>';
+    echo '<option value="0" ' . $hiddenselected . ' style="background-color: #e2e3e5; color: #383d41;">' . get_string('hidden', 'local_timeshift') . '</option>';
 
-    // Only show the Stealth option if allowed globally or if the activity is already stealth
+    // Only show the Stealth option if allowed globally or if the activity is already stealth.
     global $CFG;
     if (!empty($CFG->allowstealth) || $act->status == 2) {
-        echo '<option value="2" ' . $stealthSelected . ' style="background-color: #fff3cd; color: #856404;">' . get_string('stealth', 'local_timeshift') . '</option>';
+        echo '<option value="2" ' . $stealthselected . ' style="background-color: #fff3cd; color: #856404;">' . get_string('stealth', 'local_timeshift') . '</option>';
     }
 
     echo '</select></td>';
@@ -282,26 +282,26 @@ echo '</tbody>';
 echo '</table>';
 echo '</div>';
 
-// Table Footer Toolbar
+// Table Footer Toolbar.
 echo '<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 16px;">';
 
-// Left side: Total count
+// Left side: Total count.
 echo '<div style="color: #6c757d; font-size: 14px; font-weight: 500;">';
 echo get_string('totalactivities', 'local_timeshift') . ' <span id="total-activities-count">' . count($activities) . '</span>';
 echo '</div>';
 
-// Right side: Action buttons
+// Right side: Action buttons.
 echo '<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">';
 
-// Discard Changes
+// Discard Changes.
 echo '<button type="button" class="btn btn-outline-secondary" id="btn-discard-changes" style="border-radius: 6px; padding: 8px 16px; font-weight: 500;">' . get_string('discard', 'local_timeshift') . '</button>';
 
-// Save Changes
+// Save Changes.
 echo '<button type="button" class="btn btn-timeshift-save" id="btn-save-changes" style="border-radius: 6px; padding: 8px 24px; font-weight: 500;">';
 echo get_string('savechanges', 'local_timeshift');
 echo '</button>';
 
-echo '</div>'; // End right side actions
+echo '</div>'; // End right side actions.
 echo '</div>'; // End footer toolbar.
 
 echo '</div>'; // End container.
