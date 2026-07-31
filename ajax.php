@@ -49,7 +49,7 @@ try {
         $modname = clean_param($update['modname'], PARAM_ALPHA);
         $instanceid = clean_param($update['instanceid'], PARAM_INT);
         $newname = clean_param($update['newname'], PARAM_TEXT);
-        
+
         $duedate = null;
         if (isset($update['duedate']) && $update['duedate'] !== '') {
             $duedate = clean_param($update['duedate'], PARAM_INT);

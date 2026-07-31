@@ -59,17 +59,13 @@ class availability_form extends \core_form\dynamic_form {
         );
         $mform->addElement('html', $loadingcontainer);
         
-        // Include Javascript for availability UI during rendering using a dummy element
+        // Include Javascript for availability UI during rendering.
         if ($courseid && $cmid) {
             $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
             $modinfo = get_fast_modinfo($course);
             $cm = $modinfo->get_cm($cmid);
             
-            \MoodleQuickForm::registerElementType('availability_js_injector', __FILE__, 'local_timeshift\form\availability_js_injector');
-            
-            $injector = $mform->addElement('availability_js_injector', 'js_injector');
-            $injector->course = $course;
-            $injector->cm = $cm;
+            \core_availability\frontend::include_all_javascript($course, $cm);
         }
     }
     
@@ -124,26 +120,19 @@ class availability_form extends \core_form\dynamic_form {
         }
     }
     
+    /**
+     * Get the page URL for dynamic submission.
+     *
+     * @return \moodle_url
+     */
     protected function get_page_url_for_dynamic_submission(): \moodle_url {
         $courseid = $this->optional_param('courseid', 0, PARAM_INT);
         if (!$courseid) {
             $courseid = optional_param('courseid', 0, PARAM_INT);
         }
-        
+
         return new \moodle_url('/local/timeshift/index.php', ['courseid' => $courseid]);
     }
 }
 
-global $CFG;
-require_once($CFG->libdir . '/pear/HTML/QuickForm/static.php');
-
-class availability_js_injector extends \HTML_QuickForm_static {
-    public $course;
-    public $cm;
-    public function toHtml() {
-        if ($this->course && $this->cm) {
-            \core_availability\frontend::include_all_javascript($this->course, $this->cm);
-        }
-        return '';
-    }
 }

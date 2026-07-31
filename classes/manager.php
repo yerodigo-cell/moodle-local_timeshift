@@ -24,10 +24,10 @@
 
 namespace local_timeshift;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Manager class
+ */
 class manager {
-
     /**
      * Retrieves all supported activities of a course with their current dates.
      *
@@ -46,12 +46,12 @@ class manager {
             }
 
             $modname = $cm->modname;
-            
-            // Subsections and question banks are structural/backend modules without typical dates, so we exclude them
+
+            // Subsections and question banks are structural/backend modules without typical dates, so we exclude them.
             if ($modname === 'subsection' || $modname === 'qbank') {
                 continue;
             }
-            
+
             $instanceid = $cm->instance;
 
             $duedate = 0;
@@ -63,7 +63,9 @@ class manager {
                 if ($assign) {
                     $duedate = $assign->duedate;
                     $allowfromdate = $assign->allowsubmissionsfromdate;
-                    if (isset($assign->cutoffdate)) $cutoffdate = $assign->cutoffdate;
+                    if (isset($assign->cutoffdate)) {
+                        $cutoffdate = $assign->cutoffdate;
+                    }
                 }
             } else if ($modname === 'quiz') {
                 $quiz = $DB->get_record('quiz', ['id' => $instanceid], 'timeclose, timeopen');
@@ -218,18 +220,20 @@ class manager {
                 $DB->update_record('forum', $forum);
             }
         }
-        
+
         // Universal Calendar Sync
         // Automatically create missing events, update existing ones, and safely rename them.
         $cm = $DB->get_record('course_modules', ['id' => $cmid], 'course', MUST_EXIST);
         $courseid = $cm->course;
-        
+
         if ($modname === 'assign') {
             if ($duedate !== null) {
                 self::sync_calendar_event($modname, $instanceid, $courseid, 'due', $duedate, $oldname, $newname);
             }
             if ($allowfromdate !== null) {
-                self::sync_calendar_event($modname, $instanceid, $courseid, 'allowsubmissionsfrom', $allowfromdate, $oldname, $newname);
+                self::sync_calendar_event(
+                    $modname, $instanceid, $courseid, 'allowsubmissionsfrom', $allowfromdate, $oldname, $newname
+                );
             }
             if ($cutoffdate !== null) {
                 self::sync_calendar_event($modname, $instanceid, $courseid, 'cutoff', $cutoffdate, $oldname, $newname);
@@ -267,13 +271,13 @@ class manager {
      */
     private static function sync_calendar_event($modname, $instanceid, $courseid, $eventtype, $timestamp, $oldname, $newname) {
         global $DB;
-        
+
         $events = $DB->get_records('event', [
             'modulename' => $modname,
             'instance' => $instanceid,
             'eventtype' => $eventtype,
         ]);
-        
+
         if ($timestamp > 0) {
             if ($events) {
                 foreach ($events as $event) {
@@ -299,7 +303,7 @@ class manager {
                         }
                         $updated = true;
                     }
-                    
+
                     if ($updated) {
                         $event->timemodified = time();
                         $DB->update_record('event', $event);
@@ -308,7 +312,7 @@ class manager {
             } else {
                 // Event does not exist, so create it manually.
                 $name = !empty($newname) ? $newname : (!empty($oldname) ? $oldname : ucfirst($modname));
-                
+
                 if ($eventtype === 'due' || $eventtype === 'close') {
                     $name .= ' is due';
                 } else if ($eventtype === 'open' || $eventtype === 'allowsubmissionsfrom') {
@@ -316,7 +320,7 @@ class manager {
                 } else if ($eventtype === 'cutoff') {
                     $name .= ' cutoff';
                 }
-                
+
                 $newevent = new \stdClass();
                 $newevent->name = $name;
                 $newevent->description = '';
@@ -333,22 +337,22 @@ class manager {
                 $newevent->visible = 1;
                 $newevent->sequence = 1;
                 $newevent->timemodified = time();
-                
+
                 $columns = $DB->get_columns('event');
                 if (array_key_exists('priority', $columns)) {
-                    $newevent->priority = null; 
+                    $newevent->priority = null;
                 }
                 if (array_key_exists('type', $columns)) {
                     // CALENDAR_EVENT_TYPE_ACTION is 1.
                     $newevent->type = 1;
                 }
-                
+
                 if (class_exists('\core\uuid')) {
                     $newevent->uuid = \core\uuid::generate();
                 } else {
                     $newevent->uuid = md5(uniqid('', true));
                 }
-                
+
                 $DB->insert_record('event', $newevent);
             }
         } else {
