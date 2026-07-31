@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_timeshift';
-$plugin->version   = 2026073003; // YYYYMMDDXX.
+$plugin->version   = 2026073004; // YYYYMMDDXX.
 $plugin->requires  = 2022112800; // Compatible with Moodle 4.1 and above.
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '1.0.0';
