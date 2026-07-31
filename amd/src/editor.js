@@ -47,14 +47,17 @@ define(['jquery', 'core/config'], function($, config) {
                 dataType: 'json'
             }).done(function(response) {
                 if (response && response.success) {
+                    // eslint-disable-next-line no-alert
                     alert('Changes successfully saved.');
                     window.location.reload();
                 } else {
+                    // eslint-disable-next-line no-alert
                     alert((response && response.message) ? response.message : 'Error updating database records.');
                     btn.prop('disabled', false).text(originalText);
                 }
             }).fail(function(ex) {
                 window.console.error(ex);
+                // eslint-disable-next-line no-alert
                 alert('AJAX Error updating records.');
                 btn.prop('disabled', false).text(originalText);
             });
@@ -97,8 +100,8 @@ define(['jquery', 'core/config'], function($, config) {
          * @return {string} formatted date
          */
         function formatDateForInput(dateObj) {
-            // format to YYYY-MM-DDThh:mm
-            var tzoffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
+            // Format to YYYY-MM-DDThh:mm.
+            var tzoffset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds.
             var localISOTime = (new Date(dateObj - tzoffset)).toISOString().slice(0, 16);
             return localISOTime;
         }
