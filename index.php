@@ -64,7 +64,7 @@ asort($modtypes);
 echo '<div style="margin-bottom: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">';
 echo '<div style="display: flex; gap: 10px; align-items: center;">';
 echo '<div style="position: relative; width: 100%; max-width: 250px; min-width: 140px;">';
-echo '<input type="text" id="filter-name" class="form-control" placeholder="' . 
+echo '<input type="text" id="filter-name" class="form-control" placeholder="' .
      get_string('searchbyname', 'local_timeshift') . '" style="width: 100%; border-radius: 6px;">';
 echo '</div>';
 echo '<select id="filter-type" class="form-control" style="max-width: 200px; border-radius: 6px;">';
@@ -85,9 +85,9 @@ if (!empty($CFG->allowstealth)) {
 echo '</select>';
 
 echo '<button type="button" id="btn-clear-filters" title="Clear filters" style="display: none;">';
-echo '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' . 
-     '<circle cx="12" cy="12" r="12" fill="#292d32"/>' . 
-     '<path d="M8.5 8.5L15.5 15.5M15.5 8.5L8.5 15.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' . 
+echo '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' .
+     '<circle cx="12" cy="12" r="12" fill="#292d32"/>' .
+     '<path d="M8.5 8.5L15.5 15.5M15.5 8.5L8.5 15.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' .
      '</svg>';
 echo '</button>';
 
@@ -96,8 +96,8 @@ echo '</div>';
 // Bulk Shift All.
 echo '<div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">';
 echo $OUTPUT->help_icon('shiftmodaltitle', 'local_timeshift');
-echo '<button type="button" class="btn btn-timeshift-bulk" id="btn-shift-dates-all" data-toggle="modal" ' . 
-     'data-target="#shiftDatesModal" data-bs-toggle="modal" data-bs-target="#shiftDatesModal" ' . 
+echo '<button type="button" class="btn btn-timeshift-bulk" id="btn-shift-dates-all" data-toggle="modal" ' .
+     'data-target="#shiftDatesModal" data-bs-toggle="modal" data-bs-target="#shiftDatesModal" ' .
      'style="border-radius: 6px; font-weight: 500;">' . get_string('bulkshiftall', 'local_timeshift') . '</button>';
 echo '</div>';
 

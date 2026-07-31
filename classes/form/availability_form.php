@@ -62,9 +62,9 @@ class availability_form extends \core_form\dynamic_form {
         $mform->setType('pending', PARAM_RAW);
 
         $mform->addElement(
-            'textarea', 
-            'availabilityconditionsjson', 
-            '', 
+            'textarea',
+            'availabilityconditionsjson',
+            '',
             ['class' => 'd-none', 'id' => 'id_availabilityconditionsjson']
         );
 
