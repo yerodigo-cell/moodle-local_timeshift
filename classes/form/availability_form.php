@@ -152,5 +152,3 @@ class availability_form extends \core_form\dynamic_form {
         return new \moodle_url('/local/timeshift/index.php', ['courseid' => $courseid]);
     }
 }
-
-}
