@@ -76,13 +76,17 @@ class availability_form extends \core_form\dynamic_form {
         );
         $mform->addElement('html', $loadingcontainer);
 
-        // Include Javascript for availability UI during rendering.
+        // Include Javascript for availability UI during rendering using a dummy element.
         if ($courseid && $cmid) {
             $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
             $modinfo = get_fast_modinfo($course);
             $cm = $modinfo->get_cm($cmid);
 
-            \core_availability\frontend::include_all_javascript($course, $cm);
+            \MoodleQuickForm::registerElementType('availability_js_injector', __DIR__ . '/availability_js_injector.php', '\local_timeshift\form\availability_js_injector');
+            
+            $injector = $mform->addElement('availability_js_injector', 'js_injector');
+            $injector->course = $course;
+            $injector->cm = $cm;
         }
     }
 
