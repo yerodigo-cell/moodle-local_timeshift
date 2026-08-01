@@ -69,6 +69,7 @@ $string['newcutoffdate'] = 'Nueva Fecha Límite';
 $string['newdate'] = 'Nueva Fecha:';
 $string['newduedate'] = 'Nueva Fecha de Entrega';
 $string['opendate'] = 'Fecha de Apertura';
+$string['pagedescription'] = 'Timeshift Pro';
 $string['pagedescription_help'] = 'Gestiona las fechas de apertura, cierre y restricciones de todas las actividades del curso.<br><br>Utiliza los filtros para buscar elementos específicos o aplica cambios de forma masiva.<br><br>Puedes usar arrastrar y soltar para reordenar los elementos. Las secciones vacías no se mostrarán.';
 $string['pagetitle'] = 'Timeshift Pro';
 $string['pending_deletion'] = 'Eliminación Pendiente';

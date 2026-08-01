@@ -72,6 +72,7 @@ $string['newcutoffdate'] = 'New Cut-off Date';
 $string['newdate'] = 'New Date:';
 $string['newduedate'] = 'New Due Date';
 $string['opendate'] = 'Open Date';
+$string['pagedescription'] = 'Timeshift Pro';
 $string['pagedescription_help'] = 'Manage open dates, close dates, and restrictions for all course activities.<br><br>Use the filters to find specific items or apply changes in bulk.<br><br>You can use drag and drop to reorder elements. Empty sections will not be shown.';
 $string['pagetitle'] = 'Timeshift Pro';
 $string['pending_deletion'] = 'Pending Deletion';
