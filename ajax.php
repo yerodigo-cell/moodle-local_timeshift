@@ -17,7 +17,7 @@
 /**
  * TimeShift Pro (local_timeshift)
  *
- * @package     local_timeshift
+ * @package     local_timeshif
  * @copyright   2026 EduPlugins Studio
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -53,7 +53,7 @@ try {
                 continue;
             }
             $beforecmid = isset($move['beforecmid']) ? clean_param($move['beforecmid'], PARAM_INT) : 0;
-            
+
             $mod = get_coursemodule_from_id('', $cmid, $courseid, true, IGNORE_MISSING);
             if (!$mod) {
                 continue;

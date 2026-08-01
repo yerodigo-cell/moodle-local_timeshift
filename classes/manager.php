@@ -17,7 +17,7 @@
 /**
  * TimeShift Pro (local_timeshift)
  *
- * @package     local_timeshift
+ * @package     local_timeshif
  * @copyright   2026 EduPlugins Studio
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -88,7 +88,7 @@ class manager {
             if ($cm->visible) {
                 $status = isset($cm->visibleoncoursepage) && !$cm->visibleoncoursepage ? 2 : 1;
             }
-            
+
             $sectionname = get_section_name($course, $cm->sectionnum);
 
             $activities[$cm->id] = (object)[

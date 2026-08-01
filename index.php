@@ -17,7 +17,7 @@
 /**
  * TimeShift Pro (local_timeshift)
  *
- * @package     local_timeshift
+ * @package     local_timeshif
  * @copyright   2026 EduPlugins Studio
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -53,7 +53,7 @@ $iconimg = '<img src="' . $iconurl . '" alt="Timeshift Pro Logo" ' .
            'style="width: 32px; height: 32px; border-radius: 6px; box-shadow: 0px 2px 4px rgba(0,0,0,0.2);">';
 
 echo '<h3 style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #1e293b; margin-bottom: 20px;">' .
-     $iconimg . ' <span>' . get_string('pagetitle', 'local_timeshift') . '</span>' . 
+     $iconimg . ' <span>' . get_string('pagetitle', 'local_timeshift') . '</span>' .
      '<span style="display: flex; align-items: center; margin-top: 4px;">' . $OUTPUT->help_icon('pagedescription', 'local_timeshift') . '</span></h3>';
 
 // Build a unique list of activity types for the filter dropdown.
@@ -137,7 +137,7 @@ echo '<div class="table-responsive timeshift-table-wrapper">';
 echo '<table class="table timeshift-clean-table" id="timeshift-table">';
 echo '<thead>';
 echo '<tr>';
-echo '<th style="width: 30px; text-align: center;"></th>'; // Drag handle
+echo '<th style="width: 30px; text-align: center;"></th>'; // Drag handle.
 echo '<th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-checkbox"></th>';
 echo '<th>' . get_string('type', 'local_timeshift') . '</th>';
 echo '<th>' . get_string('activity', 'local_timeshift') . '</th>';
@@ -150,26 +150,26 @@ echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
 
-$activities_by_section = [];
+$activitiesbysection = [];
 foreach ($activities as $act) {
     $sec = $act->sectionnum;
-    if (!isset($activities_by_section[$sec])) {
-        $activities_by_section[$sec] = [];
+    if (!isset($activitiesbysection[$sec])) {
+        $activitiesbysection[$sec] = [];
     }
-    $activities_by_section[$sec][] = $act;
+    $activitiesbysection[$sec][] = $act;
 }
 
-foreach ($activities_by_section as $secnum => $section_acts) {
-    if (empty($section_acts)) {
+foreach ($activitiesbysection as $secnum => $sectionacts) {
+    if (empty($sectionacts)) {
         continue;
     }
-    $secname = $section_acts[0]->sectionname;
-    
+    $secname = $sectionacts[0]->sectionname;
+
     echo '<tr class="table-light timeshift-section-header" data-sectionnum="' . $secnum . '" style="background-color: #f8f9fa;">';
     echo '<td colspan="9" style="font-weight: 600; color: #495057; padding-left: 20px; vertical-align: middle;">' . s($secname) . '</td>';
     echo '</tr>';
 
-    foreach ($section_acts as $act) {
+    foreach ($sectionacts as $act) {
         // Format dates for input type datetime-local (YYYY-MM-DDThh:mm).
         $allowfrom = !empty($act->allowfromdate) ? date('Y-m-d\TH:i', $act->allowfromdate) : '';
         $due = !empty($act->duedate) ? date('Y-m-d\TH:i', $act->duedate) : '';
@@ -265,7 +265,7 @@ foreach ($activities_by_section as $secnum => $section_acts) {
         echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
     }
 
-    // Restrictions Column..
+    // Restrictions Column.
     echo '<td style="vertical-align: middle; text-align: center; white-space: nowrap;">';
     $hasrestrictions = !empty($act->availability) && $act->availability !== '{"op":"&","c":[],"showc":[]}';
     if ($hasrestrictions) {
@@ -278,7 +278,7 @@ foreach ($activities_by_section as $secnum => $section_acts) {
     echo '</button>';
     echo '</td>';
 
-    // Status Column..
+    // Status Column.
     $visibleselected = ($act->status == 1) ? 'selected' : '';
     $stealthselected = ($act->status == 2) ? 'selected' : '';
     $hiddenselected = ($act->status == 0) ? 'selected' : '';
@@ -289,7 +289,7 @@ foreach ($activities_by_section as $secnum => $section_acts) {
     echo '<option value="1" ' . $visibleselected . ' style="background-color: #d4edda; color: #155724;">' . get_string('visible', 'local_timeshift') . '</option>';
     echo '<option value="0" ' . $hiddenselected . ' style="background-color: #e2e3e5; color: #383d41;">' . get_string('hidden', 'local_timeshift') . '</option>';
 
-    // Only show the Stealth option if allowed globally or if the activity is already stealth..
+    // Only show the Stealth option if allowed globally or if the activity is already stealth.
     global $CFG;
     if (!empty($CFG->allowstealth) || $act->status == 2) {
         echo '<option value="2" ' . $stealthselected . ' style="background-color: #fff3cd; color: #856404;">' . get_string('stealth', 'local_timeshift') . '</option>';
@@ -621,7 +621,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.style.display = 'none';
             }
         });
-        
+
         // Hide empty sections
         sectionHeaders.forEach(function(header) {
             var hasVisibleActivities = false;
@@ -1016,7 +1016,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (shiftUnitInput) shiftUnitInput.addEventListener('change', updateLiveExample);
     if (shiftDirAdd) shiftDirAdd.addEventListener('change', updateLiveExample);
     if (shiftDirSub) shiftDirSub.addEventListener('change', updateLiveExample);
-    
+
     // Call once to initialize the example with the actual current date
     updateLiveExample();
 
@@ -1266,7 +1266,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 btnBulkRestrictions.addEventListener('click', function(e) {
                     e.preventDefault();
 
-                    // Find first selected cmid to use as context
+                    // Find first selected cmid to use as contex
                     var rows = document.querySelectorAll('#timeshift-table tbody tr');
                     var firstSelectedCmid = null;
                     var courseid = null;
@@ -1370,10 +1370,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (evt.oldIndex === evt.newIndex) return;
                 var item = evt.item;
                 if (!item.classList.contains('timeshift-activity-row')) return;
-                
+
                 var prevRow = item.previousElementSibling;
                 var nextRow = item.nextElementSibling;
-                
+
                 var targetcmid = 0;
                 var beforecmid = 0;
                 var targetsectionnum = -1;
@@ -1388,12 +1388,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         targetsectionnum = parseInt(prevRow.dataset.sectionnum, 10) || -1;
                     }
                 }
-                
+
                 var cmid = parseInt(item.dataset.cmid, 10);
                 if (!cmid || isNaN(cmid)) return;
-                
+
                 pendingReorders.push({cmid: cmid, beforecmid: beforecmid, targetcmid: targetcmid, targetsectionnum: targetsectionnum});
-                
+
                 hasUnsavedChanges = true;
                 var floatingBtn = document.getElementById('floating-save-container');
                 if (floatingBtn) floatingBtn.style.display = 'block';

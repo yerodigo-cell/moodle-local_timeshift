@@ -17,24 +17,24 @@
     body#page-local-timeshift-index .card,
     body#page-local-timeshift-index .card-body,
     body#page-local-timeshift-index [role="main"] {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        border-radius: 0 !important;
-        border: 0 !important;
-        box-shadow: none !important;
-        width: 100% !important;
-        max-width: 100% !important;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: 0;
+        border: 0;
+        box-shadow: none;
+        width: 100%;
+        max-width: 100%;
     }
     body#page-local-timeshift-index .local-timeshift-container {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        padding: 15px 5px !important;
-        border-radius: 0 !important;
-        box-sizing: border-box !important;
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding: 15px 5px;
+        border-radius: 0;
+        box-sizing: border-box;
         background: #fff;
     }
     .timeshift-clean-table th,
@@ -259,35 +259,35 @@
     padding: 0 24px;
 }
 .btn.btn-timeshift-save {
-    background-color: #3f7e44 !important;
-    border-color: #3f7e44 !important;
-    color: #fff !important;
+    background-color: #3f7e44;
+    border-color: #3f7e44;
+    color: #fff;
 }
 .btn.btn-timeshift-save:hover {
-    background-color: #336636 !important;
-    border-color: #336636 !important;
-    color: #fff !important;
+    background-color: #336636;
+    border-color: #336636;
+    color: #fff;
 }
 .btn.btn-timeshift-bulk {
-    background-color: #bf8b2e !important;
-    border-color: #bf8b2e !important;
-    color: #fff !important;
+    background-color: #bf8b2e;
+    border-color: #bf8b2e;
+    color: #fff;
 }
 .btn.btn-timeshift-bulk:hover {
-    background-color: #a37627 !important;
-    border-color: #a37627 !important;
-    color: #fff !important;
+    background-color: #a37627;
+    border-color: #a37627;
+    color: #fff;
 }
 .btn.btn-timeshift-clear {
-    background-color: #fff !important;
-    border-color: #084298 !important;
-    color: #084298 !important;
+    background-color: #fff;
+    border-color: #084298;
+    color: #084298;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 .btn.btn-timeshift-clear:hover {
-    background-color: #f8f9fa !important;
-    border-color: #084298 !important;
-    color: #084298 !important;
+    background-color: #f8f9fa;
+    border-color: #084298;
+    color: #084298;
 }
 .td-modified {
     position: relative;
@@ -317,29 +317,29 @@
 }
 
 .btn.btn-timeshift-action {
-    background-color: #0f528a !important;
-    border-color: #0f528a !important;
-    color: #fff !important;
+    background-color: #0f528a;
+    border-color: #0f528a;
+    color: #fff;
 }
 .btn.btn-timeshift-action:hover {
-    background-color: #0b3d66 !important;
-    border-color: #0b3d66 !important;
-    color: #fff !important;
+    background-color: #0b3d66;
+    border-color: #0b3d66;
+    color: #fff;
 }
 
 .btn.btn-timeshift-discard {
-    background-color: #fff !important;
-    border-color: #6b7280 !important;
-    color: #4b5563 !important;
+    background-color: #fff;
+    border-color: #6b7280;
+    color: #4b5563;
 }
 .btn.btn-timeshift-discard:hover {
-    background-color: #f3f4f6 !important;
-    border-color: #4b5563 !important;
-    color: #374151 !important;
+    background-color: #f3f4f6;
+    border-color: #4b5563;
+    color: #374151;
 }
 
 /* Strikethrough for inputs when row is marked for deletion */
 tr.text-decoration-line-through input.field-name {
-    text-decoration: line-through !important;
-    color: #dc3545 !important;
+    text-decoration: line-through;
+    color: #dc3545;
 }
