@@ -3,27 +3,39 @@
     body {
         overflow-x: hidden; /* Prevent horizontal scroll from 100vw */
     }
-    #region-main,
-    #page-content,
-    .card,
-    .region-main-content {
-        padding: 0;
-        border: 0;
-        margin: 0;
-        border-radius: 0;
-        box-shadow: none;
+    body#page-local-timeshift-index #page,
+    body#page-local-timeshift-index #page-wrapper,
+    body#page-local-timeshift-index #topofscroll,
+    body#page-local-timeshift-index #page-content,
+    body#page-local-timeshift-index #region-main-box,
+    body#page-local-timeshift-index #region-main,
+    body#page-local-timeshift-index .main-inner,
+    body#page-local-timeshift-index .container,
+    body#page-local-timeshift-index .container-fluid,
+    body#page-local-timeshift-index [class*="col-"],
+    body#page-local-timeshift-index .row,
+    body#page-local-timeshift-index .card,
+    body#page-local-timeshift-index .card-body,
+    body#page-local-timeshift-index [role="main"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        border-radius: 0 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
-    .local-timeshift-container {
-        width: 100vw;
-        max-width: 100vw;
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
-        padding: 15px 5px;
-        border-radius: 0;
-        box-sizing: border-box;
+    body#page-local-timeshift-index .local-timeshift-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 15px 5px !important;
+        border-radius: 0 !important;
+        box-sizing: border-box !important;
+        background: #fff;
     }
     .timeshift-clean-table th,
     .timeshift-clean-table td {
@@ -51,6 +63,7 @@
 .timeshift-table-wrapper {
     max-height: 70vh; /* Make the table body scrollable independently */
     overflow-y: auto;
+    overflow-x: auto;
     border-radius: 6px;
     border: 1px solid #eaedf1;
 }
@@ -76,7 +89,7 @@
     color: #495057;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 50;
     box-shadow: 0 1px 0 #eaedf1;
 }
 .timeshift-clean-table th:first-child {
@@ -246,34 +259,35 @@
     padding: 0 24px;
 }
 .btn.btn-timeshift-save {
-    background-color: #3f7e44;
-    border-color: #3f7e44;
-    color: #fff;
+    background-color: #3f7e44 !important;
+    border-color: #3f7e44 !important;
+    color: #fff !important;
 }
 .btn.btn-timeshift-save:hover {
-    background-color: #336636;
-    border-color: #336636;
-    color: #fff;
+    background-color: #336636 !important;
+    border-color: #336636 !important;
+    color: #fff !important;
 }
 .btn.btn-timeshift-bulk {
-    background-color: #bf8b2e;
-    border-color: #bf8b2e;
-    color: #fff;
+    background-color: #bf8b2e !important;
+    border-color: #bf8b2e !important;
+    color: #fff !important;
 }
 .btn.btn-timeshift-bulk:hover {
-    border-color: #a37627;
-    color: #fff;
+    background-color: #a37627 !important;
+    border-color: #a37627 !important;
+    color: #fff !important;
 }
 .btn.btn-timeshift-clear {
-    background-color: #fff;
-    border-color: #b6d4fe;
-    color: #084298;
+    background-color: #fff !important;
+    border-color: #084298 !important;
+    color: #084298 !important;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 .btn.btn-timeshift-clear:hover {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    color: #fff;
+    background-color: #f8f9fa !important;
+    border-color: #084298 !important;
+    color: #084298 !important;
 }
 .td-modified {
     position: relative;
@@ -287,7 +301,7 @@
     height: 8px;
     background-color: #0d6efd;
     border-radius: 50%;
-    z-index: 10;
+    z-index: 2;
     box-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
 }
 
@@ -300,4 +314,32 @@
 #fitem_id_availabilityconditionsjson > .col-md-9 {
     flex: 0 0 100%;
     max-width: 100%;
+}
+
+.btn.btn-timeshift-action {
+    background-color: #0f528a !important;
+    border-color: #0f528a !important;
+    color: #fff !important;
+}
+.btn.btn-timeshift-action:hover {
+    background-color: #0b3d66 !important;
+    border-color: #0b3d66 !important;
+    color: #fff !important;
+}
+
+.btn.btn-timeshift-discard {
+    background-color: #fff !important;
+    border-color: #6b7280 !important;
+    color: #4b5563 !important;
+}
+.btn.btn-timeshift-discard:hover {
+    background-color: #f3f4f6 !important;
+    border-color: #4b5563 !important;
+    color: #374151 !important;
+}
+
+/* Strikethrough for inputs when row is marked for deletion */
+tr.text-decoration-line-through input.field-name {
+    text-decoration: line-through !important;
+    color: #dc3545 !important;
 }

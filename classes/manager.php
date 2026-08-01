@@ -37,7 +37,8 @@ class manager {
     public static function get_course_activities($courseid) {
         global $DB;
 
-        $modinfo = get_fast_modinfo($courseid);
+        $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
+        $modinfo = get_fast_modinfo($course);
         $activities = [];
 
         foreach ($modinfo->cms as $cm) {
@@ -87,6 +88,8 @@ class manager {
             if ($cm->visible) {
                 $status = isset($cm->visibleoncoursepage) && !$cm->visibleoncoursepage ? 2 : 1;
             }
+            
+            $sectionname = get_section_name($course, $cm->sectionnum);
 
             $activities[$cm->id] = (object)[
                 'cmid' => $cm->id,
@@ -100,6 +103,8 @@ class manager {
                 'allowfromdate' => $allowfromdate,
                 'cutoffdate' => $cutoffdate,
                 'availability' => $cm->availability,
+                'sectionname' => $sectionname,
+                'sectionnum' => $cm->sectionnum,
             ];
         }
 
@@ -159,71 +164,81 @@ class manager {
         if (!empty($newname)) {
             $table = $modname;
             if ($DB->get_manager()->table_exists($table)) {
-                $record = $DB->get_record($table, ['id' => $instanceid], '*', MUST_EXIST);
-                $oldname = $record->name;
-
-                if ($oldname !== $newname) {
-                    $record->name = $newname;
-                    $DB->update_record($table, $record);
+                $record = $DB->get_record($table, ['id' => $instanceid], '*', IGNORE_MISSING);
+                if ($record) {
+                    $oldname = $record->name;
+                    if ($oldname !== $newname) {
+                        $record->name = $newname;
+                        $DB->update_record($table, $record);
+                    }
                 }
             }
         }
 
         // 2. Update dates according to the module type
         if ($modname === 'assign') {
-            $assign = $DB->get_record('assign', ['id' => $instanceid], '*', MUST_EXIST);
-            $needsupdate = false;
-            if ($duedate !== null) {
-                $assign->duedate = $duedate;
-                $needsupdate = true;
-            }
-            if ($allowfromdate !== null) {
-                $assign->allowsubmissionsfromdate = $allowfromdate;
-                $needsupdate = true;
-            }
-            if ($cutoffdate !== null && isset($assign->cutoffdate)) {
-                $assign->cutoffdate = $cutoffdate;
-                $needsupdate = true;
-            }
+            $assign = $DB->get_record('assign', ['id' => $instanceid], '*', IGNORE_MISSING);
+            if ($assign) {
+                $needsupdate = false;
+                if ($duedate !== null) {
+                    $assign->duedate = $duedate;
+                    $needsupdate = true;
+                }
+                if ($allowfromdate !== null) {
+                    $assign->allowsubmissionsfromdate = $allowfromdate;
+                    $needsupdate = true;
+                }
+                if ($cutoffdate !== null && isset($assign->cutoffdate)) {
+                    $assign->cutoffdate = $cutoffdate;
+                    $needsupdate = true;
+                }
 
-            if ($needsupdate) {
-                $DB->update_record('assign', $assign);
+                if ($needsupdate) {
+                    $DB->update_record('assign', $assign);
+                }
             }
         } else if ($modname === 'quiz') {
-            $quiz = $DB->get_record('quiz', ['id' => $instanceid], '*', MUST_EXIST);
-            $needsupdate = false;
-            if ($duedate !== null) {
-                $quiz->timeclose = $duedate;
-                $needsupdate = true;
-            }
-            if ($allowfromdate !== null) {
-                $quiz->timeopen = $allowfromdate;
-                $needsupdate = true;
-            }
+            $quiz = $DB->get_record('quiz', ['id' => $instanceid], '*', IGNORE_MISSING);
+            if ($quiz) {
+                $needsupdate = false;
+                if ($duedate !== null) {
+                    $quiz->timeclose = $duedate;
+                    $needsupdate = true;
+                }
+                if ($allowfromdate !== null) {
+                    $quiz->timeopen = $allowfromdate;
+                    $needsupdate = true;
+                }
 
-            if ($needsupdate) {
-                $DB->update_record('quiz', $quiz);
+                if ($needsupdate) {
+                    $DB->update_record('quiz', $quiz);
+                }
             }
         } else if ($modname === 'forum') {
-            $forum = $DB->get_record('forum', ['id' => $instanceid], '*', MUST_EXIST);
-            $needsupdate = false;
-            if (isset($forum->duedate) && $duedate !== null) {
-                $forum->duedate = $duedate;
-                $needsupdate = true;
-            }
-            if (isset($forum->cutoffdate) && $cutoffdate !== null) {
-                $forum->cutoffdate = $cutoffdate;
-                $needsupdate = true;
-            }
+            $forum = $DB->get_record('forum', ['id' => $instanceid], '*', IGNORE_MISSING);
+            if ($forum) {
+                $needsupdate = false;
+                if (isset($forum->duedate) && $duedate !== null) {
+                    $forum->duedate = $duedate;
+                    $needsupdate = true;
+                }
+                if (isset($forum->cutoffdate) && $cutoffdate !== null) {
+                    $forum->cutoffdate = $cutoffdate;
+                    $needsupdate = true;
+                }
 
-            if ($needsupdate) {
-                $DB->update_record('forum', $forum);
+                if ($needsupdate) {
+                    $DB->update_record('forum', $forum);
+                }
             }
         }
 
         // Universal Calendar Sync
         // Automatically create missing events, update existing ones, and safely rename them.
-        $cm = $DB->get_record('course_modules', ['id' => $cmid], 'course', MUST_EXIST);
+        $cm = $DB->get_record('course_modules', ['id' => $cmid], 'course', IGNORE_MISSING);
+        if (!$cm) {
+            return false;
+        }
         $courseid = $cm->course;
 
         if ($modname === 'assign') {

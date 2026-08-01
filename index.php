@@ -52,9 +52,9 @@ $iconurl = new moodle_url('/local/timeshift/pix/icon.jpg');
 $iconimg = '<img src="' . $iconurl . '" alt="Timeshift Pro Logo" ' .
            'style="width: 32px; height: 32px; border-radius: 6px; box-shadow: 0px 2px 4px rgba(0,0,0,0.2);">';
 
-echo '<h3 style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #1e293b;">' .
-     $iconimg . ' ' . get_string('pagetitle', 'local_timeshift') . '</h3>';
-echo '<p style="color: #6c757d; margin-bottom: 20px;">' . get_string('pagedescription', 'local_timeshift') . '</p>';
+echo '<h3 style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #1e293b; margin-bottom: 20px;">' .
+     $iconimg . ' <span>' . get_string('pagetitle', 'local_timeshift') . '</span>' . 
+     '<span style="display: flex; align-items: center; margin-top: 4px;">' . $OUTPUT->help_icon('pagedescription', 'local_timeshift') . '</span></h3>';
 
 // Build a unique list of activity types for the filter dropdown.
 $modtypes = [];
@@ -111,19 +111,19 @@ echo '<div id="bulk-actions-toolbar" style="display: none; margin-bottom: 20px; 
 echo '  <div style="display: flex; align-items: center; gap: 15px;">';
 echo '    <span id="selected-count" style="font-weight: 700; color: #084298; font-size: 1.05em;">' . get_string('activitiesselected', 'local_timeshift', 0) . '</span>';
 echo '    <div class="dropdown">';
-echo '      <button class="btn btn-primary dropdown-toggle" type="button" id="bulkActionsDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 6px; font-weight: 500; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">';
+echo '      <button class="btn btn-timeshift-action dropdown-toggle" type="button" id="bulkActionsDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 6px; font-weight: 500; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">';
 echo '        ' . get_string('actionsforselected', 'local_timeshift') . '
       </button>';
 echo '      <div class="dropdown-menu" aria-labelledby="bulkActionsDropdown">
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#shiftDatesModal" data-bs-toggle="modal" data-bs-target="#shiftDatesModal" id="action-shift-dates">' . get_string('action_shiftdates', 'local_timeshift') . '</a>
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#setAllowFromModal" data-bs-toggle="modal" data-bs-target="#setAllowFromModal">' . get_string('action_setallowfromdate', 'local_timeshift') . '</a>
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#setDueDateModal" data-bs-toggle="modal" data-bs-target="#setDueDateModal">' . get_string('action_setduedate', 'local_timeshift') . '</a>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#setCutoffDateModal" data-bs-toggle="modal" data-bs-target="#setCutoffDateModal">' . get_string('action_setcutoffdate', 'local_timeshift') . '</a>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#findReplaceModal" data-bs-toggle="modal" data-bs-target="#findReplaceModal" id="action-find-replace">' . get_string('action_findreplace', 'local_timeshift') . '</a>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeAvailabilityModal" data-bs-toggle="modal" data-bs-target="#changeAvailabilityModal" id="action-change-availability">' . get_string('action_changeavailability', 'local_timeshift') . '</a>
-        <a class="dropdown-item" href="#" id="action-set-restrictions">' . get_string('action_setrestrictions', 'local_timeshift') . '</a>
+        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#setCutoffModal" data-bs-toggle="modal" data-bs-target="#setCutoffModal">' . get_string('action_setcutoffdate', 'local_timeshift') . '</a>
+        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#setRestrictionsModal" data-bs-toggle="modal" data-bs-target="#setRestrictionsModal">' . get_string('action_setrestrictions', 'local_timeshift') . '</a>
+        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeAvailabilityModal" data-bs-toggle="modal" data-bs-target="#changeAvailabilityModal">' . get_string('action_changeavailability', 'local_timeshift') . '</a>
+        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#findReplaceModal" data-bs-toggle="modal" data-bs-target="#findReplaceModal">' . get_string('action_findreplace', 'local_timeshift') . '</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item text-danger" href="#" data-toggle="modal" data-target="#bulkDeleteModal" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal" id="action-delete-activities"><i class="fa fa-trash"></i> ' . get_string('action_deleteactivities', 'local_timeshift') . '</a>
+        <a class="dropdown-item text-danger" href="#" data-toggle="modal" data-target="#bulkDeleteModal" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">' . get_string('action_deleteactivities', 'local_timeshift') . '</a>
       </div>';
 echo '    </div>';
 echo '  </div>';
@@ -137,6 +137,7 @@ echo '<div class="table-responsive timeshift-table-wrapper">';
 echo '<table class="table timeshift-clean-table" id="timeshift-table">';
 echo '<thead>';
 echo '<tr>';
+echo '<th style="width: 30px; text-align: center;"></th>'; // Drag handle
 echo '<th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-checkbox"></th>';
 echo '<th>' . get_string('type', 'local_timeshift') . '</th>';
 echo '<th>' . get_string('activity', 'local_timeshift') . '</th>';
@@ -149,14 +150,34 @@ echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
 
+$activities_by_section = [];
 foreach ($activities as $act) {
-    // Format dates for input type datetime-local (YYYY-MM-DDThh:mm).
-    $allowfrom = !empty($act->allowfromdate) ? date('Y-m-d\TH:i', $act->allowfromdate) : '';
-    $due = !empty($act->duedate) ? date('Y-m-d\TH:i', $act->duedate) : '';
-    $cutoff = !empty($act->cutoffdate) ? date('Y-m-d\TH:i', $act->cutoffdate) : '';
+    $sec = $act->sectionnum;
+    if (!isset($activities_by_section[$sec])) {
+        $activities_by_section[$sec] = [];
+    }
+    $activities_by_section[$sec][] = $act;
+}
 
-    echo '<tr data-cmid="' . $act->cmid . '" data-instance="' . $act->instance . '" data-modname="' . $act->modname . '">';
-    echo '<td style="vertical-align: middle; text-align: center;"><input type="checkbox" class="row-checkbox"></td>';
+foreach ($activities_by_section as $secnum => $section_acts) {
+    if (empty($section_acts)) {
+        continue;
+    }
+    $secname = $section_acts[0]->sectionname;
+    
+    echo '<tr class="table-light timeshift-section-header" data-sectionnum="' . $secnum . '" style="background-color: #f8f9fa;">';
+    echo '<td colspan="9" style="font-weight: 600; color: #495057; padding-left: 20px; vertical-align: middle;">' . s($secname) . '</td>';
+    echo '</tr>';
+
+    foreach ($section_acts as $act) {
+        // Format dates for input type datetime-local (YYYY-MM-DDThh:mm).
+        $allowfrom = !empty($act->allowfromdate) ? date('Y-m-d\TH:i', $act->allowfromdate) : '';
+        $due = !empty($act->duedate) ? date('Y-m-d\TH:i', $act->duedate) : '';
+        $cutoff = !empty($act->cutoffdate) ? date('Y-m-d\TH:i', $act->cutoffdate) : '';
+
+        echo '<tr class="timeshift-activity-row" data-cmid="' . $act->cmid . '" data-instance="' . $act->instance . '" data-modname="' . $act->modname . '">';
+        echo '<td style="vertical-align: middle; text-align: center; cursor: grab;" class="drag-handle-cell"><i class="fa fa-bars text-muted drag-handle"></i></td>';
+        echo '<td style="vertical-align: middle; text-align: center;"><input type="checkbox" class="row-checkbox"></td>';
 
     // Column 1: Type.
     echo '<td style="vertical-align: middle;">';
@@ -197,8 +218,9 @@ foreach ($activities as $act) {
             // HVP plugin comes with its own colored square icon, so we don't wrap it or invert it.
             echo '<img src="' . $act->iconurl . '" alt="' . $act->modname . ' icon" style="width: 32px; height: 32px; border-radius: 6px;">';
         } else {
-            echo '<div style="background-color: ' . $iconbg . '; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">';
-            echo '<img src="' . $act->iconurl . '" alt="' . $act->modname . ' icon" style="width: 20px; height: 20px; filter: brightness(0) invert(1);">';
+            $iconbglight = $iconbg . '26'; // 15% opacity hex alpha
+            echo '<div style="background-color: ' . $iconbglight . '; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">';
+            echo '<div style="background-color: ' . $iconbg . '; width: 20px; height: 20px; -webkit-mask-image: url(' . $act->iconurl . '); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; mask-image: url(' . $act->iconurl . '); mask-size: contain; mask-repeat: no-repeat;"></div>';
             echo '</div>';
         }
     }
@@ -276,8 +298,8 @@ foreach ($activities as $act) {
     echo '</select></td>';
 
     echo '</tr>';
-}
-
+    }
+} // end foreach section
 echo '</tbody>';
 echo '</table>';
 echo '</div>';
@@ -294,10 +316,10 @@ echo '</div>';
 echo '<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">';
 
 // Discard Changes..
-echo '<button type="button" class="btn btn-outline-secondary" id="btn-discard-changes" style="border-radius: 6px; padding: 8px 16px; font-weight: 500;">' . get_string('discard', 'local_timeshift') . '</button>';
+echo '<button type="button" class="btn btn-timeshift-discard btn-action-discard" style="border-radius: 6px; padding: 8px 16px; font-weight: 500;">' . get_string('discard', 'local_timeshift') . '</button>';
 
 // Save Changes..
-echo '<button type="button" class="btn btn-timeshift-save" id="btn-save-changes" style="border-radius: 6px; padding: 8px 24px; font-weight: 500;">';
+echo '<button type="button" class="btn btn-timeshift-save btn-action-save" style="border-radius: 6px; padding: 8px 24px; font-weight: 500;">';
 echo get_string('savechanges', 'local_timeshift');
 echo '</button>';
 
@@ -529,6 +551,7 @@ echo '
 ';
 
 ?>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var strSingular = '<?php echo get_string('activitiesselected_singular', 'local_timeshift'); ?>';
@@ -562,7 +585,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var nameQuery = filterName ? filterName.value.toLowerCase() : '';
         var typeQuery = filterType ? filterType.value.toLowerCase() : '';
         var statusQuery = filterStatus ? filterStatus.value : '';
-        var rows = document.querySelectorAll('#timeshift-table tbody tr');
+        var activityRows = document.querySelectorAll('#timeshift-table tbody tr.timeshift-activity-row');
+        var sectionHeaders = document.querySelectorAll('#timeshift-table tbody tr.timeshift-section-header');
 
         if (btnClearFilters) {
             if (nameQuery !== '' || typeQuery !== '' || statusQuery !== '') {
@@ -574,8 +598,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var visibleCount = 0;
 
-        rows.forEach(function(row) {
-            var modname = row.getAttribute('data-modname').toLowerCase();
+        activityRows.forEach(function(row) {
+            var modname = row.getAttribute('data-modname');
+            if (modname) {
+                modname = modname.toLowerCase();
+            } else {
+                modname = '';
+            }
             var nameInput = row.querySelector('.field-name');
             var name = nameInput ? nameInput.value.toLowerCase() : '';
             var statusSelect = row.querySelector('.field-status');
@@ -590,6 +619,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 visibleCount++;
             } else {
                 row.style.display = 'none';
+            }
+        });
+        
+        // Hide empty sections
+        sectionHeaders.forEach(function(header) {
+            var hasVisibleActivities = false;
+            var next = header.nextElementSibling;
+            while (next && !next.classList.contains('timeshift-section-header')) {
+                if (next.style.display !== 'none' && next.classList.contains('timeshift-activity-row')) {
+                    hasVisibleActivities = true;
+                    break;
+                }
+                next = next.nextElementSibling;
+            }
+            if (hasVisibleActivities) {
+                header.style.display = '';
+            } else {
+                header.style.display = 'none';
             }
         });
 
@@ -720,8 +767,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Discard Changes. Handler
-    var btnDiscard = document.getElementById('btn-discard-changes');
-    if (btnDiscard) {
+    var btnDiscardNodes = document.querySelectorAll('.btn-action-discard');
+    btnDiscardNodes.forEach(function(btnDiscard) {
         btnDiscard.addEventListener('click', function() {
             if (typeof require !== 'undefined') {
                 require(['core/notification'], function(Notification) {
@@ -743,15 +790,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-    }
+    });
 
     // Save Changes. Handler
-    var btnSave = document.getElementById('btn-save-changes');
-    if (btnSave) {
+    var btnSaveNodes = document.querySelectorAll('.btn-action-save');
+    btnSaveNodes.forEach(function(btnSave) {
         btnSave.addEventListener('click', function() {
-            btnSave.disabled = true;
+            btnSaveNodes.forEach(function(btn) { btn.disabled = true; });
             var originalText = btnSave.innerText;
-            btnSave.innerText = '<?php echo get_string('saving', 'local_timeshift'); ?>';
+            btnSaveNodes.forEach(function(btn) { btn.innerText = '<?php echo get_string('saving', 'local_timeshift'); ?>'; });
 
             var updates = [];
             var rows = document.querySelectorAll('#timeshift-table tbody tr');
@@ -810,28 +857,35 @@ document.addEventListener('DOMContentLoaded', function() {
                                 });
                             } else {
                                 showMoodleAlert('Error', (response && response.message) ? response.message : 'Error updating database records.');
-                                btnSave.disabled = false;
-                                btnSave.innerText = originalText;
+                                btnSaveNodes.forEach(function(btn) {
+                                    btn.disabled = false;
+                                    btn.innerText = originalText;
+                                });
                             }
                         } catch (e) {
                             showMoodleAlert('Error', 'Invalid JSON response from server.');
-                            btnSave.disabled = false;
-                            btnSave.innerText = originalText;
+                            btnSaveNodes.forEach(function(btn) {
+                                btn.disabled = false;
+                                btn.innerText = originalText;
+                            });
                         }
                     } else {
                         showMoodleAlert('Error', 'AJAX HTTP Error: ' + xhr.status);
-                        btnSave.disabled = false;
-                        btnSave.innerText = originalText;
+                        btnSaveNodes.forEach(function(btn) {
+                            btn.disabled = false;
+                            btn.innerText = originalText;
+                        });
                     }
                 }
             };
 
             var params = 'courseid=' + encodeURIComponent(courseid) +
                          '&updates=' + encodeURIComponent(JSON.stringify(updates)) +
+                         '&reorders=' + encodeURIComponent(JSON.stringify(pendingReorders)) +
                          '&sesskey=' + encodeURIComponent(sesskey);
             xhr.send(params);
         });
-    }
+    });
 
     // Bulk Shift Dates Handler & Modal UI Logic
     var btnShiftDatesAll = document.getElementById('btn-shift-dates-all');
@@ -936,20 +990,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!exCurrent || !exNew || !shiftAmountInput) return;
 
         var baseDate = new Date();
-        // find a valid date from table if possible
-        var firstValid = document.querySelector('.field-allowfrom, .field-duedate');
-        if (firstValid && firstValid.value) {
-            baseDate = new Date(firstValid.value);
-        }
 
         exCurrent.innerText = formatExampleDate(baseDate);
 
         var amt = parseInt(shiftAmountInput.value, 10);
         if (isNaN(amt)) amt = 0;
 
+        var dir = shiftDirAdd && shiftDirAdd.checked ? 1 : -1;
+        amt = amt * dir;
         var unit = shiftUnitInput ? shiftUnitInput.value : 'days';
-        var isSub = shiftDirSub && shiftDirSub.checked;
-        if (isSub) amt = -amt;
 
         var newD = new Date(baseDate.getTime());
         if (unit === 'days') {
@@ -967,6 +1016,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (shiftUnitInput) shiftUnitInput.addEventListener('change', updateLiveExample);
     if (shiftDirAdd) shiftDirAdd.addEventListener('change', updateLiveExample);
     if (shiftDirSub) shiftDirSub.addEventListener('change', updateLiveExample);
+    
+    // Call once to initialize the example with the actual current date
+    updateLiveExample();
 
     // Preview Changes Button logic
     var btnApply = document.getElementById('btn-apply-shift');
@@ -1295,6 +1347,67 @@ document.addEventListener('DOMContentLoaded', function() {
         var tzoffset = (new Date()).getTimezoneOffset() * 60000;
         var localISOTime = (new Date(dateObj - tzoffset)).toISOString().slice(0, 16);
         return localISOTime;
+    }
+
+    // Drag and Drop Logic using SortableJS
+    var pendingReorders = [];
+    var tableBody = document.querySelector('#timeshift-table tbody');
+    if (tableBody) {
+        Sortable.create(tableBody, {
+            handle: '.drag-handle',
+            filter: '.timeshift-section-header', // Prevent section headers from being draggable
+            animation: 150,
+            onStart: function(evt) {
+                var fName = document.getElementById('filter-name');
+                var fType = document.getElementById('filter-type');
+                var fStatus = document.getElementById('filter-status');
+                if ((fName && fName.value !== '') || (fType && fType.value !== '') || (fStatus && fStatus.value !== '')) {
+                    showMoodleAlert('Notice', 'Drag and drop reordering is disabled while filters are active. Please clear filters first.');
+                    evt.preventDefault(); // Stop sorting if filters are active
+                }
+            },
+            onEnd: function(evt) {
+                if (evt.oldIndex === evt.newIndex) return;
+                var item = evt.item;
+                if (!item.classList.contains('timeshift-activity-row')) return;
+                
+                var prevRow = item.previousElementSibling;
+                var nextRow = item.nextElementSibling;
+                
+                var targetcmid = 0;
+                var beforecmid = 0;
+                var targetsectionnum = -1;
+
+                if (nextRow && nextRow.classList.contains('timeshift-activity-row')) {
+                    beforecmid = parseInt(nextRow.dataset.cmid, 10) || 0;
+                } else if (prevRow && prevRow.classList.contains('timeshift-activity-row')) {
+                    targetcmid = parseInt(prevRow.dataset.cmid, 10) || 0;
+                } else {
+                    // It must be placed just after a section header with no other activities
+                    if (prevRow && prevRow.classList.contains('timeshift-section-header')) {
+                        targetsectionnum = parseInt(prevRow.dataset.sectionnum, 10) || -1;
+                    }
+                }
+                
+                var cmid = parseInt(item.dataset.cmid, 10);
+                if (!cmid || isNaN(cmid)) return;
+                
+                pendingReorders.push({cmid: cmid, beforecmid: beforecmid, targetcmid: targetcmid, targetsectionnum: targetsectionnum});
+                
+                hasUnsavedChanges = true;
+                var floatingBtn = document.getElementById('floating-save-container');
+                if (floatingBtn) floatingBtn.style.display = 'block';
+
+                var dragCell = item.querySelector('.drag-handle-cell');
+                if (dragCell) {
+                    dragCell.classList.add('td-modified');
+                }
+
+                item.style.transition = 'background-color 0.5s';
+                item.style.backgroundColor = '#e8f5e9';
+                setTimeout(function(){ item.style.backgroundColor = ''; }, 1000);
+            }
+        });
     }
 });
 </script>
