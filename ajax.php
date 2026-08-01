@@ -80,7 +80,12 @@ try {
                     }
                 } else if (isset($move['targetsectionnum']) && $move['targetsectionnum'] >= 0) {
                     $targetsectionnum = clean_param($move['targetsectionnum'], PARAM_INT);
-                    $section = $DB->get_record('course_sections', ['course' => $courseid, 'section' => $targetsectionnum], '*', IGNORE_MISSING);
+                    $section = $DB->get_record(
+                        'course_sections',
+                        ['course' => $courseid, 'section' => $targetsectionnum],
+                        '*',
+                        IGNORE_MISSING
+                    );
                     if ($section) {
                         moveto_module($mod, $section, null);
                     }
