@@ -17,7 +17,7 @@
 /**
  * TimeShift Pro (local_timeshift)
  *
- * @package     local_timeshif
+ * @package     local_timeshift
  * @copyright   2026 EduPlugins Studio
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

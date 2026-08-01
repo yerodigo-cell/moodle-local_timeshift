@@ -17,7 +17,7 @@
 /**
  * TimeShift Pro (local_timeshift)
  *
- * @package     local_timeshif
+ * @package     local_timeshift
  * @copyright   2026 EduPlugins Studio
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -179,125 +179,125 @@ foreach ($activitiesbysection as $secnum => $sectionacts) {
         echo '<td style="vertical-align: middle; text-align: center; cursor: grab;" class="drag-handle-cell"><i class="fa fa-bars text-muted drag-handle"></i></td>';
         echo '<td style="vertical-align: middle; text-align: center;"><input type="checkbox" class="row-checkbox"></td>';
 
-    // Column 1: Type.
-    echo '<td style="vertical-align: middle;">';
-    echo '<div style="display: flex; align-items: center; gap: 10px;">';
-    if (!empty($act->iconurl)) {
-        // Determine icon color based on Moodle 4 module categories.
-        $modpurposes = [
-            // Assessment.
-            'assign' => 'assessment', 'quiz' => 'assessment', 'workshop' => 'assessment', 'certificatebeautiful' => 'assessment', 'coursecertificate' => 'assessment',
-            // Communication.
-            'choice' => 'communication', 'feedback' => 'communication', 'chat' => 'communication', 'bigbluebuttonbn' => 'communication', 'zoom' => 'communication',
-            // Content.
-            'book' => 'content', 'folder' => 'content', 'label' => 'content', 'page' => 'content', 'qbank' => 'content', 'resource' => 'content', 'url' => 'content', 'emubook' => 'content', 'videotrack' => 'content', 'codeframe' => 'content',
-            // Collaboration.
-            'data' => 'collaboration', 'database' => 'collaboration', 'forum' => 'collaboration', 'glossary' => 'collaboration', 'wiki' => 'collaboration', 'diary' => 'collaboration',
-            // Interactive content..
-            'h5pactivity' => 'interactive_content', 'imscp' => 'interactive_content', 'lesson' => 'interactive_content', 'scorm' => 'interactive_content',
-            // Administration & Other..
-            'attendance' => 'administration', 'lti' => 'other',
-            // Custom..
-            'hvp' => 'hvp_black',
-        ];
-        $purposecolors = [
-            'assessment' => '#fa0086',
-            'communication' => '#fe5701',
-            'content' => '#00a5ad',
-            'collaboration' => '#6f46f7',
-            'interactive_content' => '#3c73b8',
-            'hvp_black' => '#212529',
-            'administration' => '#5d63f6',
-            'other' => '#6c757d',
-            'default' => '#6c757d',
-        ];
-        $purpose = isset($modpurposes[$act->modname]) ? $modpurposes[$act->modname] : 'default';
-        $iconbg = $purposecolors[$purpose];
+        // Column 1: Type.
+        echo '<td style="vertical-align: middle;">';
+        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+        if (!empty($act->iconurl)) {
+            // Determine icon color based on Moodle 4 module categories.
+            $modpurposes = [
+                // Assessment.
+                'assign' => 'assessment', 'quiz' => 'assessment', 'workshop' => 'assessment', 'certificatebeautiful' => 'assessment', 'coursecertificate' => 'assessment',
+                // Communication.
+                'choice' => 'communication', 'feedback' => 'communication', 'chat' => 'communication', 'bigbluebuttonbn' => 'communication', 'zoom' => 'communication',
+                // Content.
+                'book' => 'content', 'folder' => 'content', 'label' => 'content', 'page' => 'content', 'qbank' => 'content', 'resource' => 'content', 'url' => 'content', 'emubook' => 'content', 'videotrack' => 'content', 'codeframe' => 'content',
+                // Collaboration.
+                'data' => 'collaboration', 'database' => 'collaboration', 'forum' => 'collaboration', 'glossary' => 'collaboration', 'wiki' => 'collaboration', 'diary' => 'collaboration',
+                // Interactive content..
+                'h5pactivity' => 'interactive_content', 'imscp' => 'interactive_content', 'lesson' => 'interactive_content', 'scorm' => 'interactive_content',
+                // Administration & Other..
+                'attendance' => 'administration', 'lti' => 'other',
+                // Custom..
+                'hvp' => 'hvp_black',
+            ];
+            $purposecolors = [
+                'assessment' => '#fa0086',
+                'communication' => '#fe5701',
+                'content' => '#00a5ad',
+                'collaboration' => '#6f46f7',
+                'interactive_content' => '#3c73b8',
+                'hvp_black' => '#212529',
+                'administration' => '#5d63f6',
+                'other' => '#6c757d',
+                'default' => '#6c757d',
+            ];
+            $purpose = isset($modpurposes[$act->modname]) ? $modpurposes[$act->modname] : 'default';
+            $iconbg = $purposecolors[$purpose];
 
-        if ($act->modname === 'hvp') {
-            // HVP plugin comes with its own colored square icon, so we don't wrap it or invert it.
-            echo '<img src="' . $act->iconurl . '" alt="' . $act->modname . ' icon" style="width: 32px; height: 32px; border-radius: 6px;">';
-        } else {
-            $iconbglight = $iconbg . '26'; // 15% opacity hex alpha
-            echo '<div style="background-color: ' . $iconbglight . '; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">';
-            echo '<div style="background-color: ' . $iconbg . '; width: 20px; height: 20px; -webkit-mask-image: url(' . $act->iconurl . '); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; mask-image: url(' . $act->iconurl . '); mask-size: contain; mask-repeat: no-repeat;"></div>';
-            echo '</div>';
+            if ($act->modname === 'hvp') {
+                // HVP plugin comes with its own colored square icon, so we don't wrap it or invert it.
+                echo '<img src="' . $act->iconurl . '" alt="' . $act->modname . ' icon" style="width: 32px; height: 32px; border-radius: 6px;">';
+            } else {
+                $iconbglight = $iconbg . '26'; // 15% opacity hex alpha
+                echo '<div style="background-color: ' . $iconbglight . '; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">';
+                echo '<div style="background-color: ' . $iconbg . '; width: 20px; height: 20px; -webkit-mask-image: url(' . $act->iconurl . '); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; mask-image: url(' . $act->iconurl . '); mask-size: contain; mask-repeat: no-repeat;"></div>';
+                echo '</div>';
+            }
         }
-    }
-    $displayname = isset($act->modfullname) ? $act->modfullname : ucfirst($act->modname);
-    // Explicitly handle H5pactivity just in case the localized string still says H5P activity..
-    if (strtolower($displayname) === 'h5pactivity' || strtolower($displayname) === 'h5p activity') {
-        $displayname = 'H5p';
-    }
-    if ($act->modname === 'label') {
-        $displayname = 'Label';
-    }
-    echo '<span style="font-weight: 500; color: #495057; min-width: 70px;">' . $displayname . '</span>';
-    echo '</div>';
-    echo '</td>';
+        $displayname = isset($act->modfullname) ? $act->modfullname : ucfirst($act->modname);
+        // Explicitly handle H5pactivity just in case the localized string still says H5P activity..
+        if (strtolower($displayname) === 'h5pactivity' || strtolower($displayname) === 'h5p activity') {
+            $displayname = 'H5p';
+        }
+        if ($act->modname === 'label') {
+            $displayname = 'Label';
+        }
+        echo '<span style="font-weight: 500; color: #495057; min-width: 70px;">' . $displayname . '</span>';
+        echo '</div>';
+        echo '</td>';
 
-    // Column 2: Activity..
-    echo '<td style="vertical-align: middle;">';
-    echo '<input type="text" class="form-control field-name" value="' . s($act->name) . '" style="width: 100%; min-width: 120px; max-width: 300px;">';
-    echo '</td>';
+        // Column 2: Activity..
+        echo '<td style="vertical-align: middle;">';
+        echo '<input type="text" class="form-control field-name" value="' . s($act->name) . '" style="width: 100%; min-width: 120px; max-width: 300px;">';
+        echo '</td>';
 
-    // Dates editable for assign/quiz/forum. Others can be extended later..
-    if ($act->modname === 'assign' || $act->modname === 'quiz' || $act->modname === 'forum') {
-        $allowdisabled = ($act->modname === 'forum');
-        $cutoffdisabled = ($act->modname === 'quiz');
+        // Dates editable for assign/quiz/forum. Others can be extended later..
+        if ($act->modname === 'assign' || $act->modname === 'quiz' || $act->modname === 'forum') {
+            $allowdisabled = ($act->modname === 'forum');
+            $cutoffdisabled = ($act->modname === 'quiz');
 
-        if ($allowdisabled) {
+            if ($allowdisabled) {
+                echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
+            } else {
+                echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-allowfrom" value="' . $allowfrom . '"></td>';
+            }
+
+            echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-duedate" value="' . $due . '"></td>';
+
+            if ($cutoffdisabled) {
+                echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
+            } else {
+                echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-cutoffdate" value="' . $cutoff . '"></td>';
+            }
+        } else {
             echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
-        } else {
-            echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-allowfrom" value="' . $allowfrom . '"></td>';
-        }
-
-        echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-duedate" value="' . $due . '"></td>';
-
-        if ($cutoffdisabled) {
             echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
-        } else {
-            echo '<td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-cutoffdate" value="' . $cutoff . '"></td>';
+            echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
         }
-    } else {
-        echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
-        echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
-        echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
-    }
 
-    // Restrictions Column.
-    echo '<td style="vertical-align: middle; text-align: center; white-space: nowrap;">';
-    $hasrestrictions = !empty($act->availability) && $act->availability !== '{"op":"&","c":[],"showc":[]}';
-    if ($hasrestrictions) {
-        echo '<i class="fa fa-lock text-warning restrictions-icon" title="Has restrictions" style="margin-right: 8px; font-size: 16px;"></i>';
-    } else {
-        echo '<i class="fa fa-unlock-alt text-muted restrictions-icon" title="No restrictions" style="margin-right: 8px; font-size: 16px; opacity: 0.3;"></i>';
-    }
-    echo '<button type="button" class="btn btn-sm btn-outline-secondary btn-edit-restrictions" data-cmid="' . $act->cmid . '" data-courseid="' . $courseid . '" title="Edit Restrictions">';
-    echo '<i class="fa fa-pencil"></i>';
-    echo '</button>';
-    echo '</td>';
+        // Restrictions Column.
+        echo '<td style="vertical-align: middle; text-align: center; white-space: nowrap;">';
+        $hasrestrictions = !empty($act->availability) && $act->availability !== '{"op":"&","c":[],"showc":[]}';
+        if ($hasrestrictions) {
+            echo '<i class="fa fa-lock text-warning restrictions-icon" title="Has restrictions" style="margin-right: 8px; font-size: 16px;"></i>';
+        } else {
+            echo '<i class="fa fa-unlock-alt text-muted restrictions-icon" title="No restrictions" style="margin-right: 8px; font-size: 16px; opacity: 0.3;"></i>';
+        }
+        echo '<button type="button" class="btn btn-sm btn-outline-secondary btn-edit-restrictions" data-cmid="' . $act->cmid . '" data-courseid="' . $courseid . '" title="Edit Restrictions">';
+        echo '<i class="fa fa-pencil"></i>';
+        echo '</button>';
+        echo '</td>';
 
-    // Status Column.
-    $visibleselected = ($act->status == 1) ? 'selected' : '';
-    $stealthselected = ($act->status == 2) ? 'selected' : '';
-    $hiddenselected = ($act->status == 0) ? 'selected' : '';
+        // Status Column.
+        $visibleselected = ($act->status == 1) ? 'selected' : '';
+        $stealthselected = ($act->status == 2) ? 'selected' : '';
+        $hiddenselected = ($act->status == 0) ? 'selected' : '';
 
-    $statuscolor = ($act->status == 1) ? 'background-color: #d4edda; color: #155724;' : (($act->status == 0) ? 'background-color: #e2e3e5; color: #383d41;' : 'background-color: #fff3cd; color: #856404;');
+        $statuscolor = ($act->status == 1) ? 'background-color: #d4edda; color: #155724;' : (($act->status == 0) ? 'background-color: #e2e3e5; color: #383d41;' : 'background-color: #fff3cd; color: #856404;');
 
-    echo '<td style="vertical-align: middle;"><select class="form-control field-status" style="' . $statuscolor . ' font-weight: 500;" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor; this.style.color = this.options[this.selectedIndex].style.color;">';
-    echo '<option value="1" ' . $visibleselected . ' style="background-color: #d4edda; color: #155724;">' . get_string('visible', 'local_timeshift') . '</option>';
-    echo '<option value="0" ' . $hiddenselected . ' style="background-color: #e2e3e5; color: #383d41;">' . get_string('hidden', 'local_timeshift') . '</option>';
+        echo '<td style="vertical-align: middle;"><select class="form-control field-status" style="' . $statuscolor . ' font-weight: 500;" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor; this.style.color = this.options[this.selectedIndex].style.color;">';
+        echo '<option value="1" ' . $visibleselected . ' style="background-color: #d4edda; color: #155724;">' . get_string('visible', 'local_timeshift') . '</option>';
+        echo '<option value="0" ' . $hiddenselected . ' style="background-color: #e2e3e5; color: #383d41;">' . get_string('hidden', 'local_timeshift') . '</option>';
 
-    // Only show the Stealth option if allowed globally or if the activity is already stealth.
-    global $CFG;
-    if (!empty($CFG->allowstealth) || $act->status == 2) {
-        echo '<option value="2" ' . $stealthselected . ' style="background-color: #fff3cd; color: #856404;">' . get_string('stealth', 'local_timeshift') . '</option>';
-    }
+        // Only show the Stealth option if allowed globally or if the activity is already stealth.
+        global $CFG;
+        if (!empty($CFG->allowstealth) || $act->status == 2) {
+            echo '<option value="2" ' . $stealthselected . ' style="background-color: #fff3cd; color: #856404;">' . get_string('stealth', 'local_timeshift') . '</option>';
+        }
 
-    echo '</select></td>';
+        echo '</select></td>';
 
-    echo '</tr>';
+        echo '</tr>';
     }
 } // end foreach section
 echo '</tbody>';
