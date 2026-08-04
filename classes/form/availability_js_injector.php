@@ -23,6 +23,10 @@ namespace local_timeshift\form;
  * @copyright  2026 EduPlugins Studio
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+global $CFG;
+require_once($CFG->libdir . '/formslib.php');
+require_once('HTML/QuickForm/static.php');
+
 class availability_js_injector extends \HTML_QuickForm_static {
     /** @var \stdClass Course object. */
     public $course;

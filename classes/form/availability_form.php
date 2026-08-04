@@ -34,6 +34,29 @@ require_once($CFG->libdir . '/formslib.php');
  */
 class availability_form extends \core_form\dynamic_form {
     /**
+     * Helper to get parameters from customdata (which holds the JS args in Moodle 4.1)
+     * or fallback to global optional_param. This fixes the fatal error where 
+     * $this->optional_param() does not exist in Moodle 4.1 dynamic_form.
+     */
+    private function get_customdata_param(string $name, $default, string $type) {
+        // In Moodle 4.1, ModalForm args are serialized and passed as ajaxformdata.
+        if (property_exists($this, '_ajaxformdata') && is_array($this->_ajaxformdata) && isset($this->_ajaxformdata[$name])) {
+            return clean_param($this->_ajaxformdata[$name], $type);
+        }
+
+        // In Moodle 4.2+, they might be in customdata or accessible via optional_param.
+        if (method_exists($this, 'optional_param')) {
+            return $this->optional_param($name, $default, $type);
+        }
+        
+        if (isset($this->_customdata) && is_array($this->_customdata) && isset($this->_customdata[$name])) {
+            return clean_param($this->_customdata[$name], $type);
+        }
+
+        return optional_param($name, $default, $type);
+    }
+
+    /**
      * Form definition.
      */
     public function definition() {
@@ -41,12 +64,12 @@ class availability_form extends \core_form\dynamic_form {
 
         $mform = $this->_form;
 
-        $cmid = $this->optional_param('cmid', 0, PARAM_INT);
+        $cmid = $this->get_customdata_param('cmid', 0, PARAM_INT);
         if (!$cmid) {
             $cmid = optional_param('cmid', 0, PARAM_INT);
         }
 
-        $courseid = $this->optional_param('courseid', 0, PARAM_INT);
+        $courseid = $this->get_customdata_param('courseid', 0, PARAM_INT);
         if (!$courseid) {
             $courseid = optional_param('courseid', 0, PARAM_INT);
         }
@@ -57,7 +80,7 @@ class availability_form extends \core_form\dynamic_form {
         $mform->addElement('hidden', 'courseid', $courseid);
         $mform->setType('courseid', PARAM_INT);
 
-        $pending = $this->optional_param('pending', null, PARAM_RAW);
+        $pending = $this->get_customdata_param('pending', null, PARAM_RAW);
         $mform->addElement('hidden', 'pending', $pending);
         $mform->setType('pending', PARAM_RAW);
 
@@ -65,7 +88,7 @@ class availability_form extends \core_form\dynamic_form {
             'textarea',
             'availabilityconditionsjson',
             '',
-            ['class' => 'd-none', 'id' => 'id_availabilityconditionsjson']
+            ['style' => 'display: none;', 'id' => 'id_availabilityconditionsjson']
         );
 
         global $OUTPUT;
@@ -74,24 +97,106 @@ class availability_form extends \core_form\dynamic_form {
             'd-flex justify-content-center py-5 icon-size-5',
             'availabilityconditions-loading'
         );
+        $mform->addElement('html', '<div style="min-height: 200px;" id="timeshift-restrictions-container">');
         $mform->addElement('html', $loadingcontainer);
 
-        // Include Javascript for availability UI during rendering using a dummy element.
+        // Include Javascript for availability UI during rendering.
         if ($courseid && $cmid) {
             $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
             $modinfo = get_fast_modinfo($course);
             $cm = $modinfo->get_cm($cmid);
 
-            \MoodleQuickForm::registerElementType(
-                'availability_js_injector',
-                __DIR__ . '/availability_js_injector.php',
-                '\local_timeshift\form\availability_js_injector'
-            );
+            // This loads strings and queues YUI modules (which will be stripped).
+            \core_availability\frontend::include_all_javascript($course, $cm);
 
-            $injector = $mform->addElement('availability_js_injector', 'js_injector');
-            $injector->course = $course;
-            $injector->cm = $cm;
+            // MANUALLY RECONSTRUCT COMPONENT PARAMS FOR MOODLE 4.1 YUI INIT
+            // We save this to a class property to inject it during render()
+            $pluginmanager = \core_plugin_manager::instance();
+            $enabled = $pluginmanager->get_enabled_plugins('availability');
+            
+            $yuimodules = array('moodle-core_availability-form');
+            $componentparams = new \stdClass();
+            foreach ($enabled as $plugin => $info) {
+                $class = '\availability_' . $plugin . '\frontend';
+                if (class_exists($class)) {
+                    $frontend = new $class();
+                    $component = 'availability_' . $plugin;
+                    
+                    $yuimodules[] = 'moodle-' . $component . '-form';
+                    
+                    // Bypass protected access via Reflection
+                    $ref_allow_add = new \ReflectionMethod($class, 'allow_add');
+                    $ref_allow_add->setAccessible(true);
+                    $allow_add = $ref_allow_add->invoke($frontend, $course, $cm, null);
+                    
+                    $ref_init_params = new \ReflectionMethod($class, 'get_javascript_init_params');
+                    $ref_init_params->setAccessible(true);
+                    $init_params = $ref_init_params->invoke($frontend, $course, $cm, null);
+
+                    $componentparams->{$plugin} = array(
+                        $component,
+                        $allow_add,
+                        $init_params
+                    );
+                }
+            }
+            $this->_yui_componentparams = $componentparams;
+            $this->_yui_modules = $yuimodules;
         }
+        $mform->addElement('html', '</div>'); // Close min-height container
+    }
+
+    /**
+     * Override render to inject JS after Moodle 4.1 starts collecting JS requirements.
+     * In Moodle 4.1, dynamic_form::execute() calls start_collecting_javascript_requirements() 
+     * AFTER the form is instantiated (and after definition() is run).
+     * Any JS added in definition() is completely lost. 
+     * By adding it in render(), we ensure it gets captured in the AJAX response!
+     */
+    public function render() {
+        global $PAGE;
+        if (!empty($this->_yui_componentparams)) {
+            $modules_json = json_encode($this->_yui_modules);
+            $PAGE->requires->js_amd_inline("
+                require(['jquery'], function($) {
+                    setTimeout(function() {
+                        if (typeof YUI !== 'undefined') {
+                            var modules = " . $modules_json . ";
+                            var yuiLoaded = false;
+                            modules.push(function(Y) {
+                                yuiLoaded = true;
+                                if (typeof M !== 'undefined' && M.core_availability && M.core_availability.form && typeof M.core_availability.form.init === 'function') {
+                                    try {
+                                        M.core_availability.form.init(" . json_encode($this->_yui_componentparams) . ");
+                                        $('#availabilityconditions-loading').remove();
+                                    } catch (e) {
+                                        console.error('Error initializing availability form', e);
+                                        $('#timeshift-restrictions-container').html('<div class=\"alert alert-danger\" style=\"margin:20px;\"><strong>JS Error:</strong> ' + e.message + '<br>Stack: ' + e.stack + '</div>');
+                                    }
+                                } else {
+                                    var errmsg = 'M.core_availability.form.init is not available after YUI load.';
+                                    console.error(errmsg);
+                                    $('#timeshift-restrictions-container').html('<div class=\"alert alert-danger\" style=\"margin:20px;\">' + errmsg + '</div>');
+                                }
+                            });
+                            try {
+                                YUI().use.apply(YUI(), modules);
+                                setTimeout(function() {
+                                    if (!yuiLoaded) {
+                                        $('#timeshift-restrictions-container').html('<div class=\"alert alert-danger\" style=\"margin:20px;\"><strong>YUI Error:</strong> The YUI modules failed to load within 5 seconds. Modules requested: ' + modules.join(', ') + '</div>');
+                                    }
+                                }, 5000);
+                            } catch(e) {
+                                $('#timeshift-restrictions-container').html('<div class=\"alert alert-danger\" style=\"margin:20px;\">YUI Error: ' + e.message + '</div>');
+                            }
+                        } else {
+                            $('#timeshift-restrictions-container').html('<div class=\"alert alert-danger\" style=\"margin:20px;\">YUI is not defined.</div>');
+                        }
+                    }, 200);
+                });
+            ");
+        }
+        return parent::render();
     }
 
     /**
@@ -100,7 +205,7 @@ class availability_form extends \core_form\dynamic_form {
      * @return \context
      */
     public function get_context_for_dynamic_submission(): \context {
-        $courseid = $this->optional_param('courseid', 0, PARAM_INT);
+        $courseid = $this->get_customdata_param('courseid', 0, PARAM_INT);
         if (!$courseid) {
             $courseid = optional_param('courseid', 0, PARAM_INT);
         }
@@ -117,7 +222,7 @@ class availability_form extends \core_form\dynamic_form {
      * @throws \moodle_exception
      */
     protected function check_access_for_dynamic_submission(): void {
-        $courseid = $this->optional_param('courseid', 0, PARAM_INT);
+        $courseid = $this->get_customdata_param('courseid', 0, PARAM_INT);
         if (!$courseid) {
             $courseid = optional_param('courseid', 0, PARAM_INT);
         }
@@ -150,8 +255,8 @@ class availability_form extends \core_form\dynamic_form {
      */
     public function set_data_for_dynamic_submission(): void {
         global $DB;
-        $cmid = $this->optional_param('cmid', 0, PARAM_INT);
-        $pending = $this->optional_param('pending', null, PARAM_RAW);
+        $cmid = $this->get_customdata_param('cmid', 0, PARAM_INT);
+        $pending = $this->get_customdata_param('pending', null, PARAM_RAW);
 
         if ($pending !== null && $pending !== 'null' && $pending !== '') {
             $this->set_data(['availabilityconditionsjson' => $pending]);
@@ -169,7 +274,7 @@ class availability_form extends \core_form\dynamic_form {
      * @return \moodle_url
      */
     protected function get_page_url_for_dynamic_submission(): \moodle_url {
-        $courseid = $this->optional_param('courseid', 0, PARAM_INT);
+        $courseid = $this->get_customdata_param('courseid', 0, PARAM_INT);
         if (!$courseid) {
             $courseid = optional_param('courseid', 0, PARAM_INT);
         }

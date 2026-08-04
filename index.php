@@ -43,6 +43,14 @@ $PAGE->set_heading($course->fullname);
 
 $activities = \local_timeshift\manager::get_course_activities($courseid);
 
+// Preload availability JS to prevent infinite loading in Moodle 4.1 ModalForms due to YUI restrictions.
+$modinfo = get_fast_modinfo($course);
+$cms = $modinfo->get_cms();
+$firstcm = reset($cms);
+if ($firstcm) {
+    \core_availability\frontend::include_all_javascript($course, $firstcm);
+}
+
 echo $OUTPUT->header();
 
 // Start container.
@@ -1224,7 +1232,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     var cmid = parseInt(btn.getAttribute('data-cmid'), 10);
                     var courseid = parseInt(btn.getAttribute('data-courseid'), 10);
 
-                    var pending = btn.closest('tr').getAttribute('data-pending-availability') || null;
+                    var pending = btn.closest('tr').getAttribute('data-pending-availability') || '';
 
                     var form = new ModalForm({
                         formClass: 'local_timeshift\\form\\availability_form',
@@ -1285,9 +1293,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
 
-                    var pending = null;
+                    var pending = '';
                     var firstRow = document.querySelector('tr[data-cmid="' + firstSelectedCmid + '"]');
-                    if (firstRow) pending = firstRow.getAttribute('data-pending-availability') || null;
+                    if (firstRow) pending = firstRow.getAttribute('data-pending-availability') || '';
 
                     var form = new ModalForm({
                         formClass: 'local_timeshift\\form\\availability_form',
