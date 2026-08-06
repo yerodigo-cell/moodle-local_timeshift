@@ -74,7 +74,7 @@ asort($modtypes);
 // Modal, top buttons, and filters.
 echo '<div id="timeshift-main-view">';
 echo '<div style="margin-bottom: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">';
-echo '<div style="display: flex; gap: 10px; align-items: center;">';
+echo '<div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">';
 echo '<div style="position: relative; width: 100%; max-width: 250px; min-width: 140px;">';
 echo '<input type="text" id="filter-name" class="form-control" placeholder="' .
      get_string('searchbyname', 'local_timeshift') . '" style="width: 100%; border-radius: 6px;">';
@@ -97,7 +97,7 @@ echo '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://
 echo '</button>';
 
 echo '<a href="#" id="btn-show-pro" class="btn btn-timeshift-action" ' .
-     'style="border-radius: 6px; font-weight: 500; margin-left: 8px; white-space: nowrap; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">' .
+     'style="border-radius: 6px; font-weight: 500; white-space: nowrap; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">' .
      '🚀 Get Timeshift Pro!</a>';
 
 echo '</div>';
