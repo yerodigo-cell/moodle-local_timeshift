@@ -305,17 +305,17 @@ class manager {
                     if ($updated) {
                         $event->timemodified = time();
                         $DB->update_record('event', $event);
-                        
+
                         if (class_exists('\core\event\calendar_event_updated')) {
-                            \core\event\calendar_event_updated::create(array(
+                            \core\event\calendar_event_updated::create([
                                 'objectid' => $event->id,
                                 'context'  => \context_course::instance($courseid),
-                                'other'    => array(
+                                'other'    => [
                                     'repeatid'  => empty($event->repeatid) ? 0 : $event->repeatid,
                                     'timestart' => $event->timestart,
-                                    'name'      => $event->name
-                                )
-                            ))->trigger();
+                                    'name'      => $event->name,
+                                ],
+                            ])->trigger();
                         }
                     }
                 }
@@ -364,17 +364,17 @@ class manager {
                 }
 
                 $newevent->id = $DB->insert_record('event', $newevent);
-                
+
                 if (class_exists('\core\event\calendar_event_created')) {
-                    \core\event\calendar_event_created::create(array(
+                    \core\event\calendar_event_created::create([
                         'objectid' => $newevent->id,
                         'context'  => \context_course::instance($courseid),
-                        'other'    => array(
+                        'other'    => [
                             'repeatid'  => empty($newevent->repeatid) ? 0 : $newevent->repeatid,
                             'timestart' => $newevent->timestart,
-                            'name'      => $newevent->name
-                        )
-                    ))->trigger();
+                            'name'      => $newevent->name,
+                        ],
+                    ])->trigger();
                 }
             }
         } else {
@@ -382,17 +382,17 @@ class manager {
             if ($events) {
                 foreach ($events as $event) {
                     $DB->delete_records('event', ['id' => $event->id]);
-                    
+
                     if (class_exists('\core\event\calendar_event_deleted')) {
-                        \core\event\calendar_event_deleted::create(array(
+                        \core\event\calendar_event_deleted::create([
                             'objectid' => $event->id,
                             'context'  => \context_course::instance($courseid),
-                            'other'    => array(
+                            'other'    => [
                                 'repeatid'  => empty($event->repeatid) ? 0 : $event->repeatid,
                                 'timestart' => $event->timestart,
-                                'name'      => $event->name
-                            )
-                        ))->trigger();
+                                'name'      => $event->name,
+                            ],
+                        ])->trigger();
                     }
                 }
             }
