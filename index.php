@@ -56,7 +56,7 @@ echo $OUTPUT->header();
 // Start container.
 echo '<div class="local-timeshift-container" style="margin: 0 auto 80px auto; max-width: 1600px;">';
 
-$iconurl = new moodle_url('/local/timeshift/pix/icon.jpg');
+$iconurl = new moodle_url('/local/timeshift/pix/icon.png');
 $iconimg = '<img src="' . $iconurl . '" alt="Timeshift Lite Logo" ' .
            'style="width: 32px; height: 32px; border-radius: 6px; box-shadow: 0px 2px 4px rgba(0,0,0,0.2);">';
 
@@ -343,79 +343,79 @@ echo '<div class="container my-5" style="max-width: 900px;">
                 <thead class="thead-dark" style="background-color: #f8f9fa;">
                     <tr>
                         <th class="py-4 px-4 border-0" style="width: 50%;">Feature</th>
-                        <th class="py-4 px-4 text-center border-0" style="width: 25%; color: #6c757d;">Lite Version</th>
+                        <th class="py-4 px-4 text-center border-0" style="width: 25%; color: #475569; background-color: #f1f5f9;">Lite Version</th>
                         <th class="py-4 px-4 text-center border-0" style="width: 25%; color: #854d0e; background-color: #fef08a;">PRO Version</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">View and manage Quiz, Assign & Forum dates</td>
-                        <td class="py-3 px-4 text-center text-success"><i class="fa fa-check"></i></td>
+                        <td class="py-3 px-4">View and manage Quiz, Assign & Forum dates</td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #f8fafc;"><i class="fa fa-check"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Rename activities directly from the table</td>
-                        <td class="py-3 px-4 text-center text-success"><i class="fa fa-check"></i></td>
+                        <td class="py-3 px-4">Rename activities directly from the table</td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #f8fafc;"><i class="fa fa-check"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Find & Replace in activity names</td>
-                        <td class="py-3 px-4 text-center text-success"><i class="fa fa-check"></i></td>
+                        <td class="py-3 px-4">Find & Replace in activity names</td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #f8fafc;"><i class="fa fa-check"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Modify dates in Bulk across activities</td>
-                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4">Calendar date synchronization</td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #f8fafc;"><i class="fa fa-check"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Shift ALL course dates by X days automatically</td>
-                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4">Modify dates in Bulk across activities</td>
+                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">View and organize by course sections</td>
-                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4">Shift ALL course dates by X days automatically</td>
+                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Delete activities in bulk</td>
-                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4">View and organize by course sections</td>
+                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Filter activities by type or status</td>
-                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4">Delete activities in bulk</td>
+                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Manage ALL modules (Files, Pages, Books, etc.)</td>
-                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4">Filter activities by type or status</td>
+                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Change Visibility (Show, Hide, Stealth mode)</td>
-                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4">Manage ALL modules (Files, Pages, Books, etc.)</td>
+                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Manage Access Restrictions & Conditions</td>
-                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4">Change Availability (Show, Hide, Stealth mode)</td>
+                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Drag and drop reordering inside the table</td>
-                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4">Manage Access Restrictions & Conditions</td>
+                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold">Calendar date synchronization</td>
-                        <td class="py-3 px-4 text-center text-success"><i class="fa fa-check"></i></td>
+                        <td class="py-3 px-4">Drag and drop reordering inside the table</td>
+                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
-                        <td class="py-3 px-4 font-weight-bold border-0">Premium Support</td>
-                        <td class="py-3 px-4 text-center text-danger border-0"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 border-0">Premium Support</td>
+                        <td class="py-3 px-4 text-center text-danger border-0" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success border-0" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                 </tbody>
@@ -427,7 +427,7 @@ echo '<div class="container my-5" style="max-width: 900px;">
         <a href="https://edupluginsstudio.com/timeshift-pro.html" target="_blank" class="btn btn-lg btn-timeshift-action" style="padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 1.25rem; box-shadow: 0 4px 15px rgba(15, 82, 138, 0.4);">
             Purchase Timeshift Pro Now <i class="fa fa-arrow-right" style="margin-left: 8px;"></i>
         </a>
-        <p class="mt-3 text-muted">Join thousands of Moodle educators saving time every day.</p>
+        <p class="mt-3 text-muted">Save time every day!</p>
     </div>
 </div>';
 echo '</div>';
