@@ -121,9 +121,7 @@ class manager {
      * @param string $newname The new name of the activity
      * @param int|null $duedate The new due date
      * @param int|null $allowfromdate The new allow from date
-     * @param int|null $status The visibility status
      * @param int|null $cutoffdate The new cutoff date
-     * @param string|null $availability The new availability JSON string
      * @return bool True if successful
      */
     public static function update_activity(
