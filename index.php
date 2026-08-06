@@ -409,6 +409,11 @@ echo '<div class="container my-5" style="max-width: 900px;">
                         <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
                     </tr>
                     <tr>
+                        <td class="py-3 px-4 font-weight-bold">Calendar date synchronization</td>
+                        <td class="py-3 px-4 text-center text-success"><i class="fa fa-check"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
                         <td class="py-3 px-4 font-weight-bold border-0">Premium Support</td>
                         <td class="py-3 px-4 text-center text-danger border-0"><i class="fa fa-times"></i></td>
                         <td class="py-3 px-4 text-center text-success border-0" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
