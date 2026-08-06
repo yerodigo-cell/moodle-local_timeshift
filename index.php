@@ -105,7 +105,7 @@ echo '</div>';
 // Banner Upsell.
 echo '<div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">';
 
-// Disabled Bulk Shift Button
+// Disabled Bulk Shift Button.
 echo '<div title="Pro Feature" style="cursor: not-allowed; display: flex; align-items: center; gap: 8px;">';
 echo $OUTPUT->help_icon('shiftmodaltitle', 'local_timeshift');
 echo '<button type="button" class="btn btn-timeshift-bulk" style="border-radius: 6px; font-weight: 500; pointer-events: none; opacity: 0.8;">' . get_string('bulkshiftall', 'local_timeshift') . ' <span class="badge" style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; margin-left: 6px;">PRO</span></button>';
@@ -327,7 +327,7 @@ echo '</button>';
 echo '</div>'; // End right side actions.
 echo '</div>'; // End footer toolbar.
 
-echo '</div>'; // End timeshift-main-view
+echo '</div>'; // End timeshift-main-view.
 
 echo '<div id="timeshift-pro-view" style="display:none;">';
 echo '<div class="mb-3"><button class="btn btn-secondary" id="btn-back-main" style="border-radius: 6px; font-weight: 500;"><i class="fa fa-arrow-left" style="margin-right: 8px;"></i> Back to Course Activities</button></div>';
@@ -417,7 +417,7 @@ echo '<div class="container my-5" style="max-width: 900px;">
             </table>
         </div>
     </div>
-    
+
     <div class="text-center mt-5">
         <a href="https://edupluginsstudio.com/timeshift-pro.html" target="_blank" class="btn btn-lg btn-timeshift-action" style="padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 1.25rem; box-shadow: 0 4px 15px rgba(15, 82, 138, 0.4);">
             Purchase Timeshift Pro Now <i class="fa fa-arrow-right" style="margin-left: 8px;"></i>
