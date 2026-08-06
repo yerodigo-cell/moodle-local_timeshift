@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * TimeShift Pro (local_timeshift)
+ * TimeShift Lite (local_timeshift)
  *
  * @package     local_timeshift
  * @copyright   2026 EduPlugins Studio

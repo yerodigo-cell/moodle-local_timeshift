@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * TimeShift Pro (local_timeshift)
+ * TimeShift Lite (local_timeshift)
  *
  * @package     local_timeshift
  * @copyright   2026 EduPlugins Studio
@@ -57,7 +57,7 @@ echo $OUTPUT->header();
 echo '<div class="local-timeshift-container" style="margin: 0 auto 80px auto; max-width: 1600px;">';
 
 $iconurl = new moodle_url('/local/timeshift/pix/icon.jpg');
-$iconimg = '<img src="' . $iconurl . '" alt="Timeshift Pro Logo" ' .
+$iconimg = '<img src="' . $iconurl . '" alt="Timeshift Lite Logo" ' .
            'style="width: 32px; height: 32px; border-radius: 6px; box-shadow: 0px 2px 4px rgba(0,0,0,0.2);">';
 
 echo '<h3 style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #1e293b; margin-bottom: 20px;">' .
@@ -72,28 +72,22 @@ foreach ($activities as $act) {
 asort($modtypes);
 
 // Modal, top buttons, and filters.
+echo '<div id="timeshift-main-view">';
 echo '<div style="margin-bottom: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">';
 echo '<div style="display: flex; gap: 10px; align-items: center;">';
 echo '<div style="position: relative; width: 100%; max-width: 250px; min-width: 140px;">';
 echo '<input type="text" id="filter-name" class="form-control" placeholder="' .
      get_string('searchbyname', 'local_timeshift') . '" style="width: 100%; border-radius: 6px;">';
 echo '</div>';
-echo '<select id="filter-type" class="form-control" style="max-width: 200px; border-radius: 6px;">';
-echo '<option value="">' . get_string('alltypes', 'local_timeshift') . '</option>';
-foreach ($modtypes as $type) {
-    echo '<option value="' . s($type) . '">' . ucfirst(s($type)) . '</option>';
-}
-echo '</select>';
+echo '<div style="height: 38px; padding: 0 12px; border: 1px solid #ced4da; border-radius: 6px; cursor: not-allowed; opacity: 0.8; display: inline-flex; align-items: center; gap: 12px; background-color: #e9ecef; box-sizing: border-box;" title="Pro Feature">';
+echo '<span style="color: #6c757d; white-space: nowrap; font-size: 1rem;">' . get_string('alltypes', 'local_timeshift') . '</span>';
+echo '<span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1;">PRO</span>';
+echo '</div>';
 
-echo '<select id="filter-status" class="form-control" style="max-width: 150px; border-radius: 6px;">';
-echo '<option value="">' . get_string('allstatuses', 'local_timeshift') . '</option>';
-echo '<option value="1">' . get_string('visible', 'local_timeshift') . '</option>';
-echo '<option value="0">' . get_string('hidden', 'local_timeshift') . '</option>';
-global $CFG;
-if (!empty($CFG->allowstealth)) {
-    echo '<option value="2">' . get_string('stealth', 'local_timeshift') . '</option>';
-}
-echo '</select>';
+echo '<div style="height: 38px; padding: 0 12px; border: 1px solid #ced4da; border-radius: 6px; cursor: not-allowed; opacity: 0.8; display: inline-flex; align-items: center; gap: 12px; background-color: #e9ecef; box-sizing: border-box;" title="Pro Feature">';
+echo '<span style="color: #6c757d; white-space: nowrap; font-size: 1rem;">' . get_string('allstatuses', 'local_timeshift') . '</span>';
+echo '<span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1;">PRO</span>';
+echo '</div>';
 
 echo '<button type="button" id="btn-clear-filters" title="Clear filters" style="display: none;">';
 echo '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' .
@@ -102,14 +96,21 @@ echo '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://
      '</svg>';
 echo '</button>';
 
+echo '<a href="#" id="btn-show-pro" class="btn btn-timeshift-action" ' .
+     'style="border-radius: 6px; font-weight: 500; margin-left: 8px; white-space: nowrap; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">' .
+     '🚀 Get Timeshift Pro!</a>';
+
 echo '</div>';
 
-// Bulk Shift All.
+// Banner Upsell.
 echo '<div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">';
+
+// Disabled Bulk Shift Button
+echo '<div title="Pro Feature" style="cursor: not-allowed; display: flex; align-items: center; gap: 8px;">';
 echo $OUTPUT->help_icon('shiftmodaltitle', 'local_timeshift');
-echo '<button type="button" class="btn btn-timeshift-bulk" id="btn-shift-dates-all" data-toggle="modal" ' .
-     'data-target="#shiftDatesModal" data-bs-toggle="modal" data-bs-target="#shiftDatesModal" ' .
-     'style="border-radius: 6px; font-weight: 500;">' . get_string('bulkshiftall', 'local_timeshift') . '</button>';
+echo '<button type="button" class="btn btn-timeshift-bulk" style="border-radius: 6px; font-weight: 500; pointer-events: none; opacity: 0.8;">' . get_string('bulkshiftall', 'local_timeshift') . ' <span class="badge" style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; margin-left: 6px;">PRO</span></button>';
+echo '</div>';
+
 echo '</div>';
 
 echo '</div>';
@@ -123,15 +124,15 @@ echo '      <button class="btn btn-timeshift-action dropdown-toggle" type="butto
 echo '        ' . get_string('actionsforselected', 'local_timeshift') . '
       </button>';
 echo '      <div class="dropdown-menu" aria-labelledby="bulkActionsDropdown">
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#shiftDatesModal" data-bs-toggle="modal" data-bs-target="#shiftDatesModal" id="action-shift-dates">' . get_string('action_shiftdates', 'local_timeshift') . '</a>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#setAllowFromModal" data-bs-toggle="modal" data-bs-target="#setAllowFromModal">' . get_string('action_setallowfromdate', 'local_timeshift') . '</a>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#setDueDateModal" data-bs-toggle="modal" data-bs-target="#setDueDateModal">' . get_string('action_setduedate', 'local_timeshift') . '</a>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#setCutoffModal" data-bs-toggle="modal" data-bs-target="#setCutoffModal">' . get_string('action_setcutoffdate', 'local_timeshift') . '</a>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#setRestrictionsModal" data-bs-toggle="modal" data-bs-target="#setRestrictionsModal">' . get_string('action_setrestrictions', 'local_timeshift') . '</a>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeAvailabilityModal" data-bs-toggle="modal" data-bs-target="#changeAvailabilityModal">' . get_string('action_changeavailability', 'local_timeshift') . '</a>
+        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_shiftdates', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
+        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_setallowfromdate', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
+        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_setduedate', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
+        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_setcutoffdate', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
+        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_setrestrictions', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
+        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_changeavailability', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#findReplaceModal" data-bs-toggle="modal" data-bs-target="#findReplaceModal">' . get_string('action_findreplace', 'local_timeshift') . '</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item text-danger" href="#" data-toggle="modal" data-target="#bulkDeleteModal" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">' . get_string('action_deleteactivities', 'local_timeshift') . '</a>
+        <a class="dropdown-item text-danger" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_deleteactivities', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
       </div>';
 echo '    </div>';
 echo '  </div>';
@@ -173,7 +174,7 @@ foreach ($activitiesbysection as $secnum => $sectionacts) {
     }
     $secname = $sectionacts[0]->sectionname;
 
-    echo '<tr class="table-light timeshift-section-header" data-sectionnum="' . $secnum . '" style="background-color: #f8f9fa;">';
+    echo '<tr class="table-light timeshift-section-header" data-sectionnum="' . $secnum . '" style="display: none; background-color: #f8f9fa;">';
     echo '<td colspan="9" style="font-weight: 600; color: #495057; padding-left: 20px; vertical-align: middle;">' . s($secname) . '</td>';
     echo '</tr>';
 
@@ -184,7 +185,9 @@ foreach ($activitiesbysection as $secnum => $sectionacts) {
         $cutoff = !empty($act->cutoffdate) ? date('Y-m-d\TH:i', $act->cutoffdate) : '';
 
         echo '<tr class="timeshift-activity-row" data-cmid="' . $act->cmid . '" data-instance="' . $act->instance . '" data-modname="' . $act->modname . '">';
-        echo '<td style="vertical-align: middle; text-align: center; cursor: grab;" class="drag-handle-cell"><i class="fa fa-bars text-muted drag-handle"></i></td>';
+        $helpicon = $OUTPUT->help_icon('dragdrop', 'local_timeshift');
+        $helpicon = preg_replace('/(<a[^>]+>).*?(<\/a>)/is', '$1<i class="fa fa-bars text-muted drag-handle" style="font-size: 16px;"></i>$2', $helpicon);
+        echo '<td style="vertical-align: middle; text-align: center; cursor: not-allowed; opacity: 0.7;" class="drag-handle-cell" title="Pro Feature">' . $helpicon . '</td>';
         echo '<td style="vertical-align: middle; text-align: center;"><input type="checkbox" class="row-checkbox"></td>';
 
         // Column 1: Type.
@@ -281,29 +284,19 @@ foreach ($activitiesbysection as $secnum => $sectionacts) {
         } else {
             echo '<i class="fa fa-unlock-alt text-muted restrictions-icon" title="No restrictions" style="margin-right: 8px; font-size: 16px; opacity: 0.3;"></i>';
         }
-        echo '<button type="button" class="btn btn-sm btn-outline-secondary btn-edit-restrictions" data-cmid="' . $act->cmid . '" data-courseid="' . $courseid . '" title="Edit Restrictions">';
-        echo '<i class="fa fa-pencil"></i>';
-        echo '</button>';
+        echo '<span class="badge" style="background-color: #ffc107; color: #212529; font-size: 11px; padding: 4px 6px; border-radius: 4px;" title="Pro Feature">PRO</span>';
         echo '</td>';
 
         // Status Column.
-        $visibleselected = ($act->status == 1) ? 'selected' : '';
-        $stealthselected = ($act->status == 2) ? 'selected' : '';
-        $hiddenselected = ($act->status == 0) ? 'selected' : '';
-
         $statuscolor = ($act->status == 1) ? 'background-color: #d4edda; color: #155724;' : (($act->status == 0) ? 'background-color: #e2e3e5; color: #383d41;' : 'background-color: #fff3cd; color: #856404;');
+        $statustext = ($act->status == 1) ? get_string('visible', 'local_timeshift') : (($act->status == 0) ? get_string('hidden', 'local_timeshift') : get_string('stealth', 'local_timeshift'));
 
-        echo '<td style="vertical-align: middle;"><select class="form-control field-status" style="' . $statuscolor . ' font-weight: 500;" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor; this.style.color = this.options[this.selectedIndex].style.color;">';
-        echo '<option value="1" ' . $visibleselected . ' style="background-color: #d4edda; color: #155724;">' . get_string('visible', 'local_timeshift') . '</option>';
-        echo '<option value="0" ' . $hiddenselected . ' style="background-color: #e2e3e5; color: #383d41;">' . get_string('hidden', 'local_timeshift') . '</option>';
-
-        // Only show the Stealth option if allowed globally or if the activity is already stealth.
-        global $CFG;
-        if (!empty($CFG->allowstealth) || $act->status == 2) {
-            echo '<option value="2" ' . $stealthselected . ' style="background-color: #fff3cd; color: #856404;">' . get_string('stealth', 'local_timeshift') . '</option>';
-        }
-
-        echo '</select></td>';
+        echo '<td style="vertical-align: middle;">';
+        echo '<div style="' . $statuscolor . ' font-weight: 500; border-radius: 4px; padding: 6px 12px; display: flex; align-items: center; justify-content: space-between; cursor: not-allowed; opacity: 0.8; border: 1px solid #ced4da; width: 100%;" title="Pro Feature">';
+        echo '<span>' . $statustext . '</span>';
+        echo '<span class="badge" style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; margin-left: 8px;">PRO</span>';
+        echo '</div>';
+        echo '</td>';
 
         echo '</tr>';
     }
@@ -334,106 +327,110 @@ echo '</button>';
 echo '</div>'; // End right side actions.
 echo '</div>'; // End footer toolbar.
 
+echo '</div>'; // End timeshift-main-view
+
+echo '<div id="timeshift-pro-view" style="display:none;">';
+echo '<div class="mb-3"><button class="btn btn-secondary" id="btn-back-main" style="border-radius: 6px; font-weight: 500;"><i class="fa fa-arrow-left" style="margin-right: 8px;"></i> Back to Course Activities</button></div>';
+echo '<div class="container my-5" style="max-width: 900px;">
+    <div class="text-center mb-5">
+        <h1 class="display-4 font-weight-bold" style="color: #0f528a;">🚀 Get Timeshift Pro!</h1>
+        <p class="lead text-muted">Supercharge your course management. Unlock the full potential of Timeshift and save hours of manual work.</p>
+    </div>
+
+    <div class="card shadow-lg border-0" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-body p-0">
+            <table class="table mb-0" style="font-size: 1.1rem;">
+                <thead class="thead-dark" style="background-color: #f8f9fa;">
+                    <tr>
+                        <th class="py-4 px-4 border-0" style="width: 50%;">Feature</th>
+                        <th class="py-4 px-4 text-center border-0" style="width: 25%; color: #6c757d;">Lite Version</th>
+                        <th class="py-4 px-4 text-center border-0" style="width: 25%; color: #854d0e; background-color: #fef08a;">PRO Version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">View and manage Quiz, Assign & Forum dates</td>
+                        <td class="py-3 px-4 text-center text-success"><i class="fa fa-check"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Rename activities directly from the table</td>
+                        <td class="py-3 px-4 text-center text-success"><i class="fa fa-check"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Find & Replace in activity names</td>
+                        <td class="py-3 px-4 text-center text-success"><i class="fa fa-check"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Modify dates in Bulk across activities</td>
+                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Shift ALL course dates by X days automatically</td>
+                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">View and organize by course sections</td>
+                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Delete activities in bulk</td>
+                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Filter activities by type or status</td>
+                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Manage ALL modules (Files, Pages, Books, etc.)</td>
+                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Change Visibility (Show, Hide, Stealth mode)</td>
+                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Manage Access Restrictions & Conditions</td>
+                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold">Drag and drop reordering inside the table</td>
+                        <td class="py-3 px-4 text-center text-danger"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-weight-bold border-0">Premium Support</td>
+                        <td class="py-3 px-4 text-center text-danger border-0"><i class="fa fa-times"></i></td>
+                        <td class="py-3 px-4 text-center text-success border-0" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="text-center mt-5">
+        <a href="https://edupluginsstudio.com/timeshift-pro.html" target="_blank" class="btn btn-lg btn-timeshift-action" style="padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 1.25rem; box-shadow: 0 4px 15px rgba(15, 82, 138, 0.4);">
+            Purchase Timeshift Pro Now <i class="fa fa-arrow-right" style="margin-left: 8px;"></i>
+        </a>
+        <p class="mt-3 text-muted">Join thousands of Moodle educators saving time every day.</p>
+    </div>
+</div>';
+echo '</div>';
+
+
 echo '</div>'; // End container.
 
-// Bulk Delete Modal.
-echo '
-<div class="modal fade" id="bulkDeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-shift-clean" role="document">
-    <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
-      <div class="modal-header" style="border-bottom: 1px solid #dee2e6;">
-        <h5 class="modal-title" style="color: #dc3545; font-weight: bold;">
-          <i class="fa fa-exclamation-triangle"></i> ' . get_string('modal_delete_title', 'local_timeshift') . '
-        </h5>
-      </div>
-      <div class="modal-body">
-        <p>' . get_string('modal_delete_warning', 'local_timeshift') . '</p>
-        <p><strong>' . get_string('modal_delete_cannot_undo', 'local_timeshift') . '</strong></p>
-      </div>
-      <div class="modal-footer" style="border-top: none; padding: 15px 20px;">
-        <button type="button" class="btn btn-light" data-dismiss="modal" data-bs-dismiss="modal" style="border-radius: 6px;">' . get_string('cancel', 'local_timeshift') . '</button>
-        <button type="button" class="btn btn-danger" id="btn-confirm-bulk-delete" data-dismiss="modal" data-bs-dismiss="modal" style="border-radius: 6px;">' . get_string('modal_delete_confirm', 'local_timeshift') . '</button>
-      </div>
-    </div>
-  </div>
-</div>
-';
 
-// Shift Dates Modal.
-echo '
-<div class="modal fade" id="shiftDatesModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-shift-clean" role="document">
-    <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
-      <div class="modal-header">
-        <h5 class="modal-title">
-          <i class="fa fa-calendar" style="color: #1d4ed8; font-size: 20px;"></i> ' . get_string('shiftmodaltitle', 'local_timeshift') . '
-        </h5>
-      </div>
-      <div class="modal-body">
-
-        <div class="info-box alert alert-primary">
-            <i class="fa fa-info-circle" style="margin-top: 3px; font-size: 16px;"></i>
-            <span id="shift-modal-count-text">' . get_string('action_shift_dates_all', 'local_timeshift') . '</span>
-        </div>
-
-        <div class="section-title">' . get_string('selectwhattoshift', 'local_timeshift') . '</div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="shift-opt-open" checked>
-            <label class="form-check-label" for="shift-opt-open" style="font-weight: normal;">' . get_string('opendate', 'local_timeshift') . '</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="shift-opt-due" checked>
-            <label class="form-check-label" for="shift-opt-due" style="font-weight: normal;">' . get_string('duedate', 'local_timeshift') . '</label>
-        </div>
-        <div class="form-check" style="margin-bottom: 24px;">
-            <input class="form-check-input" type="checkbox" id="shift-opt-close" checked>
-            <label class="form-check-label" for="shift-opt-close" style="font-weight: normal;">' . get_string('cutoffdate', 'local_timeshift') . '</label>
-        </div>
-
-        <div class="section-title">' . get_string('shiftby', 'local_timeshift') . '</div>
-        <div style="display: flex; gap: 12px; margin-bottom: 24px;">
-            <input type="number" class="form-control" id="shift-amount-input" value="15" min="1" style="width: 100px; border-radius: 6px;">
-            <select class="form-control" id="shift-unit-input" style="flex: 1; border-radius: 6px;">
-                <option value="days">' . get_string('days', 'local_timeshift') . '</option>
-                <option value="weeks">' . get_string('weeks', 'local_timeshift') . '</option>
-                <option value="months">' . get_string('months', 'local_timeshift') . '</option>
-            </select>
-        </div>
-
-        <div class="section-title">' . get_string('direction', 'local_timeshift') . '</div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="shift-direction" id="shift-dir-add" value="add" checked>
-            <label class="form-check-label" for="shift-dir-add" style="font-weight: normal;">' . get_string('addtodates', 'local_timeshift') . '</label>
-        </div>
-        <div class="form-check" style="margin-bottom: 24px;">
-            <input class="form-check-input" type="radio" name="shift-direction" id="shift-dir-sub" value="sub">
-            <label class="form-check-label" for="shift-dir-sub" style="font-weight: normal;">' . get_string('subtractfromdates', 'local_timeshift') . '</label>
-        </div>
-
-        <div class="example-box">
-            <div style="font-weight: 600; margin-bottom: 8px; color: #111827;">' . get_string('example', 'local_timeshift') . '</div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                <span>' . get_string('currentdate', 'local_timeshift') . '</span>
-                <span id="shift-ex-current">28/07/2026 08:00</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-weight: 600;">
-                <span>' . get_string('newdate', 'local_timeshift') . '</span>
-                <span id="shift-ex-new">12/08/2026 08:00</span>
-            </div>
-        </div>
-
-        <input type="hidden" id="shift-mode" value="all">
-      </div>
-      <div class="modal-footer" style="margin-top: 16px;">
-        <button type="button" class="btn btn-cancel" data-dismiss="modal" data-bs-dismiss="modal">' . get_string('cancel', 'local_timeshift') . '</button>
-        <button type="button" class="btn btn-primary btn-preview-layout" id="btn-apply-shift" data-dismiss="modal" data-bs-dismiss="modal">
-            <i class="fa fa-eye"></i> ' . get_string('previewchanges', 'local_timeshift') . '
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-';
 
 // Find & Replace Modal.
 echo '
@@ -462,104 +459,18 @@ echo '
 </div>
 ';
 
-// Change Availability Modal.
-echo '
-<div class="modal fade" id="changeAvailabilityModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">' . get_string('action_changeavailability', 'local_timeshift') . '</h5>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-            <label>' . get_string('newavailability', 'local_timeshift') . '</label>
-            <select class="form-control" id="ca-status-input">
-                <option value="1">' . get_string('visible', 'local_timeshift') . '</option>
-                <option value="0">' . get_string('hidden', 'local_timeshift') . '</option>
-                <option value="2">' . get_string('stealth', 'local_timeshift') . '</option>
-            </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">' . get_string('cancel', 'local_timeshift') . '</button>
-        <button type="button" class="btn btn-primary" id="btn-apply-availability">' . get_string('apply', 'local_timeshift') . '</button>
-      </div>
-    </div>
-  </div>
-</div>
-';
-
-// Set Allow From Date Modal.
-echo '
-<div class="modal fade" id="setAllowFromModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">' . get_string('action_setallowfromdate', 'local_timeshift') . '</h5>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-            <label>' . get_string('newallowfromdate', 'local_timeshift') . '</label>
-            <input type="datetime-local" class="form-control" id="set-allowfrom-input">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">' . get_string('cancel', 'local_timeshift') . '</button>
-        <button type="button" class="btn btn-primary" id="btn-apply-allowfrom">' . get_string('apply', 'local_timeshift') . '</button>
-      </div>
-    </div>
-  </div>
-</div>
-';
-
-// Set Due Date Modal.
-echo '
-<div class="modal fade" id="setDueDateModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">' . get_string('action_setduedate', 'local_timeshift') . '</h5>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-            <label>' . get_string('newduedate', 'local_timeshift') . '</label>
-            <input type="datetime-local" class="form-control" id="set-duedate-input">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">' . get_string('cancel', 'local_timeshift') . '</button>
-        <button type="button" class="btn btn-primary" id="btn-apply-duedate">' . get_string('apply', 'local_timeshift') . '</button>
-      </div>
-    </div>
-  </div>
-</div>
-';
-
-// Set Cut-off Date Modal.
-echo '
-<div class="modal fade" id="setCutoffDateModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">' . get_string('action_setcutoffdate', 'local_timeshift') . '</h5>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-            <label>' . get_string('newcutoffdate', 'local_timeshift') . '</label>
-            <input type="datetime-local" class="form-control" id="set-cutoffdate-input">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">' . get_string('cancel', 'local_timeshift') . '</button>
-        <button type="button" class="btn btn-primary" id="btn-apply-cutoffdate">' . get_string('apply', 'local_timeshift') . '</button>
-      </div>
-    </div>
-  </div>
-</div>
-';
-
 ?>
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js">document.getElementById('btn-show-pro').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('timeshift-main-view').style.display = 'none';
+    document.getElementById('timeshift-pro-view').style.display = 'block';
+});
+document.getElementById('btn-back-main').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('timeshift-pro-view').style.display = 'none';
+    document.getElementById('timeshift-main-view').style.display = 'block';
+});
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var strSingular = '<?php echo get_string('activitiesselected_singular', 'local_timeshift'); ?>';
@@ -1417,6 +1328,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+});
+document.getElementById('btn-show-pro').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('timeshift-main-view').style.display = 'none';
+    document.getElementById('timeshift-pro-view').style.display = 'block';
+});
+document.getElementById('btn-back-main').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('timeshift-pro-view').style.display = 'none';
+    document.getElementById('timeshift-main-view').style.display = 'block';
 });
 </script>
 

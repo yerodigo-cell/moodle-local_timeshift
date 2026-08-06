@@ -1,6 +1,6 @@
-# TimeShift Pro (local_timeshift)
+# TimeShift Lite (local_timeshift)
 
-TimeShift Pro is a local plugin for Moodle designed to simplify the management of dates across course activities. It provides a clean, responsive, and intuitive interface to bulk shift open, due, and cutoff dates, as well as manage availability restrictions effortlessly.
+TimeShift Lite is a local plugin for Moodle designed to simplify the management of dates across course activities. It provides a clean, responsive, and intuitive interface to bulk shift open, due, and cutoff dates, as well as manage availability restrictions effortlessly.
 
 ## Requirements
 
@@ -28,7 +28,7 @@ TimeShift Pro is a local plugin for Moodle designed to simplify the management o
 
 ## Usage
 
-Once installed, administrators or teachers (with appropriate permissions) can access TimeShift Pro through the course administration menu or block links, depending on your configuration. 
+Once installed, administrators or teachers (with appropriate permissions) can access TimeShift Lite through the course administration menu or block links, depending on your configuration. 
 Select the activities you want to modify using the checkboxes, and use the top buttons to shift dates in bulk, or adjust them individually in the table.
 
 ## Copyright and License

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * TimeShift Pro (local_timeshift)
+ * TimeShift Lite (local_timeshift)
  *
  * @package     local_timeshift
  * @copyright   2026 EduPlugins Studio
@@ -48,8 +48,9 @@ class manager {
 
             $modname = $cm->modname;
 
-            // Subsections and question banks are structural/backend modules without typical dates, so we exclude them.
-            if ($modname === 'subsection' || $modname === 'qbank') {
+            // In Timeshift Lite, we only show activities that support dates (assign, quiz, forum).
+            // All other activities (like books, pages, labels) are excluded.
+            if (!in_array($modname, ['assign', 'quiz', 'forum'])) {
                 continue;
             }
 
@@ -132,31 +133,9 @@ class manager {
         $newname,
         $duedate,
         $allowfromdate,
-        $status = null,
-        $cutoffdate = null,
-        $availability = null
+        $cutoffdate = null
     ) {
         global $DB;
-
-        // 0. Update availability
-        if ($availability !== null) {
-            $availval = ($availability === '') ? null : $availability;
-            $DB->set_field('course_modules', 'availability', $availval, ['id' => $cmid]);
-        }
-
-        // 0. Update visibility
-        if ($status !== null) {
-            $visible = ($status == 1 || $status == 2) ? 1 : 0;
-            $visibleoncoursepage = ($status == 2) ? 0 : 1;
-
-            $DB->set_field('course_modules', 'visible', $visible, ['id' => $cmid]);
-            $DB->set_field('course_modules', 'visibleold', $visible, ['id' => $cmid]);
-            // Check if column exists (Moodle 3.3+).
-            $columns = $DB->get_columns('course_modules');
-            if (array_key_exists('visibleoncoursepage', $columns)) {
-                $DB->set_field('course_modules', 'visibleoncoursepage', $visibleoncoursepage, ['id' => $cmid]);
-            }
-        }
 
         $oldname = null;
 

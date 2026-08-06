@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * TimeShift Pro (local_timeshift)
+ * TimeShift Lite (local_timeshift)
  *
  * @package     local_timeshift
  * @copyright   2026 EduPlugins Studio
@@ -53,6 +53,8 @@ $string['cutoffdate'] = 'Cut-off Date';
 $string['days'] = 'Days';
 $string['direction'] = 'Direction';
 $string['discard'] = 'Discard';
+$string['dragdrop'] = 'Drag and Drop Reordering <span class="badge" style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; margin-left: 6px; font-weight: bold;">PRO</span>';
+$string['dragdrop_help'] = 'Reordering activities via drag-and-drop is a Timeshift PRO feature.<br><br>Upgrade to PRO to effortlessly organize your entire course structure directly from this table.';
 $string['duedate'] = 'Due Date';
 $string['errorupdate'] = 'Error updating database records.';
 $string['example'] = 'Example:';
@@ -72,13 +74,13 @@ $string['newcutoffdate'] = 'New Cut-off Date';
 $string['newdate'] = 'New Date:';
 $string['newduedate'] = 'New Due Date';
 $string['opendate'] = 'Open Date';
-$string['pagedescription'] = 'Timeshift Pro';
+$string['pagedescription'] = 'Timeshift Lite';
 $string['pagedescription_help'] = 'Manage open dates, close dates, and restrictions for all course activities.<br><br>Use the filters to find specific items or apply changes in bulk.<br><br>You can use drag and drop to reorder elements. Empty sections will not be shown.';
-$string['pagetitle'] = 'Timeshift Pro';
+$string['pagetitle'] = 'Timeshift Lite';
 $string['pending_deletion'] = 'Pending Deletion';
-$string['pluginname'] = 'TimeShift Pro';
+$string['pluginname'] = 'TimeShift Lite';
 $string['previewchanges'] = 'Preview Changes';
-$string['privacy:metadata'] = 'The TimeShift Pro plugin does not store any personal data.';
+$string['privacy:metadata'] = 'The TimeShift Lite plugin does not store any personal data.';
 $string['replacementtext'] = 'Replacement text...';
 $string['replacewith'] = 'Replace with';
 $string['restrictions'] = 'Restrictions';

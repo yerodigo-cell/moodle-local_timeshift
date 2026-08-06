@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * TimeShift Pro (local_timeshift)
+ * TimeShift Lite (local_timeshift)
  *
  * @package     local_timeshift
  * @copyright   2026 EduPlugins Studio
@@ -46,61 +46,6 @@ if (!is_array($updatesarray)) {
 
 $success = true;
 try {
-    if (is_array($reordersarray) && !empty($reordersarray)) {
-        foreach ($reordersarray as $move) {
-            $cmid = clean_param($move['cmid'], PARAM_INT);
-            if (!$cmid) {
-                continue;
-            }
-            $beforecmid = isset($move['beforecmid']) ? clean_param($move['beforecmid'], PARAM_INT) : 0;
-
-            $mod = get_coursemodule_from_id('', $cmid, $courseid, true, IGNORE_MISSING);
-            if (!$mod) {
-                continue;
-            }
-
-            if ($beforecmid) {
-                $beforemod = get_coursemodule_from_id('', $beforecmid, $courseid, true, IGNORE_MISSING);
-                if ($beforemod) {
-                    $section = $DB->get_record('course_sections', ['id' => $beforemod->section], '*', IGNORE_MISSING);
-                    if ($section) {
-                        moveto_module($mod, $section, $beforemod);
-                    }
-                }
-            } else {
-                // If there's no beforecmid, it was placed at the end of a section. We can use targetcmid to find which section.
-                if (isset($move['targetcmid']) && $move['targetcmid'] > 0) {
-                    $targetcmid = clean_param($move['targetcmid'], PARAM_INT);
-                    $targetmod = get_coursemodule_from_id('', $targetcmid, $courseid, true, IGNORE_MISSING);
-                    if ($targetmod) {
-                        $section = $DB->get_record('course_sections', ['id' => $targetmod->section], '*', IGNORE_MISSING);
-                        if ($section) {
-                            moveto_module($mod, $section, null);
-                        }
-                    }
-                } else if (isset($move['targetsectionnum']) && $move['targetsectionnum'] >= 0) {
-                    $targetsectionnum = clean_param($move['targetsectionnum'], PARAM_INT);
-                    $section = $DB->get_record(
-                        'course_sections',
-                        ['course' => $courseid, 'section' => $targetsectionnum],
-                        '*',
-                        IGNORE_MISSING
-                    );
-                    if ($section) {
-                        moveto_module($mod, $section, null);
-                    }
-                } else {
-                    // Fallback: move to the very end of the course.
-                    $sections = $DB->get_records('course_sections', ['course' => $courseid], 'section DESC', '*', 0, 1);
-                    $lastsection = reset($sections);
-                    if ($lastsection) {
-                        moveto_module($mod, $lastsection, null);
-                    }
-                }
-            }
-        }
-    }
-
     foreach ($updatesarray as $update) {
         $cmid = clean_param($update['cmid'], PARAM_INT);
         $modname = clean_param($update['modname'], PARAM_ALPHA);
@@ -122,24 +67,15 @@ try {
             $cutoffdate = clean_param($update['cutoffdate'], PARAM_INT);
         }
 
-        $status = isset($update['status']) && $update['status'] !== '' ? clean_param($update['status'], PARAM_INT) : null;
-        $availability = isset($update['availability']) ? $update['availability'] : null;
-        $delete = isset($update['delete']) ? (bool)$update['delete'] : false;
-        if ($delete) {
-            course_delete_module($cmid);
-        } else {
-            \local_timeshift\manager::update_activity(
-                $cmid,
-                $modname,
-                $instanceid,
-                $newname,
-                $duedate,
-                $allowfromdate,
-                $status,
-                $cutoffdate,
-                $availability
-            );
-        }
+        \local_timeshift\manager::update_activity(
+            $cmid,
+            $modname,
+            $instanceid,
+            $newname,
+            $duedate,
+            $allowfromdate,
+            $cutoffdate
+        );
     }
     // Rebuild the course cache so that name changes and visibility reflect immediately in the UI and Calendar.
     rebuild_course_cache($courseid, true);
