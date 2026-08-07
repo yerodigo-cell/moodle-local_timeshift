@@ -94,3 +94,5 @@ $string['texttofind'] = 'Texto a buscar...';
 $string['totalactivities'] = 'Total de actividades:';
 $string['type'] = 'Tipo';
 $string['visible'] = 'Visible';
+$string['lite_installed'] = 'Estás usando la versión <strong>Lite</strong>. Algunas funcionalidades están limitadas.';
+$string['buy_pro'] = '¡Adquiere la versión Pro aquí!';

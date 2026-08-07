@@ -103,3 +103,5 @@ $string['totalactivities'] = 'Total activities:';
 $string['type'] = 'Type';
 $string['visible'] = 'Visible';
 $string['weeks'] = 'Weeks';
+$string['lite_installed'] = 'You are using the <strong>Lite</strong> version. Some features are limited.';
+$string['buy_pro'] = 'Get the Pro version here!';

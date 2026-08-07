@@ -24,14 +24,26 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Only add settings in the course administration tree.
 if ($hassiteconfig) {
-    // Note: We don't necessarily need a global admin setting tree if we just want a course tool.
-    // However, if we want an admin page, we can add it here.
-    // Let's create an empty settings file since it was specified in the structure.
-    // For a local plugin that works at course level, often the link is added via local_timeshift_extend_navigation_course
-    // inside lib.php, but settings.php is loaded for site admin block. We can leave this empty or add a simple setting.
     $settings = new admin_settingpage('local_timeshift', get_string('pluginname', 'local_timeshift'));
-    // We add a link to the tool instead of real settings, or we just leave the settings page empty.
+
+    global $CFG;
+    $logo_url = $CFG->wwwroot . '/local/timeshift/pix/icon.png';
+    
+    $pluginname = get_string('pluginname', 'local_timeshift');
+    $lite_installed = get_string('lite_installed', 'local_timeshift');
+    $buy_pro = get_string('buy_pro', 'local_timeshift');
+    
+    $html = '<div style="text-align:center; padding:20px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 20px;">
+                <img src="' . $logo_url . '" alt="' . $pluginname . ' Logo" style="max-width:150px; margin-bottom:15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+                <h3 style="color: #495057;">' . $pluginname . '</h3>
+                <p style="color: #495057; font-size: 16px;">' . $lite_installed . '</p>
+                <div style="margin-top: 20px;">
+                    <a href="https://edupluginsstudio.com/timeshift-pro.html#pricing" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #0d6efd; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2); transition: background-color 0.3s;">' . $buy_pro . '</a>
+                </div>
+             </div>';
+
+    $settings->add(new admin_setting_heading('local_timeshift_lite_info', '', $html));
+
     $ADMIN->add('localplugins', $settings);
 }
