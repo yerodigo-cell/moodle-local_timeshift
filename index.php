@@ -79,10 +79,7 @@ echo '<div style="position: relative; width: 100%; max-width: 250px; min-width: 
 echo '<input type="text" id="filter-name" class="form-control" placeholder="' .
      get_string('searchbyname', 'local_timeshift') . '" style="width: 100%; border-radius: 6px;">';
 echo '</div>';
-echo '<div style="height: 38px; padding: 0 12px; border: 1px solid #ced4da; border-radius: 6px; cursor: not-allowed; opacity: 0.8; display: inline-flex; align-items: center; gap: 12px; background-color: #e9ecef; box-sizing: border-box;" title="Pro Feature">';
-echo '<span style="color: #6c757d; white-space: nowrap; font-size: 1rem;">' . get_string('alltypes', 'local_timeshift') . '</span>';
-echo '<span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1;">PRO</span>';
-echo '</div>';
+
 
 
 echo '<button type="button" id="btn-clear-filters" title="Clear filters" style="display: none;">';
