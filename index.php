@@ -74,7 +74,7 @@ asort($modtypes);
 // Modal, top buttons, and filters.
 echo '<div id="timeshift-main-view">';
 echo '<div style="margin-bottom: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">';
-echo '<div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">';
+echo '<div style="display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">';
 echo '<div style="position: relative; width: 100%; max-width: 250px; min-width: 140px;">';
 echo '<input type="text" id="filter-name" class="form-control" placeholder="' .
      get_string('searchbyname', 'local_timeshift') . '" style="width: 100%; border-radius: 6px;">';
@@ -96,19 +96,23 @@ echo '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://
      '</svg>';
 echo '</button>';
 
+echo '</div>';
+
+// Banner Upsell.
+echo '<div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-left: auto;">';
+
 echo '<a href="#" id="btn-show-pro" class="btn btn-timeshift-action" ' .
      'style="border-radius: 6px; font-weight: 500; white-space: nowrap; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">' .
      '🚀 Get Timeshift Pro!</a>';
 
-echo '</div>';
-
-// Banner Upsell.
-echo '<div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">';
-
 // Disabled Bulk Shift Button.
 echo '<div title="Pro Feature" style="cursor: not-allowed; display: flex; align-items: center; gap: 8px;">';
 echo $OUTPUT->help_icon('shiftmodaltitle', 'local_timeshift');
-echo '<button type="button" class="btn btn-timeshift-bulk" style="border-radius: 6px; font-weight: 500; pointer-events: none; opacity: 0.8;">' . get_string('bulkshiftall', 'local_timeshift') . ' <span class="badge" style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; margin-left: 6px;">PRO</span></button>';
+echo '<button type="button" class="btn btn-timeshift-bulk" ' .
+     'style="border-radius: 6px; font-weight: 500; pointer-events: none; opacity: 0.8;">' .
+     get_string('bulkshiftall', 'local_timeshift') .
+     ' <span class="badge" style="background-color: #ffc107; color: #212529; font-size: 10px; ' .
+     'padding: 3px 5px; border-radius: 4px; margin-left: 6px;">PRO</span></button>';
 echo '</div>';
 
 echo '</div>';
@@ -424,7 +428,8 @@ echo '<div class="container my-5" style="max-width: 900px;">
     </div>
 
     <div class="text-center mt-5">
-        <a href="https://edupluginsstudio.com/timeshift-pro.html" target="_blank" class="btn btn-lg btn-timeshift-action" style="padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 1.25rem; box-shadow: 0 4px 15px rgba(15, 82, 138, 0.4);">
+        <a href="https://edupluginsstudio.com/timeshift-pro.html#pricing" target="_blank" class="btn btn-lg btn-timeshift-action" 
+           style="padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 1.25rem; box-shadow: 0 4px 15px rgba(15, 82, 138, 0.4);">
             Purchase Timeshift Pro Now <i class="fa fa-arrow-right" style="margin-left: 8px;"></i>
         </a>
         <p class="mt-3 text-muted">Save time every day!</p>
