@@ -1,17 +1,35 @@
 # TimeShift Lite (local_timeshift)
 
-TimeShift Lite is a local plugin for Moodle designed to simplify the management of dates across course activities. It provides a clean, responsive, and intuitive interface to bulk shift open, due, and cutoff dates, as well as manage availability restrictions effortlessly.
+TimeShift Lite is a free local plugin for Moodle designed to simplify the management of dates across your most important course activities. It provides a clean, responsive, and intuitive interface to view and edit dates for Assignments, Quizzes, and Forums directly from a single page.
 
 ## Requirements
 
 * Moodle 4.1 or later (`2022112800`)
 
-## Features
+## Features (Lite Version)
 
-* **Bulk Shift Dates:** Easily shift all activity dates forward or backward by a specific number of days, hours, or minutes.
-* **Inline Editing:** Quick adjustments to open, due, and cutoff dates on a clean table interface.
-* **Availability Management:** Manage activity restriction settings with a simplified UI.
+* **Inline Editing:** Quick adjustments to open, due, and cutoff dates for Assignments, Quizzes, and Forums.
+* **Activity Renaming:** Rename your activities effortlessly directly from the table.
+* **Calendar Synchronization:** Any date changes made in TimeShift Lite are automatically synchronized with the Moodle Calendar.
 * **Responsive Design:** A fully mobile-optimized interface for managing dates on the go.
+
+---
+
+## 🚀 Upgrade to TimeShift PRO
+
+Unlock the full potential of your course management with **TimeShift PRO**. The PRO version includes advanced features designed for power users and institutions:
+
+* **Bulk Shift Dates:** Shift all activity dates forward or backward by a specific number of days, hours, or minutes with a single click.
+* **Manage ALL Modules:** Full support for Files, Pages, Books, Workshops, SCORM, and more.
+* **Course Sections:** View, filter, and organize activities seamlessly by their course sections.
+* **Drag-and-Drop Reordering:** Reorder activities directly inside the table using drag and drop.
+* **Availability Management:** Manage activity access restrictions, conditions, and visibility statuses (Show, Hide, Stealth).
+* **Bulk Deletion:** Select and delete multiple activities in bulk.
+* **Premium Support:** Get priority assistance directly from our team.
+
+👉 **[Get TimeShift PRO today!](https://edupluginsstudio.com/timeshift-pro.html)**
+
+---
 
 ## Installation
 
@@ -28,8 +46,7 @@ TimeShift Lite is a local plugin for Moodle designed to simplify the management 
 
 ## Usage
 
-Once installed, administrators or teachers (with appropriate permissions) can access TimeShift Lite through the course administration menu or block links, depending on your configuration. 
-Select the activities you want to modify using the checkboxes, and use the top buttons to shift dates in bulk, or adjust them individually in the table.
+Once installed, administrators or teachers (with appropriate permissions) can access TimeShift Lite through the course administration menu. Simply adjust the dates or names of your Assignments, Quizzes, or Forums directly on the table and click "Save Changes".
 
 ## Copyright and License
 
