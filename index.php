@@ -113,10 +113,11 @@ echo '    <span id="selected-count" style="font-weight: 700; color: #084298; fon
 echo '    <div class="dropdown">';
 echo '      <button class="btn btn-timeshift-action dropdown-toggle" type="button" id="bulkActionsDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 6px; font-weight: 500; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">';
 echo '        ' . get_string('actionsforselected', 'local_timeshift') . '
-      </button>echo '      <div class="dropdown-menu" aria-labelledby="bulkActionsDropdown">
+      </button>';
+echo '      <div class="dropdown-menu" aria-labelledby="bulkActionsDropdown">
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#findReplaceModal" data-bs-toggle="modal" data-bs-target="#findReplaceModal">' . get_string('action_findreplace', 'local_timeshift') . '</a>
       </div>';
-echo '    </div>';>';
+echo '    </div>';
 echo '  </div>';
 echo '  <div>';
 echo '    <button type="button" class="btn btn-timeshift-clear" id="btn-clear-selection" style="border-radius: 6px; font-weight: 500;">' . get_string('clearselection', 'local_timeshift') . ' ✕</button>';
