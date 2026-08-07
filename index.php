@@ -94,9 +94,11 @@ echo '</div>';
 // Banner Upsell.
 echo '<div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-left: auto;">';
 
+/*
 echo '<a href="#" id="btn-show-pro" class="btn btn-timeshift-action" ' .
      'style="border-radius: 6px; font-weight: 500; white-space: nowrap; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">' .
      '🚀 Get Timeshift Pro!</a>';
+*/
 
 
 echo '</div>';
@@ -282,6 +284,7 @@ echo '</div>'; // End footer toolbar.
 
 echo '</div>'; // End timeshift-main-view.
 
+/* 
 echo '<div id="timeshift-pro-view" style="display:none;">';
 echo '<div class="mb-3"><button class="btn btn-secondary" id="btn-back-main" style="border-radius: 6px; font-weight: 500;"><i class="fa fa-arrow-left" style="margin-right: 8px;"></i> Back to Course Activities</button></div>';
 echo '<div class="container my-5" style="max-width: 900px;">
@@ -385,6 +388,7 @@ echo '<div class="container my-5" style="max-width: 900px;">
     </div>
 </div>';
 echo '</div>';
+*/
 
 
 echo '</div>'; // End container.
@@ -419,6 +423,7 @@ echo '
 ';
 
 ?>
+<!--
 <script>
 document.getElementById('btn-show-pro').addEventListener('click', function(e) {
     e.preventDefault();
@@ -431,6 +436,7 @@ document.getElementById('btn-back-main').addEventListener('click', function(e) {
     document.getElementById('timeshift-main-view').style.display = 'block';
 });
 </script>
+-->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var strSingular = '<?php echo get_string('activitiesselected_singular', 'local_timeshift'); ?>';
@@ -809,6 +815,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
+/*
 document.getElementById('btn-show-pro').addEventListener('click', function(e) {
     e.preventDefault();
     document.getElementById('timeshift-main-view').style.display = 'none';
@@ -819,6 +826,7 @@ document.getElementById('btn-back-main').addEventListener('click', function(e) {
     document.getElementById('timeshift-pro-view').style.display = 'none';
     document.getElementById('timeshift-main-view').style.display = 'block';
 });
+*/
 </script>
 
 <?php
