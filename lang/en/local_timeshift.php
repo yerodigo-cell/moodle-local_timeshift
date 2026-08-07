@@ -54,8 +54,7 @@ $string['cutoffdate'] = 'Cut-off Date';
 $string['days'] = 'Days';
 $string['direction'] = 'Direction';
 $string['discard'] = 'Discard';
-$string['dragdrop'] = 'Drag and Drop Reordering <span class="badge" style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; margin-left: 6px; font-weight: bold;">PRO</span>';
-$string['dragdrop_help'] = 'Reordering activities via drag-and-drop is a Timeshift PRO feature.<br><br>Upgrade to PRO to effortlessly organize your entire course structure directly from this table.';
+
 $string['duedate'] = 'Due Date';
 $string['errorupdate'] = 'Error updating database records.';
 $string['example'] = 'Example:';
