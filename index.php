@@ -84,10 +84,6 @@ echo '<span style="color: #6c757d; white-space: nowrap; font-size: 1rem;">' . ge
 echo '<span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1;">PRO</span>';
 echo '</div>';
 
-echo '<div style="height: 38px; padding: 0 12px; border: 1px solid #ced4da; border-radius: 6px; cursor: not-allowed; opacity: 0.8; display: inline-flex; align-items: center; gap: 12px; background-color: #e9ecef; box-sizing: border-box;" title="Pro Feature">';
-echo '<span style="color: #6c757d; white-space: nowrap; font-size: 1rem;">' . get_string('allstatuses', 'local_timeshift') . '</span>';
-echo '<span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1;">PRO</span>';
-echo '</div>';
 
 echo '<button type="button" id="btn-clear-filters" title="Clear filters" style="display: none;">';
 echo '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' .
@@ -105,15 +101,6 @@ echo '<a href="#" id="btn-show-pro" class="btn btn-timeshift-action" ' .
      'style="border-radius: 6px; font-weight: 500; white-space: nowrap; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">' .
      '🚀 Get Timeshift Pro!</a>';
 
-// Disabled Bulk Shift Button.
-echo '<div title="Pro Feature" style="cursor: not-allowed; display: flex; align-items: center; gap: 8px;">';
-echo $OUTPUT->help_icon('shiftmodaltitle', 'local_timeshift');
-echo '<button type="button" class="btn btn-timeshift-bulk" ' .
-     'style="border-radius: 6px; font-weight: 500; pointer-events: none; opacity: 0.8;">' .
-     get_string('bulkshiftall', 'local_timeshift') .
-     ' <span class="badge" style="background-color: #ffc107; color: #212529; font-size: 10px; ' .
-     'padding: 3px 5px; border-radius: 4px; margin-left: 6px;">PRO</span></button>';
-echo '</div>';
 
 echo '</div>';
 
@@ -126,19 +113,10 @@ echo '    <span id="selected-count" style="font-weight: 700; color: #084298; fon
 echo '    <div class="dropdown">';
 echo '      <button class="btn btn-timeshift-action dropdown-toggle" type="button" id="bulkActionsDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 6px; font-weight: 500; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">';
 echo '        ' . get_string('actionsforselected', 'local_timeshift') . '
-      </button>';
-echo '      <div class="dropdown-menu" aria-labelledby="bulkActionsDropdown">
-        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_shiftdates', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
-        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_setallowfromdate', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
-        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_setduedate', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
-        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_setcutoffdate', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
-        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_setrestrictions', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
-        <a class="dropdown-item" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_changeavailability', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
+      </button>echo '      <div class="dropdown-menu" aria-labelledby="bulkActionsDropdown">
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#findReplaceModal" data-bs-toggle="modal" data-bs-target="#findReplaceModal">' . get_string('action_findreplace', 'local_timeshift') . '</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item text-danger" href="#" style="pointer-events:none; opacity: 0.6;"><div style="display:flex; justify-content:space-between; align-items:center;"><span>' . get_string('action_deleteactivities', 'local_timeshift') . '</span><span style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; font-weight: bold; line-height: 1; margin-left: 8px;">PRO</span></div></a>
       </div>';
-echo '    </div>';
+echo '    </div>';>';
 echo '  </div>';
 echo '  <div>';
 echo '    <button type="button" class="btn btn-timeshift-clear" id="btn-clear-selection" style="border-radius: 6px; font-weight: 500;">' . get_string('clearselection', 'local_timeshift') . ' ✕</button>';
@@ -150,15 +128,12 @@ echo '<div class="table-responsive timeshift-table-wrapper">';
 echo '<table class="table timeshift-clean-table" id="timeshift-table">';
 echo '<thead>';
 echo '<tr>';
-echo '<th style="width: 30px; text-align: center;"></th>'; // Drag handle.
 echo '<th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-checkbox"></th>';
 echo '<th>' . get_string('type', 'local_timeshift') . '</th>';
 echo '<th>' . get_string('activity', 'local_timeshift') . '</th>';
 echo '<th style="width: 1%; white-space: nowrap;"><i class="fa fa-calendar-o" aria-hidden="true" style="margin-right:6px; color:#6c757d;"></i> ' . get_string('opendate', 'local_timeshift') . '</th>';
 echo '<th style="width: 1%; white-space: nowrap;"><i class="fa fa-calendar-o" aria-hidden="true" style="margin-right:6px; color:#6c757d;"></i> ' . get_string('duedate', 'local_timeshift') . '</th>';
 echo '<th style="width: 1%; white-space: nowrap;"><i class="fa fa-calendar-o" aria-hidden="true" style="margin-right:6px; color:#6c757d;"></i> ' . get_string('cutoffdate', 'local_timeshift') . '</th>';
-echo '<th style="width: 1%; white-space: nowrap; text-align: center;">' . get_string('restrictions', 'local_timeshift') . '</th>';
-echo '<th>' . get_string('status', 'local_timeshift') . '</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
@@ -179,7 +154,7 @@ foreach ($activitiesbysection as $secnum => $sectionacts) {
     $secname = $sectionacts[0]->sectionname;
 
     echo '<tr class="table-light timeshift-section-header" data-sectionnum="' . $secnum . '" style="display: none; background-color: #f8f9fa;">';
-    echo '<td colspan="9" style="font-weight: 600; color: #495057; padding-left: 20px; vertical-align: middle;">' . s($secname) . '</td>';
+    echo '<td colspan="6" style="font-weight: 600; color: #495057; padding-left: 20px; vertical-align: middle;">' . s($secname) . '</td>';
     echo '</tr>';
 
     foreach ($sectionacts as $act) {
@@ -189,9 +164,6 @@ foreach ($activitiesbysection as $secnum => $sectionacts) {
         $cutoff = !empty($act->cutoffdate) ? date('Y-m-d\TH:i', $act->cutoffdate) : '';
 
         echo '<tr class="timeshift-activity-row" data-cmid="' . $act->cmid . '" data-instance="' . $act->instance . '" data-modname="' . $act->modname . '">';
-        $helpicon = $OUTPUT->help_icon('dragdrop', 'local_timeshift');
-        $helpicon = preg_replace('/(<a[^>]+>).*?(<\/a>)/is', '$1<i class="fa fa-bars text-muted drag-handle" style="font-size: 16px;"></i>$2', $helpicon);
-        echo '<td style="vertical-align: middle; text-align: center; cursor: not-allowed; opacity: 0.7;" class="drag-handle-cell" title="Pro Feature">' . $helpicon . '</td>';
         echo '<td style="vertical-align: middle; text-align: center;"><input type="checkbox" class="row-checkbox"></td>';
 
         // Column 1: Type.
@@ -280,27 +252,6 @@ foreach ($activitiesbysection as $secnum => $sectionacts) {
             echo '<td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>';
         }
 
-        // Restrictions Column.
-        echo '<td style="vertical-align: middle; text-align: center; white-space: nowrap;">';
-        $hasrestrictions = !empty($act->availability) && $act->availability !== '{"op":"&","c":[],"showc":[]}';
-        if ($hasrestrictions) {
-            echo '<i class="fa fa-lock text-warning restrictions-icon" title="Has restrictions" style="margin-right: 8px; font-size: 16px;"></i>';
-        } else {
-            echo '<i class="fa fa-unlock-alt text-muted restrictions-icon" title="No restrictions" style="margin-right: 8px; font-size: 16px; opacity: 0.3;"></i>';
-        }
-        echo '<span class="badge" style="background-color: #ffc107; color: #212529; font-size: 11px; padding: 4px 6px; border-radius: 4px;" title="Pro Feature">PRO</span>';
-        echo '</td>';
-
-        // Status Column.
-        $statuscolor = ($act->status == 1) ? 'background-color: #d4edda; color: #155724;' : (($act->status == 0) ? 'background-color: #e2e3e5; color: #383d41;' : 'background-color: #fff3cd; color: #856404;');
-        $statustext = ($act->status == 1) ? get_string('visible', 'local_timeshift') : (($act->status == 0) ? get_string('hidden', 'local_timeshift') : get_string('stealth', 'local_timeshift'));
-
-        echo '<td style="vertical-align: middle;">';
-        echo '<div style="' . $statuscolor . ' font-weight: 500; border-radius: 4px; padding: 6px 12px; display: flex; align-items: center; justify-content: space-between; cursor: not-allowed; opacity: 0.8; border: 1px solid #ced4da; width: 100%;" title="Pro Feature">';
-        echo '<span>' . $statustext . '</span>';
-        echo '<span class="badge" style="background-color: #ffc107; color: #212529; font-size: 10px; padding: 3px 5px; border-radius: 4px; margin-left: 8px;">PRO</span>';
-        echo '</div>';
-        echo '</td>';
 
         echo '</tr>';
     }
@@ -470,7 +421,8 @@ echo '
 ';
 
 ?>
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js">document.getElementById('btn-show-pro').addEventListener('click', function(e) {
+<script>
+document.getElementById('btn-show-pro').addEventListener('click', function(e) {
     e.preventDefault();
     document.getElementById('timeshift-main-view').style.display = 'none';
     document.getElementById('timeshift-pro-view').style.display = 'block';
@@ -507,18 +459,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Filtering logic
     var filterName = document.getElementById('filter-name');
     var filterType = document.getElementById('filter-type');
-    var filterStatus = document.getElementById('filter-status');
     var btnClearFilters = document.getElementById('btn-clear-filters');
 
     function applyFilters() {
         var nameQuery = filterName ? filterName.value.toLowerCase() : '';
         var typeQuery = filterType ? filterType.value.toLowerCase() : '';
-        var statusQuery = filterStatus ? filterStatus.value : '';
         var activityRows = document.querySelectorAll('#timeshift-table tbody tr.timeshift-activity-row');
         var sectionHeaders = document.querySelectorAll('#timeshift-table tbody tr.timeshift-section-header');
 
         if (btnClearFilters) {
-            if (nameQuery !== '' || typeQuery !== '' || statusQuery !== '') {
+            if (nameQuery !== '' || typeQuery !== '') {
                 btnClearFilters.style.display = 'flex';
             } else {
                 btnClearFilters.style.display = 'none';
@@ -536,14 +486,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             var nameInput = row.querySelector('.field-name');
             var name = nameInput ? nameInput.value.toLowerCase() : '';
-            var statusSelect = row.querySelector('.field-status');
-            var status = statusSelect ? statusSelect.value : '';
 
             var matchName = name.indexOf(nameQuery) > -1;
             var matchType = typeQuery === '' || modname === typeQuery;
-            var matchStatus = statusQuery === '' || status === statusQuery;
 
-            if (matchName && matchType && matchStatus) {
+            if (matchName && matchType) {
                 row.style.display = '';
                 visibleCount++;
             } else {
@@ -581,13 +528,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (filterName) filterName.addEventListener('input', applyFilters);
     if (filterType) filterType.addEventListener('change', applyFilters);
-    if (filterStatus) filterStatus.addEventListener('change', applyFilters);
 
     if (btnClearFilters) {
         btnClearFilters.addEventListener('click', function() {
             if (filterName) filterName.value = '';
             if (filterType) filterType.value = '';
-            if (filterStatus) filterStatus.value = '';
             applyFilters();
         });
     }
@@ -738,13 +683,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 var modname = row.getAttribute('data-modname');
 
                 var nameInput = row.querySelector('.field-name');
-                var statusInput = row.querySelector('.field-status');
                 var allowfromInput = row.querySelector('.field-allowfrom');
                 var duedateInput = row.querySelector('.field-duedate');
                 var cutoffdateInput = row.querySelector('.field-cutoffdate');
 
                 var newname = nameInput ? nameInput.value : '';
-                var statusVal = statusInput ? statusInput.value : '';
                 var allowval = allowfromInput ? allowfromInput.value : '';
                 var dueval = duedateInput ? duedateInput.value : '';
                 var cutoffval = cutoffdateInput ? cutoffdateInput.value : '';
@@ -753,20 +696,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 var duedate = dueval ? Math.floor(new Date(dueval).getTime() / 1000) : 0;
                 var cutoffdate = cutoffval ? Math.floor(new Date(cutoffval).getTime() / 1000) : 0;
 
-                var pendingAvailability = row.getAttribute('data-pending-availability');
-                var deleteFlag = row.dataset.delete === "1" ? true : false;
-
                 updates.push({
                     cmid: cmid,
                     instanceid: instanceid,
                     modname: modname,
                     newname: newname,
-                    status: statusVal,
                     allowfromdate: allowfrom,
                     duedate: duedate,
-                    cutoffdate: cutoffdate,
-                    availability: pendingAvailability,
-                    delete: deleteFlag
+                    cutoffdate: cutoffdate
                 });
             });
 
@@ -810,280 +747,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             var params = 'courseid=' + encodeURIComponent(courseid) +
                          '&updates=' + encodeURIComponent(JSON.stringify(updates)) +
-                         '&reorders=' + encodeURIComponent(JSON.stringify(pendingReorders)) +
                          '&sesskey=' + encodeURIComponent(sesskey);
             xhr.send(params);
         });
     });
 
-    // Bulk Shift Dates Handler & Modal UI Logic
-    var btnShiftDatesAll = document.getElementById('btn-shift-dates-all');
-    var actionShiftDates = document.getElementById('action-shift-dates');
-    var shiftModeInput = document.getElementById('shift-mode');
-    var shiftModalCountText = document.getElementById('shift-modal-count-text');
-    var exCurrent = document.getElementById('shift-ex-current');
-    var exNew = document.getElementById('shift-ex-new');
 
-    function getSelectedCount() {
-        var count = 0;
-        document.querySelectorAll('.row-checkbox').forEach(function(cb) {
-            var row = cb.closest('tr');
-            if (row.style.display !== 'none' && cb.checked) {
-                count++;
-            }
-        });
-        return count;
-    }
-
-    // Bulk Delete Action Logic
-    var strPendingDeletion = '<?php echo get_string('pending_deletion', 'local_timeshift'); ?>';
-
-    // Shift Modal Strings
-    var strShiftSelected = '<?php echo get_string('action_shift_dates_selected', 'local_timeshift'); ?>';
-    var strShiftAll = '<?php echo get_string('action_shift_dates_all', 'local_timeshift'); ?>';
-
-    var btnConfirmBulkDelete = document.getElementById('btn-confirm-bulk-delete');
-    if (btnConfirmBulkDelete) {
-        btnConfirmBulkDelete.addEventListener('click', function() {
-            var count = 0;
-            document.querySelectorAll('.row-checkbox').forEach(function(cb) {
-                var row = cb.closest('tr');
-                if (row.style.display !== 'none' && cb.checked) {
-                    row.dataset.delete = "1";
-                    row.classList.add('table-danger');
-                    row.classList.add('text-decoration-line-through');
-
-                    var badge = document.createElement('span');
-                    badge.className = 'badge bg-danger ms-2';
-                    badge.innerText = strPendingDeletion;
-
-                    var nameInputContainer = row.querySelector('.field-name').parentNode;
-                    // Prevent adding multiple badges if clicked multiple times
-                    if (!nameInputContainer.querySelector('.badge.bg-danger')) {
-                        nameInputContainer.appendChild(badge);
-                        hasUnsavedChanges = true;
-                    }
-                    count++;
-                }
-            });
-            if (count > 0) {
-                // Ensure floating save button is visible
-                var floatingBtn = document.getElementById('floating-save-container');
-                if (floatingBtn && count > 0) floatingBtn.style.display = 'block';
-            }
-        });
-    }
-
-    function updateShiftModalUI() {
-        var mode = shiftModeInput ? shiftModeInput.value : 'all';
-        var count = getSelectedCount();
-
-        if (mode === 'selected' && count > 0) {
-            if (shiftModalCountText) {
-                shiftModalCountText.innerHTML = strShiftSelected.replace('{$a}', count);
-            }
-        } else {
-            if (shiftModalCountText) {
-                shiftModalCountText.innerHTML = strShiftAll;
-            }
-        }
-        updateLiveExample();
-    }
-
-    if (btnShiftDatesAll) {
-        btnShiftDatesAll.addEventListener('click', function() {
-            if (shiftModeInput) shiftModeInput.value = 'all';
-            updateShiftModalUI();
-        });
-    }
-
-    if (actionShiftDates) {
-        actionShiftDates.addEventListener('click', function() {
-            if (shiftModeInput) shiftModeInput.value = 'selected';
-            updateShiftModalUI();
-        });
-    }
-
-    // Live Example Updater
-    var shiftAmountInput = document.getElementById('shift-amount-input');
-    var shiftUnitInput = document.getElementById('shift-unit-input');
-    var shiftDirAdd = document.getElementById('shift-dir-add');
-    var shiftDirSub = document.getElementById('shift-dir-sub');
-
-    function pad(n) { return n < 10 ? '0' + n : n; }
-    function formatExampleDate(d) {
-        return pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
-    }
-
-    function updateLiveExample() {
-        if (!exCurrent || !exNew || !shiftAmountInput) return;
-
-        var baseDate = new Date();
-
-        exCurrent.innerText = formatExampleDate(baseDate);
-
-        var amt = parseInt(shiftAmountInput.value, 10);
-        if (isNaN(amt)) amt = 0;
-
-        var dir = shiftDirAdd && shiftDirAdd.checked ? 1 : -1;
-        amt = amt * dir;
-        var unit = shiftUnitInput ? shiftUnitInput.value : 'days';
-
-        var newD = new Date(baseDate.getTime());
-        if (unit === 'days') {
-            newD.setDate(newD.getDate() + amt);
-        } else if (unit === 'weeks') {
-            newD.setDate(newD.getDate() + (amt * 7));
-        } else if (unit === 'months') {
-            newD.setMonth(newD.getMonth() + amt);
-        }
-
-        exNew.innerText = formatExampleDate(newD);
-    }
-
-    if (shiftAmountInput) shiftAmountInput.addEventListener('input', updateLiveExample);
-    if (shiftUnitInput) shiftUnitInput.addEventListener('change', updateLiveExample);
-    if (shiftDirAdd) shiftDirAdd.addEventListener('change', updateLiveExample);
-    if (shiftDirSub) shiftDirSub.addEventListener('change', updateLiveExample);
-
-    // Call once to initialize the example with the actual current date
-    updateLiveExample();
-
-    // Preview Changes Button logic
-    var btnApply = document.getElementById('btn-apply-shift');
-    if (btnApply) {
-        btnApply.addEventListener('click', function() {
-            var amt = parseInt(shiftAmountInput.value, 10);
-            if (isNaN(amt) || amt === 0) return;
-
-            var unit = shiftUnitInput ? shiftUnitInput.value : 'days';
-            var isSub = shiftDirSub && shiftDirSub.checked;
-            if (isSub) amt = -amt;
-
-            var shiftOpen = document.getElementById('shift-opt-open').checked;
-            var shiftDue = document.getElementById('shift-opt-due').checked;
-            var shiftClose = document.getElementById('shift-opt-close').checked;
-
-            var rows = document.querySelectorAll('#timeshift-table tbody tr');
-            var mode = shiftModeInput ? shiftModeInput.value : 'all';
-
-            rows.forEach(function(row) {
-                if (mode === 'selected') {
-                    var cb = row.querySelector('.row-checkbox');
-                    if (!cb || !cb.checked) return;
-                }
-
-                var allowField = row.querySelector('.field-allowfrom');
-                var dueField = row.querySelector('.field-duedate');
-                var cutoffField = row.querySelector('.field-cutoffdate');
-
-                if (shiftOpen && allowField && !allowField.disabled && allowField.value) {
-                    var d1 = new Date(allowField.value);
-                    if (unit === 'days') d1.setDate(d1.getDate() + amt);
-                    else if (unit === 'weeks') d1.setDate(d1.getDate() + (amt * 7));
-                    else if (unit === 'months') d1.setMonth(d1.getMonth() + amt);
-                    allowField.value = formatDateForInput(d1);
-                    markFieldAsModified(allowField);
-                }
-
-                if (shiftDue && dueField && !dueField.disabled && dueField.value) {
-                    var d2 = new Date(dueField.value);
-                    if (unit === 'days') d2.setDate(d2.getDate() + amt);
-                    else if (unit === 'weeks') d2.setDate(d2.getDate() + (amt * 7));
-                    else if (unit === 'months') d2.setMonth(d2.getMonth() + amt);
-                    dueField.value = formatDateForInput(d2);
-                    markFieldAsModified(dueField);
-                }
-
-                if (shiftClose && cutoffField && !cutoffField.disabled && cutoffField.value) {
-                    var d3 = new Date(cutoffField.value);
-                    if (unit === 'days') d3.setDate(d3.getDate() + amt);
-                    else if (unit === 'weeks') d3.setDate(d3.getDate() + (amt * 7));
-                    else if (unit === 'months') d3.setMonth(d3.getMonth() + amt);
-                    cutoffField.value = formatDateForInput(d3);
-                    markFieldAsModified(cutoffField);
-                }
-            });
-        });
-    }
-
-    // Set Allow From Date Handler
-    var btnApplyAllowFrom = document.getElementById('btn-apply-allowfrom');
-    if (btnApplyAllowFrom) {
-        btnApplyAllowFrom.addEventListener('click', function() {
-            var newDate = document.getElementById('set-allowfrom-input').value;
-            if (!newDate) {
-                closeModal('#setAllowFromModal');
-                return;
-            }
-
-            var rows = document.querySelectorAll('#timeshift-table tbody tr');
-            rows.forEach(function(row) {
-                var cb = row.querySelector('.row-checkbox');
-                if (cb && cb.checked) {
-                    var allowField = row.querySelector('.field-allowfrom');
-                    if (allowField && !allowField.disabled) {
-                        allowField.value = newDate;
-                        markFieldAsModified(allowField);
-                    }
-                }
-            });
-
-            closeModal('#setAllowFromModal');
-        });
-    }
-
-    // Set Due Date Handler
-    var btnApplyDueDate = document.getElementById('btn-apply-duedate');
-    if (btnApplyDueDate) {
-        btnApplyDueDate.addEventListener('click', function() {
-            var newDate = document.getElementById('set-duedate-input').value;
-            if (!newDate) {
-                closeModal('#setDueDateModal');
-                return;
-            }
-
-            var rows = document.querySelectorAll('#timeshift-table tbody tr');
-            rows.forEach(function(row) {
-                var cb = row.querySelector('.row-checkbox');
-                if (cb && cb.checked) {
-                    var dueField = row.querySelector('.field-duedate');
-                    if (dueField && !dueField.disabled) {
-                        dueField.value = newDate;
-                        markFieldAsModified(dueField);
-                    }
-                }
-            });
-
-            closeModal('#setDueDateModal');
-        });
-    }
-
-    // Set Cut-off Date Handler
-    var btnApplyCutoffDate = document.getElementById('btn-apply-cutoffdate');
-    if (btnApplyCutoffDate) {
-        btnApplyCutoffDate.addEventListener('click', function() {
-            var newDate = document.getElementById('set-cutoffdate-input').value;
-            if (!newDate) {
-                closeModal('#setCutoffDateModal');
-                return;
-            }
-
-            var rows = document.querySelectorAll('#timeshift-table tbody tr');
-            rows.forEach(function(row) {
-                var cb = row.querySelector('.row-checkbox');
-                if (cb && cb.checked) {
-                    var cutoffField = row.querySelector('.field-cutoffdate');
-                    if (cutoffField && !cutoffField.disabled) {
-                        cutoffField.value = newDate;
-                        markFieldAsModified(cutoffField);
-                    }
-                }
-            });
-
-            closeModal('#setCutoffDateModal');
-        });
-    }
 
     // Find & Replace Handler
     var btnApplyFindReplace = document.getElementById('btn-apply-findreplace');
@@ -1118,145 +787,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Change Availability Handler
-    var btnApplyAvailability = document.getElementById('btn-apply-availability');
-    if (btnApplyAvailability) {
-        btnApplyAvailability.addEventListener('click', function() {
-            var newStatus = document.getElementById('ca-status-input').value;
 
-            var rows = document.querySelectorAll('#timeshift-table tbody tr');
-            rows.forEach(function(row) {
-                var cb = row.querySelector('.row-checkbox');
-                if (cb && cb.checked) {
-                    var statusInput = row.querySelector('.field-status');
-                    if (statusInput) {
-                        statusInput.value = newStatus;
-                        markFieldAsModified(statusInput);
-                        // Trigger change event to update the background colors
-                        var event = new Event('change');
-                        statusInput.dispatchEvent(event);
-                    }
-                }
-            });
-
-            closeModal('#changeAvailabilityModal');
-        });
-    }
-
-    // ModalForm for Restrictions
-    var editRestrictionsBtns = document.querySelectorAll('.btn-edit-restrictions');
-    if (editRestrictionsBtns.length > 0 && typeof require !== 'undefined') {
-        require(['core_form/modalform'], function(ModalForm) {
-            editRestrictionsBtns.forEach(function(btn) {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    var cmid = parseInt(btn.getAttribute('data-cmid'), 10);
-                    var courseid = parseInt(btn.getAttribute('data-courseid'), 10);
-
-                    var pending = btn.closest('tr').getAttribute('data-pending-availability') || '';
-
-                    var form = new ModalForm({
-                        formClass: 'local_timeshift\\form\\availability_form',
-                        args: { cmid: cmid, courseid: courseid, pending: pending },
-                        modalConfig: { title: 'Edit Restrictions' },
-                        returnFocus: btn
-                    });
-
-                    form.addEventListener(form.events.FORM_SUBMITTED, function(event) {
-                        var newAvail = event.detail.availability;
-                        var row = btn.closest('tr');
-                        var oldAvail = row.getAttribute('data-pending-availability');
-                        if (oldAvail !== newAvail) {
-                            row.setAttribute('data-pending-availability', newAvail ? newAvail : '');
-                            var td = btn.closest('td');
-                            if (td) td.classList.add('td-modified');
-                        }
-                        var icon = row.querySelector('.restrictions-icon');
-                        if (icon) {
-                            if (newAvail && newAvail !== '{"op":"&","c":[],"showc":[]}' && newAvail !== 'null') {
-                                icon.className = 'fa fa-lock text-warning restrictions-icon';
-                                icon.title = 'Has pending restrictions';
-                                icon.style.opacity = '1';
-                            } else {
-                                icon.className = 'fa fa-unlock-alt text-muted restrictions-icon';
-                                icon.title = 'No restrictions';
-                                icon.style.opacity = '0.3';
-                            }
-                        }
-                    });
-
-                    form.show();
-                });
-            });
-
-            // Bulk Set Restrictions Handler
-            var btnBulkRestrictions = document.getElementById('action-set-restrictions');
-            if (btnBulkRestrictions) {
-                btnBulkRestrictions.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    // Find first selected cmid to use as contex
-                    var rows = document.querySelectorAll('#timeshift-table tbody tr');
-                    var firstSelectedCmid = null;
-                    var courseid = null;
-
-                    rows.forEach(function(row) {
-                        var cb = row.querySelector('.row-checkbox');
-                        if (cb && cb.checked && !firstSelectedCmid) {
-                            firstSelectedCmid = parseInt(row.getAttribute('data-cmid'), 10);
-                            var restrictionsBtn = row.querySelector('.btn-edit-restrictions');
-                            courseid = parseInt(row.getAttribute('data-courseid') || restrictionsBtn.getAttribute('data-courseid'), 10);
-                        }
-                    });
-
-                    if (!firstSelectedCmid) {
-                        alert('Please select at least one activity to edit restrictions.');
-                        return;
-                    }
-
-                    var pending = '';
-                    var firstRow = document.querySelector('tr[data-cmid="' + firstSelectedCmid + '"]');
-                    if (firstRow) pending = firstRow.getAttribute('data-pending-availability') || '';
-
-                    var form = new ModalForm({
-                        formClass: 'local_timeshift\\form\\availability_form',
-                        args: { cmid: firstSelectedCmid, courseid: courseid, pending: pending },
-                        modalConfig: { title: 'Set Bulk Restrictions' }
-                    });
-
-                    form.addEventListener(form.events.FORM_SUBMITTED, function(event) {
-                        var newAvail = event.detail.availability;
-
-                        rows.forEach(function(row) {
-                            var cb = row.querySelector('.row-checkbox');
-                            if (cb && cb.checked) {
-                                var oldAvail = row.getAttribute('data-pending-availability');
-                                if (oldAvail !== newAvail) {
-                                    row.setAttribute('data-pending-availability', newAvail ? newAvail : '');
-                                    var td = row.querySelector('.btn-edit-restrictions').closest('td');
-                                    if (td) td.classList.add('td-modified');
-                                }
-                                var icon = row.querySelector('.restrictions-icon');
-                                if (icon) {
-                                    if (newAvail && newAvail !== '{"op":"&","c":[],"showc":[]}' && newAvail !== 'null') {
-                                        icon.className = 'fa fa-lock text-warning restrictions-icon';
-                                        icon.title = 'Has pending restrictions';
-                                        icon.style.opacity = '1';
-                                    } else {
-                                        icon.className = 'fa fa-unlock-alt text-muted restrictions-icon';
-                                        icon.title = 'No restrictions';
-                                        icon.style.opacity = '0.3';
-                                    }
-                                }
-                            }
-                        });
-                    });
-
-                    form.show();
-                });
-            }
-        });
-    }
 
     function closeModal(selector) {
         var modalSelector = selector || '.modal';
@@ -1278,66 +809,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return localISOTime;
     }
 
-    // Drag and Drop Logic using SortableJS
-    var pendingReorders = [];
-    var tableBody = document.querySelector('#timeshift-table tbody');
-    if (tableBody) {
-        Sortable.create(tableBody, {
-            handle: '.drag-handle',
-            filter: '.timeshift-section-header', // Prevent section headers from being draggable
-            animation: 150,
-            onStart: function(evt) {
-                var fName = document.getElementById('filter-name');
-                var fType = document.getElementById('filter-type');
-                var fStatus = document.getElementById('filter-status');
-                if ((fName && fName.value !== '') || (fType && fType.value !== '') || (fStatus && fStatus.value !== '')) {
-                    showMoodleAlert('Notice', 'Drag and drop reordering is disabled while filters are active. Please clear filters first.');
-                    evt.preventDefault(); // Stop sorting if filters are active
-                }
-            },
-            onEnd: function(evt) {
-                if (evt.oldIndex === evt.newIndex) return;
-                var item = evt.item;
-                if (!item.classList.contains('timeshift-activity-row')) return;
 
-                var prevRow = item.previousElementSibling;
-                var nextRow = item.nextElementSibling;
-
-                var targetcmid = 0;
-                var beforecmid = 0;
-                var targetsectionnum = -1;
-
-                if (nextRow && nextRow.classList.contains('timeshift-activity-row')) {
-                    beforecmid = parseInt(nextRow.dataset.cmid, 10) || 0;
-                } else if (prevRow && prevRow.classList.contains('timeshift-activity-row')) {
-                    targetcmid = parseInt(prevRow.dataset.cmid, 10) || 0;
-                } else {
-                    // It must be placed just after a section header with no other activities
-                    if (prevRow && prevRow.classList.contains('timeshift-section-header')) {
-                        targetsectionnum = parseInt(prevRow.dataset.sectionnum, 10) || -1;
-                    }
-                }
-
-                var cmid = parseInt(item.dataset.cmid, 10);
-                if (!cmid || isNaN(cmid)) return;
-
-                pendingReorders.push({cmid: cmid, beforecmid: beforecmid, targetcmid: targetcmid, targetsectionnum: targetsectionnum});
-
-                hasUnsavedChanges = true;
-                var floatingBtn = document.getElementById('floating-save-container');
-                if (floatingBtn) floatingBtn.style.display = 'block';
-
-                var dragCell = item.querySelector('.drag-handle-cell');
-                if (dragCell) {
-                    dragCell.classList.add('td-modified');
-                }
-
-                item.style.transition = 'background-color 0.5s';
-                item.style.backgroundColor = '#e8f5e9';
-                setTimeout(function(){ item.style.backgroundColor = ''; }, 1000);
-            }
-        });
-    }
 });
 document.getElementById('btn-show-pro').addEventListener('click', function(e) {
     e.preventDefault();
