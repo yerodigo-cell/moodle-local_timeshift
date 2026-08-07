@@ -428,7 +428,7 @@ echo '<div class="container my-5" style="max-width: 900px;">
     </div>
 
     <div class="text-center mt-5">
-        <a href="https://edupluginsstudio.com/timeshift-pro.html#pricing" target="_blank" class="btn btn-lg btn-timeshift-action" 
+        <a href="https://edupluginsstudio.com/timeshift-pro.html#pricing" target="_blank" class="btn btn-lg btn-timeshift-action"
            style="padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 1.25rem; box-shadow: 0 4px 15px rgba(15, 82, 138, 0.4);">
             Purchase Timeshift Pro Now <i class="fa fa-arrow-right" style="margin-left: 8px;"></i>
         </a>
