@@ -94,11 +94,7 @@ echo '</div>';
 // Banner Upsell.
 echo '<div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-left: auto;">';
 
-/*
-echo '<a href="#" id="btn-show-pro" class="btn btn-timeshift-action" ' .
-     'style="border-radius: 6px; font-weight: 500; white-space: nowrap; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">' .
-     '🚀 Get Timeshift Pro!</a>';
-*/
+
 
 
 echo '</div>';
@@ -284,111 +280,7 @@ echo '</div>'; // End footer toolbar.
 
 echo '</div>'; // End timeshift-main-view.
 
-/* 
-echo '<div id="timeshift-pro-view" style="display:none;">';
-echo '<div class="mb-3"><button class="btn btn-secondary" id="btn-back-main" style="border-radius: 6px; font-weight: 500;"><i class="fa fa-arrow-left" style="margin-right: 8px;"></i> Back to Course Activities</button></div>';
-echo '<div class="container my-5" style="max-width: 900px;">
-    <div class="text-center mb-5">
-        <h1 class="display-4 font-weight-bold" style="color: #0f528a;">🚀 Get Timeshift Pro!</h1>
-        <p class="lead text-muted">Supercharge your course management. Unlock the full potential of Timeshift and save hours of manual work.</p>
-    </div>
 
-    <div class="card shadow-lg border-0" style="border-radius: 12px; overflow: hidden;">
-        <div class="card-body p-0">
-            <table class="table mb-0" style="font-size: 1.1rem;">
-                <thead class="thead-dark" style="background-color: #f8f9fa;">
-                    <tr>
-                        <th class="py-4 px-4 border-0" style="width: 50%;">Feature</th>
-                        <th class="py-4 px-4 text-center border-0" style="width: 25%; color: #475569; background-color: #f1f5f9;">Free Version</th>
-                        <th class="py-4 px-4 text-center border-0" style="width: 25%; color: #854d0e; background-color: #fef08a;">PRO Version</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="py-3 px-4">View and manage Quiz, Assign & Forum dates</td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #f8fafc;"><i class="fa fa-check"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Rename activities directly from the table</td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #f8fafc;"><i class="fa fa-check"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Find & Replace in activity names</td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #f8fafc;"><i class="fa fa-check"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Calendar date synchronization</td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #f8fafc;"><i class="fa fa-check"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Modify dates in Bulk across activities</td>
-                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Shift ALL course dates by X days automatically</td>
-                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">View and organize by course sections</td>
-                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Delete activities in bulk</td>
-                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Filter activities by type or status</td>
-                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Manage ALL modules (Files, Pages, Books, etc.)</td>
-                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Change Availability (Show, Hide, Stealth mode)</td>
-                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Manage Access Restrictions & Conditions</td>
-                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4">Drag and drop reordering inside the table</td>
-                        <td class="py-3 px-4 text-center text-danger" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4 border-0">Premium Support</td>
-                        <td class="py-3 px-4 text-center text-danger border-0" style="background-color: #f8fafc;"><i class="fa fa-times"></i></td>
-                        <td class="py-3 px-4 text-center text-success border-0" style="background-color: #fef9c3;"><i class="fa fa-check"></i></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="text-center mt-5">
-        <a href="https://edupluginsstudio.com/timeshift-pro.html#pricing" target="_blank" class="btn btn-lg btn-timeshift-action"
-           style="padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 1.25rem; box-shadow: 0 4px 15px rgba(15, 82, 138, 0.4);">
-            Get Timeshift Pro Now! <i class="fa fa-arrow-right" style="margin-left: 8px;"></i>
-        </a>
-        <p class="mt-3 text-muted">Save time every day!</p>
-    </div>
-</div>';
-echo '</div>';
-*/
 
 
 echo '</div>'; // End container.
@@ -423,20 +315,7 @@ echo '
 ';
 
 ?>
-<!--
-<script>
-document.getElementById('btn-show-pro').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('timeshift-main-view').style.display = 'none';
-    document.getElementById('timeshift-pro-view').style.display = 'block';
-});
-document.getElementById('btn-back-main').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('timeshift-pro-view').style.display = 'none';
-    document.getElementById('timeshift-main-view').style.display = 'block';
-});
-</script>
--->
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var strSingular = '<?php echo get_string('activitiesselected_singular', 'local_timeshift'); ?>';
@@ -815,18 +694,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
-/*
-document.getElementById('btn-show-pro').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('timeshift-main-view').style.display = 'none';
-    document.getElementById('timeshift-pro-view').style.display = 'block';
-});
-document.getElementById('btn-back-main').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('timeshift-pro-view').style.display = 'none';
-    document.getElementById('timeshift-main-view').style.display = 'block';
-});
-*/
+
 </script>
 
 <?php
