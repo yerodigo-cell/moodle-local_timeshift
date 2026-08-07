@@ -54,7 +54,6 @@ $string['cutoffdate'] = 'Cut-off Date';
 $string['days'] = 'Days';
 $string['direction'] = 'Direction';
 $string['discard'] = 'Discard';
-
 $string['duedate'] = 'Due Date';
 $string['errorupdate'] = 'Error updating database records.';
 $string['example'] = 'Example:';
