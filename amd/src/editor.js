@@ -20,32 +20,215 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'core/config'], function($, config) {
+define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, config, Notification, str) {
 
     var init = function(courseid) {
+        var strSingular = '';
+        var strPlural = '';
+        var hasUnsavedChanges = false;
+
+        // Fetch strings for the UI
+        str.get_strings([
+            {key: 'activitiesselected_singular', component: 'local_timeshift'},
+            {key: 'activitiesselected_plural', component: 'local_timeshift'},
+            {key: 'saving', component: 'local_timeshift'},
+            {key: 'success', component: 'local_timeshift'},
+            {key: 'successsaved', component: 'local_timeshift'}
+        ]).done(function(strings) {
+            strSingular = strings[0];
+            strPlural = strings[1];
+        });
+
+        // Warn user before leaving page if there are unsaved changes
+        $(window).on('beforeunload', function(e) {
+            if (hasUnsavedChanges) {
+                e.preventDefault();
+                e.returnValue = ''; // Required for some browsers
+            }
+        });
+
+        function markFieldAsModified(field) {
+            if (!field) return;
+            var td = $(field).closest('td');
+            if (td.length) {
+                td.addClass('td-modified');
+            }
+            hasUnsavedChanges = true;
+            $('#floating-save-container').show();
+        }
+
+        // Attach listener to all editable fields
+        $('.field-name, .field-status, .field-allowfrom, .field-duedate, .field-cutoffdate').on('change input', function() {
+            markFieldAsModified(this);
+        });
+
+        // Filtering logic
+        function applyFilters() {
+            var nameQuery = $('#filter-name').val() ? $('#filter-name').val().toLowerCase() : '';
+            var typeQuery = $('#filter-type').length ? $('#filter-type').val().toLowerCase() : '';
+            var activityRows = $('#timeshift-table tbody tr.timeshift-activity-row');
+            var sectionHeaders = $('#timeshift-table tbody tr.timeshift-section-header');
+
+            if (nameQuery !== '' || typeQuery !== '') {
+                $('#btn-clear-filters').css('display', 'flex');
+            } else {
+                $('#btn-clear-filters').hide();
+            }
+
+            var visibleCount = 0;
+
+            activityRows.each(function() {
+                var row = $(this);
+                var modname = row.data('modname') || '';
+                modname = modname.toLowerCase();
+                var name = row.find('.field-name').val() ? row.find('.field-name').val().toLowerCase() : '';
+
+                var matchName = name.indexOf(nameQuery) > -1;
+                var matchType = typeQuery === '' || modname === typeQuery;
+
+                if (matchName && matchType) {
+                    row.show();
+                    visibleCount++;
+                } else {
+                    row.hide();
+                }
+            });
+
+            // Hide empty sections
+            sectionHeaders.each(function() {
+                var header = $(this);
+                var hasVisibleActivities = false;
+                var next = header.next();
+
+                while (next.length && !next.hasClass('timeshift-section-header')) {
+                    if (next.css('display') !== 'none' && next.hasClass('timeshift-activity-row')) {
+                        hasVisibleActivities = true;
+                        break;
+                    }
+                    next = next.next();
+                }
+
+                if (hasVisibleActivities) {
+                    header.show();
+                } else {
+                    header.hide();
+                }
+            });
+
+            $('#total-activities-count').text(visibleCount);
+            updateSelectionState();
+        }
+
+        $('#filter-name').on('input', applyFilters);
+        $('#filter-type').on('change', applyFilters);
+
+        $('#btn-clear-filters').on('click', function() {
+            $('#filter-name').val('');
+            if ($('#filter-type').length) {
+                $('#filter-type').val('');
+            }
+            applyFilters();
+        });
+
+        // Checkbox and Bulk Actions Toolbar Logic
+        function updateSelectionState() {
+            var selectedCount = 0;
+            var visibleCount = 0;
+            var visibleSelectedCount = 0;
+
+            $('.row-checkbox').each(function() {
+                var cb = $(this);
+                var row = cb.closest('tr');
+                if (row.css('display') !== 'none') {
+                    visibleCount++;
+                    if (cb.prop('checked')) {
+                        selectedCount++;
+                        visibleSelectedCount++;
+                    }
+                } else {
+                    if (cb.prop('checked')) {
+                        selectedCount++;
+                    }
+                }
+            });
+
+            var selectAll = $('#select-all-checkbox');
+            if (selectAll.length) {
+                selectAll.prop('checked', (visibleCount > 0 && visibleSelectedCount === visibleCount));
+                selectAll.prop('indeterminate', (visibleSelectedCount > 0 && visibleSelectedCount < visibleCount));
+            }
+
+            if (selectedCount > 0) {
+                $('#bulk-actions-toolbar').css('display', 'flex');
+                var text = selectedCount === 1 ? strSingular : strPlural;
+                $('#selected-count').text(selectedCount + text);
+            } else {
+                $('#bulk-actions-toolbar').hide();
+            }
+        }
+
+        $('#select-all-checkbox').on('change', function() {
+            var isChecked = $(this).prop('checked');
+            $('.row-checkbox').each(function() {
+                var cb = $(this);
+                var row = cb.closest('tr');
+                if (row.css('display') !== 'none') {
+                    cb.prop('checked', isChecked);
+                }
+            });
+            updateSelectionState();
+        });
+
+        $('.row-checkbox').on('change', updateSelectionState);
+
+        $('#btn-clear-selection').on('click', function() {
+            $('.row-checkbox').prop('checked', false);
+            updateSelectionState();
+        });
+
+        // Discard Changes Handler
+        $('.btn-action-discard').on('click', function() {
+            Notification.confirm(
+                'Confirm discard',
+                'Are you sure you want to discard all unsaved changes?',
+                'Discard',
+                'Cancel',
+                function() {
+                    hasUnsavedChanges = false;
+                    window.location.reload();
+                }
+            );
+        });
+
         // Save Changes Handler
-        $('#btn-save-changes').on('click', function() {
-            var btn = $(this);
-            btn.prop('disabled', true);
-            var originalText = btn.text();
-            btn.text('Saving...');
+        $('.btn-action-save').on('click', function() {
+            var btnSaveNodes = $('.btn-action-save');
+            btnSaveNodes.prop('disabled', true);
+            var originalText = btnSaveNodes.first().text();
+            
+            str.get_string('saving', 'local_timeshift').done(function(savingStr) {
+                btnSaveNodes.text(savingStr);
+            }).fail(function() {
+                btnSaveNodes.text('Saving...');
+            });
 
             var updates = [];
 
-            $('#timeshift-table tbody tr').each(function() {
+            $('#timeshift-table tbody tr.timeshift-activity-row').each(function() {
                 var row = $(this);
                 var cmid = row.data('cmid');
                 var instanceid = row.data('instance');
                 var modname = row.data('modname');
 
-                var newname = row.find('.field-name').val();
-
-                // Convert dates back to UNIX timestamp if applicable
+                var newname = row.find('.field-name').val() || '';
+                
                 var allowfromInput = row.find('.field-allowfrom').val();
                 var duedateInput = row.find('.field-duedate').val();
+                var cutoffdateInput = row.find('.field-cutoffdate').val();
 
                 var allowfrom = allowfromInput ? Math.floor(new Date(allowfromInput).getTime() / 1000) : 0;
                 var duedate = duedateInput ? Math.floor(new Date(duedateInput).getTime() / 1000) : 0;
+                var cutoffdate = cutoffdateInput ? Math.floor(new Date(cutoffdateInput).getTime() / 1000) : 0;
 
                 updates.push({
                     cmid: cmid,
@@ -53,11 +236,11 @@ define(['jquery', 'core/config'], function($, config) {
                     modname: modname,
                     newname: newname,
                     allowfromdate: allowfrom,
-                    duedate: duedate
+                    duedate: duedate,
+                    cutoffdate: cutoffdate
                 });
             });
 
-            // Using standard jQuery ajax since we have a custom ajax.php endpoint
             $.ajax({
                 url: config.wwwroot + '/local/timeshift/ajax.php',
                 type: 'POST',
@@ -69,69 +252,136 @@ define(['jquery', 'core/config'], function($, config) {
                 dataType: 'json'
             }).done(function(response) {
                 if (response && response.success) {
-                    // eslint-disable-next-line no-alert
-                    alert('Changes successfully saved.');
-                    window.location.reload();
+                    str.get_strings([
+                        {key: 'success', component: 'local_timeshift'},
+                        {key: 'successsaved', component: 'local_timeshift'}
+                    ]).done(function(strings) {
+                        Notification.alert(strings[0], strings[1], 'OK').then(function() {
+                            hasUnsavedChanges = false;
+                            window.location.reload();
+                        });
+                    });
                 } else {
-                    // eslint-disable-next-line no-alert
-                    alert((response && response.message) ? response.message : 'Error updating database records.');
-                    btn.prop('disabled', false).text(originalText);
+                    Notification.alert('Error', (response && response.message) ? response.message : 'Error updating database records.', 'OK');
+                    btnSaveNodes.prop('disabled', false).text(originalText);
                 }
             }).fail(function(ex) {
                 window.console.error(ex);
-                // eslint-disable-next-line no-alert
-                alert('AJAX Error updating records.');
-                btn.prop('disabled', false).text(originalText);
+                Notification.alert('Error', 'AJAX HTTP Error', 'OK');
+                btnSaveNodes.prop('disabled', false).text(originalText);
             });
         });
 
-        // Bulk Shift Dates Handler
+        // Find & Replace Handler
+        $('#btn-apply-findreplace').on('click', function() {
+            var findText = $('#fr-find-input').val();
+            var replaceText = $('#fr-replace-input').val();
+
+            if (findText === '') {
+                closeModal('#findReplaceModal');
+                return;
+            }
+
+            var regex = new RegExp(findText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+            var madeChanges = false;
+
+            $('#timeshift-table tbody tr.timeshift-activity-row').each(function() {
+                var row = $(this);
+                var cb = row.find('.row-checkbox');
+                if (cb.length && cb.prop('checked')) {
+                    var nameInput = row.find('.field-name');
+                    if (nameInput.length) {
+                        var oldVal = nameInput.val();
+                        var newVal = oldVal.replace(regex, replaceText);
+                        nameInput.val(newVal);
+                        if (oldVal !== newVal) {
+                            markFieldAsModified(nameInput[0]);
+                            madeChanges = true;
+                        }
+                    }
+                }
+            });
+
+            if (madeChanges) {
+                hasUnsavedChanges = true;
+            }
+
+            closeModal('#findReplaceModal');
+        });
+
+        // Bulk Shift Dates Handler (from previous editor.js)
         $('#btn-apply-shift').on('click', function() {
             var days = parseInt($('#shift-days-input').val(), 10);
             if (isNaN(days) || days === 0) {
-                $('#shiftDatesModal').modal('hide');
+                closeModal('#shiftDatesModal');
                 return;
             }
 
             var msShift = days * 24 * 60 * 60 * 1000;
+            var madeChanges = false;
 
-            $('#timeshift-table tbody tr').each(function() {
+            $('#timeshift-table tbody tr.timeshift-activity-row').each(function() {
                 var row = $(this);
+                var cb = row.find('.row-checkbox');
+                
+                // If it's a bulk action, typically it applies to selected rows
+                if (cb.length && !cb.prop('checked')) {
+                    return; // Skip if not checked
+                }
+                
                 var allowField = row.find('.field-allowfrom');
                 var dueField = row.find('.field-duedate');
+                var cutoffField = row.find('.field-cutoffdate');
 
                 if (!allowField.prop('disabled') && allowField.val()) {
                     var d1 = new Date(allowField.val());
                     d1.setTime(d1.getTime() + msShift);
                     allowField.val(formatDateForInput(d1));
+                    markFieldAsModified(allowField[0]);
+                    madeChanges = true;
                 }
 
                 if (!dueField.prop('disabled') && dueField.val()) {
                     var d2 = new Date(dueField.val());
                     d2.setTime(d2.getTime() + msShift);
                     dueField.val(formatDateForInput(d2));
+                    markFieldAsModified(dueField[0]);
+                    madeChanges = true;
+                }
+                
+                if (cutoffField.length && !cutoffField.prop('disabled') && cutoffField.val()) {
+                    var d3 = new Date(cutoffField.val());
+                    d3.setTime(d3.getTime() + msShift);
+                    cutoffField.val(formatDateForInput(d3));
+                    markFieldAsModified(cutoffField[0]);
+                    madeChanges = true;
                 }
             });
+            
+            if (madeChanges) {
+                hasUnsavedChanges = true;
+            }
 
-            $('#shiftDatesModal').modal('hide');
+            closeModal('#shiftDatesModal');
         });
 
-        /**
-         * Formats a Date object into a string for input.
-         * @param {Date} dateObj
-         * @return {string} formatted date
-         */
+        function closeModal(selector) {
+            var modalSelector = selector || '.modal';
+            var closeBtns = $(modalSelector + ' [data-dismiss="modal"], ' + modalSelector + ' [data-bs-dismiss="modal"]');
+            if (closeBtns.length > 0) {
+                closeBtns.first().trigger('click');
+            } else {
+                $(modalSelector).modal('hide');
+            }
+        }
+
         function formatDateForInput(dateObj) {
-            // Format to YYYY-MM-DDThh:mm.
-            var tzoffset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds.
+            var tzoffset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds
             var localISOTime = (new Date(dateObj - tzoffset)).toISOString().slice(0, 16);
             return localISOTime;
         }
     };
 
-    /**
-     * Returns the init function.
-     */
     return {
         init: init
     };

@@ -1,0 +1,160 @@
+<div class="local-timeshift-container" style="margin: 0 auto 80px auto; max-width: 1600px;">
+    <h3 style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: #1e293b; margin-bottom: 20px;">
+        <img src="{{iconurl}}" alt="Timeshift Lite Logo" style="width: 32px; height: 32px; border-radius: 6px; box-shadow: 0px 2px 4px rgba(0,0,0,0.2);">
+        <span>{{#str}} pagetitle, local_timeshift {{/str}}</span>
+        <span style="display: flex; align-items: center; margin-top: 4px;">{{{helpicon}}}</span>
+    </h3>
+
+    <div id="timeshift-main-view">
+        <div style="margin-bottom: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
+                <style>
+                    #filter-name {
+                        border: 1px solid #86b7fe !important;
+                        border-radius: 4px !important;
+                        color: #495057 !important;
+                        background-color: #fff !important;
+                        box-shadow: none !important;
+                        transition: border-color 0.2s, box-shadow 0.2s !important;
+                    }
+                    #filter-name:hover {
+                        border-color: #6ea8fe !important;
+                    }
+                    #filter-name:focus, #filter-name:focus-visible {
+                        background-color: #fff !important;
+                        border-color: #86b7fe !important;
+                        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, .25) !important;
+                    }
+                </style>
+                <div style="position: relative; width: 100%; max-width: 250px; min-width: 140px;">
+                    <input type="text" id="filter-name" class="form-control" placeholder="{{#str}} searchbyname, local_timeshift {{/str}}" style="width: 100%;">
+                </div>
+                <button type="button" id="btn-clear-filters" title="Clear filters" style="display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="12" fill="#292d32"/>
+                        <path d="M8.5 8.5L15.5 15.5M15.5 8.5L8.5 15.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-left: auto;">
+            </div>
+        </div>
+
+        <div id="bulk-actions-toolbar" style="display: none; margin-bottom: 20px; padding: 15px 20px; background: #e7f1ff; border: 1px solid #b6d4fe; border-radius: 8px; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15); align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; transition: all 0.3s ease;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span id="selected-count" style="font-weight: 700; color: #084298; font-size: 1.05em;">{{#str}} activitiesselected, local_timeshift, 0 {{/str}}</span>
+                <div class="dropdown">
+                    <button class="btn btn-timeshift-action dropdown-toggle" type="button" id="bulkActionsDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 6px; font-weight: 500; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">
+                        {{#str}} actionsforselected, local_timeshift {{/str}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="bulkActionsDropdown">
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#findReplaceModal" data-bs-toggle="modal" data-bs-target="#findReplaceModal">{{#str}} action_findreplace, local_timeshift {{/str}}</a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-timeshift-clear" id="btn-clear-selection" style="border-radius: 6px; font-weight: 500;">{{#str}} clearselection, local_timeshift {{/str}} ✕</button>
+            </div>
+        </div>
+
+        <div class="table-responsive timeshift-table-wrapper">
+            <table class="table timeshift-clean-table" id="timeshift-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-checkbox"></th>
+                        <th>{{#str}} type, local_timeshift {{/str}}</th>
+                        <th>{{#str}} activity, local_timeshift {{/str}}</th>
+                        <th style="width: 1%; white-space: nowrap;"><i class="fa fa-calendar-o" aria-hidden="true" style="margin-right:6px; color:#6c757d;"></i> {{#str}} opendate, local_timeshift {{/str}}</th>
+                        <th style="width: 1%; white-space: nowrap;"><i class="fa fa-calendar-o" aria-hidden="true" style="margin-right:6px; color:#6c757d;"></i> {{#str}} duedate, local_timeshift {{/str}}</th>
+                        <th style="width: 1%; white-space: nowrap;"><i class="fa fa-calendar-o" aria-hidden="true" style="margin-right:6px; color:#6c757d;"></i> {{#str}} cutoffdate, local_timeshift {{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#sections}}
+                    <tr class="table-light timeshift-section-header" data-sectionnum="{{secnum}}" style="display: none; background-color: #f8f9fa;">
+                        <td colspan="6" style="font-weight: 600; color: #495057; padding-left: 20px; vertical-align: middle;">{{secname}}</td>
+                    </tr>
+                    {{#activities}}
+                    <tr class="timeshift-activity-row" data-cmid="{{cmid}}" data-instance="{{instance}}" data-modname="{{modname}}">
+                        <td style="vertical-align: middle; text-align: center;"><input type="checkbox" class="row-checkbox"></td>
+                        <td style="vertical-align: middle;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                {{#iconhtml}}
+                                {{{iconhtml}}}
+                                {{/iconhtml}}
+                                <span style="font-weight: 500; color: #495057; min-width: 70px;">{{displayname}}</span>
+                            </div>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <input type="text" class="form-control field-name" value="{{name}}" style="width: 100%; min-width: 120px; max-width: 300px;">
+                        </td>
+                        {{#hasdates}}
+                            {{#allowdisabled}}
+                            <td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>
+                            {{/allowdisabled}}
+                            {{^allowdisabled}}
+                            <td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-allowfrom" value="{{allowfrom}}"></td>
+                            {{/allowdisabled}}
+                            
+                            <td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-duedate" value="{{due}}"></td>
+                            
+                            {{#cutoffdisabled}}
+                            <td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>
+                            {{/cutoffdisabled}}
+                            {{^cutoffdisabled}}
+                            <td style="vertical-align: middle;"><input type="datetime-local" class="form-control field-cutoffdate" value="{{cutoff}}"></td>
+                            {{/cutoffdisabled}}
+                        {{/hasdates}}
+                        {{^hasdates}}
+                            <td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>
+                            <td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>
+                            <td class="text-center" style="vertical-align: middle;"><strong>&mdash;</strong></td>
+                        {{/hasdates}}
+                    </tr>
+                    {{/activities}}
+                    {{/sections}}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 16px;">
+            <div style="color: #6c757d; font-size: 14px; font-weight: 500;">
+                {{#str}} totalactivities, local_timeshift {{/str}} <span id="total-activities-count">{{totalactivities}}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-timeshift-discard btn-action-discard" style="border-radius: 6px; padding: 8px 16px; font-weight: 500;">{{#str}} discard, local_timeshift {{/str}}</button>
+                <button type="button" class="btn btn-timeshift-save btn-action-save" style="border-radius: 6px; padding: 8px 24px; font-weight: 500;">{{#str}} savechanges, local_timeshift {{/str}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="findReplaceModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{#str}} action_findreplace, local_timeshift {{/str}}</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-2">
+            <label>{{#str}} find, local_timeshift {{/str}}</label>
+            <input type="text" class="form-control" id="fr-find-input" placeholder="{{#str}} texttofind, local_timeshift {{/str}}">
+        </div>
+        <div class="form-group mb-2">
+            <label>{{#str}} replacewith, local_timeshift {{/str}}</label>
+            <input type="text" class="form-control" id="fr-replace-input" placeholder="{{#str}} replacementtext, local_timeshift {{/str}}">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">{{#str}} cancel, local_timeshift {{/str}}</button>
+        <button type="button" class="btn btn-primary" id="btn-apply-findreplace">{{#str}} applyreplace, local_timeshift {{/str}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#js}}
+require(['local_timeshift/editor'], function(editor) {
+    editor.init({{courseid}});
+});
+{{/js}}
