@@ -35,6 +35,7 @@ $string['action_shift_dates_all'] = 'This action will shift the dates for all th
 $string['action_shift_dates_selected'] = 'This action will shift the dates for {$a} activities.';
 $string['action_shiftdates'] = 'Shift Dates';
 $string['actionsforselected'] = 'Actions for selected';
+$string['activitiesselected'] = '{$a} activities selected';
 $string['activitiesselected_plural'] = ' activities selected';
 $string['activitiesselected_singular'] = ' activity selected';
 $string['activity'] = 'Activity';
