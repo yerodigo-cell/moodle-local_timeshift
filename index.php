@@ -63,10 +63,10 @@ foreach ($activities as $act) {
         $activitiesbysection[$sec] = [
             'secnum' => $sec,
             'secname' => s($act->sectionname),
-            'activities' => []
+            'activities' => [],
         ];
     }
-    
+
     // Format dates for input type datetime-local (YYYY-MM-DDThh:mm).
     $allowfrom = !empty($act->allowfromdate) ? date('Y-m-d\TH:i', $act->allowfromdate) : '';
     $due = !empty($act->duedate) ? date('Y-m-d\TH:i', $act->duedate) : '';
@@ -115,7 +115,7 @@ foreach ($activities as $act) {
             $iconhtml .= '</div>';
         }
     }
-    
+
     $displayname = isset($act->modfullname) ? $act->modfullname : ucfirst($act->modname);
     // Explicitly handle H5pactivity just in case the localized string still says H5P activity.
     if (strtolower($displayname) === 'h5pactivity' || strtolower($displayname) === 'h5p activity') {
@@ -147,18 +147,18 @@ foreach ($activities as $act) {
         'cutoffdisabled' => $cutoffdisabled,
         'allowfrom' => $allowfrom,
         'due' => $due,
-        'cutoff' => $cutoff
+        'cutoff' => $cutoff,
     ];
 }
 
-$template_data = [
+$templatedata = [
     'iconurl' => $iconurl->out(false),
     'helpicon' => $helpicon,
     'totalactivities' => count($activities),
     'courseid' => $courseid,
-    'sections' => array_values($activitiesbysection)
+    'sections' => array_values($activitiesbysection),
 ];
 
-echo $OUTPUT->render_from_template('local_timeshift/main_view', $template_data);
+echo $OUTPUT->render_from_template('local_timeshift/main_view', $templatedata);
 
 echo $OUTPUT->footer();
