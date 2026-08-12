@@ -47,8 +47,15 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
             }
         });
 
+        /**
+         * Mark field as modified
+         *
+         * @param {HTMLElement} field
+         */
         function markFieldAsModified(field) {
-            if (!field) return;
+            if (!field) {
+                return;
+            }
             var td = $(field).closest('td');
             if (td.length) {
                 td.addClass('td-modified');
@@ -63,6 +70,10 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
         });
 
         // Filtering logic
+
+        /**
+         * Apply filters
+         */
         function applyFilters() {
             var nameQuery = $('#filter-name').val() ? $('#filter-name').val().toLowerCase() : '';
             var typeQuery = $('#filter-type').length ? $('#filter-type').val().toLowerCase() : '';
@@ -131,6 +142,10 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
         });
 
         // Checkbox and Bulk Actions Toolbar Logic
+
+        /**
+         * Update selection state
+         */
         function updateSelectionState() {
             var selectedCount = 0;
             var visibleCount = 0;
@@ -205,7 +220,7 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
             var btnSaveNodes = $('.btn-action-save');
             btnSaveNodes.prop('disabled', true);
             var originalText = btnSaveNodes.first().text();
-            
+
             str.get_string('saving', 'local_timeshift').done(function(savingStr) {
                 btnSaveNodes.text(savingStr);
             }).fail(function() {
@@ -221,7 +236,7 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
                 var modname = row.data('modname');
 
                 var newname = row.find('.field-name').val() || '';
-                
+
                 var allowfromInput = row.find('.field-allowfrom').val();
                 var duedateInput = row.find('.field-duedate').val();
                 var cutoffdateInput = row.find('.field-cutoffdate').val();
@@ -259,10 +274,14 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
                         Notification.alert(strings[0], strings[1], 'OK').then(function() {
                             hasUnsavedChanges = false;
                             window.location.reload();
+                            return true;
+                        }).catch(function() {
+                            return false;
                         });
                     });
                 } else {
-                    Notification.alert('Error', (response && response.message) ? response.message : 'Error updating database records.', 'OK');
+                    var msg = (response && response.message) ? response.message : 'Error updating database records.';
+                    Notification.alert('Error', msg, 'OK');
                     btnSaveNodes.prop('disabled', false).text(originalText);
                 }
             }).fail(function(ex) {
@@ -323,12 +342,12 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
             $('#timeshift-table tbody tr.timeshift-activity-row').each(function() {
                 var row = $(this);
                 var cb = row.find('.row-checkbox');
-                
+
                 // If it's a bulk action, typically it applies to selected rows
                 if (cb.length && !cb.prop('checked')) {
                     return; // Skip if not checked
                 }
-                
+
                 var allowField = row.find('.field-allowfrom');
                 var dueField = row.find('.field-duedate');
                 var cutoffField = row.find('.field-cutoffdate');
@@ -348,7 +367,7 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
                     markFieldAsModified(dueField[0]);
                     madeChanges = true;
                 }
-                
+
                 if (cutoffField.length && !cutoffField.prop('disabled') && cutoffField.val()) {
                     var d3 = new Date(cutoffField.val());
                     d3.setTime(d3.getTime() + msShift);
@@ -357,7 +376,7 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
                     madeChanges = true;
                 }
             });
-            
+
             if (madeChanges) {
                 hasUnsavedChanges = true;
             }
@@ -365,6 +384,11 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
             closeModal('#shiftDatesModal');
         });
 
+        /**
+         * Close modal by selector
+         *
+         * @param {String} selector
+         */
         function closeModal(selector) {
             var modalSelector = selector || '.modal';
             var closeBtns = $(modalSelector + ' [data-dismiss="modal"], ' + modalSelector + ' [data-bs-dismiss="modal"]');
@@ -375,6 +399,12 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
             }
         }
 
+        /**
+         * Format date for input
+         *
+         * @param {Date} dateObj
+         * @returns {String}
+         */
         function formatDateForInput(dateObj) {
             var tzoffset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds
             var localISOTime = (new Date(dateObj - tzoffset)).toISOString().slice(0, 16);
