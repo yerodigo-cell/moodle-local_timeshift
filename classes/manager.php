@@ -112,28 +112,24 @@ class manager {
         return $activities;
     }
 
-    /**
-     * Safely updates the name and dates of an activity.
-     *
-     * @param int $cmid The course module ID
-     * @param string $modname The module name
-     * @param int $instanceid The module instance ID
-     * @param string $newname The new name of the activity
-     * @param int|null $duedate The new due date
-     * @param int|null $allowfromdate The new allow from date
-     * @param int|null $cutoffdate The new cutoff date
-     * @return bool True if successful
-     */
     public static function update_activity(
         $cmid,
-        $modname,
-        $instanceid,
+        $courseid,
         $newname,
         $duedate,
         $allowfromdate,
         $cutoffdate = null
     ) {
         global $DB;
+
+        // Resolve the course module and validate course.
+        $cm = get_coursemodule_from_id('', $cmid, 0, false, IGNORE_MISSING);
+        if (!$cm || $cm->course != $courseid) {
+            return false;
+        }
+
+        $modname = $cm->modname;
+        $instanceid = $cm->instance;
 
         $oldname = null;
 
@@ -212,12 +208,6 @@ class manager {
 
         // Universal Calendar Sync
         // Automatically create missing events, update existing ones, and safely rename them.
-        $cm = $DB->get_record('course_modules', ['id' => $cmid], 'course', IGNORE_MISSING);
-        if (!$cm) {
-            return false;
-        }
-        $courseid = $cm->course;
-
         if ($modname === 'assign') {
             if ($duedate !== null) {
                 self::sync_calendar_event($modname, $instanceid, $courseid, 'due', $duedate, $oldname, $newname);

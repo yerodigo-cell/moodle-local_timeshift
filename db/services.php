@@ -24,8 +24,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_timeshift';
-$plugin->version   = 2026082600;
-$plugin->requires  = 2022112800;
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.0.0';
+$functions = [
+    'local_timeshift_update_activities' => [
+        'classname'   => 'local_timeshift\external',
+        'methodname'  => 'update_activities',
+        'classpath'   => 'local/timeshift/classes/external.php',
+        'description' => 'Update dates and names of multiple activities.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => true,
+    ],
+];

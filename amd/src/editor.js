@@ -20,11 +20,21 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, config, Notification, str) {
+define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], function($, config, Notification, str, Ajax) {
 
     var init = function(courseid) {
         var strSingular = '';
         var strPlural = '';
+        var strSaving = 'Saving...';
+        var strSuccess = 'Success';
+        var strSuccessSaved = 'Changes successfully saved.';
+        var strError = 'Error';
+        var strErrorUpdate = 'Error updating database records.';
+        var strConfirmDiscard = 'Confirm discard';
+        var strDiscardWarning = 'Are you sure you want to discard all unsaved changes?';
+        var strDiscard = 'Discard';
+        var strCancel = 'Cancel';
+        var strOk = 'OK';
         var hasUnsavedChanges = false;
 
         // Fetch strings for the UI
@@ -33,10 +43,27 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
             {key: 'activitiesselected_plural', component: 'local_timeshift'},
             {key: 'saving', component: 'local_timeshift'},
             {key: 'success', component: 'local_timeshift'},
-            {key: 'successsaved', component: 'local_timeshift'}
+            {key: 'successsaved', component: 'local_timeshift'},
+            {key: 'error', component: 'local_timeshift'},
+            {key: 'errorupdate', component: 'local_timeshift'},
+            {key: 'confirmdiscard', component: 'local_timeshift'},
+            {key: 'discardchangeswarning', component: 'local_timeshift'},
+            {key: 'discard', component: 'local_timeshift'},
+            {key: 'cancel', component: 'local_timeshift'},
+            {key: 'ok', component: 'moodle'}
         ]).done(function(strings) {
             strSingular = strings[0];
             strPlural = strings[1];
+            strSaving = strings[2];
+            strSuccess = strings[3];
+            strSuccessSaved = strings[4];
+            strError = strings[5];
+            strErrorUpdate = strings[6];
+            strConfirmDiscard = strings[7];
+            strDiscardWarning = strings[8];
+            strDiscard = strings[9];
+            strCancel = strings[10];
+            strOk = strings[11];
         });
 
         // Warn user before leaving page if there are unsaved changes
@@ -204,10 +231,10 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
         // Discard Changes Handler
         $('.btn-action-discard').on('click', function() {
             Notification.confirm(
-                'Confirm discard',
-                'Are you sure you want to discard all unsaved changes?',
-                'Discard',
-                'Cancel',
+                strConfirmDiscard,
+                strDiscardWarning,
+                strDiscard,
+                strCancel,
                 function() {
                     hasUnsavedChanges = false;
                     window.location.reload();
@@ -221,11 +248,7 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
             btnSaveNodes.prop('disabled', true);
             var originalText = btnSaveNodes.first().text();
 
-            str.get_string('saving', 'local_timeshift').done(function(savingStr) {
-                btnSaveNodes.text(savingStr);
-            }).fail(function() {
-                btnSaveNodes.text('Saving...');
-            });
+            btnSaveNodes.text(strSaving);
 
             var updates = [];
 
@@ -247,48 +270,36 @@ define(['jquery', 'core/config', 'core/notification', 'core/str'], function($, c
 
                 updates.push({
                     cmid: cmid,
-                    instanceid: instanceid,
-                    modname: modname,
                     newname: newname,
-                    allowfromdate: allowfrom,
-                    duedate: duedate,
-                    cutoffdate: cutoffdate
+                    allowfromdate: allowfrom ? allowfrom : null,
+                    duedate: duedate ? duedate : null,
+                    cutoffdate: cutoffdate ? cutoffdate : null
                 });
             });
 
-            $.ajax({
-                url: config.wwwroot + '/local/timeshift/ajax.php',
-                type: 'POST',
-                data: {
+            var promises = Ajax.call([{
+                methodname: 'local_timeshift_update_activities',
+                args: {
                     courseid: courseid,
-                    updates: JSON.stringify(updates),
-                    sesskey: config.sesskey
-                },
-                dataType: 'json'
-            }).done(function(response) {
+                    updates: updates
+                }
+            }]);
+
+            promises[0].done(function(response) {
                 if (response && response.success) {
-                    str.get_strings([
-                        {key: 'success', component: 'local_timeshift'},
-                        {key: 'successsaved', component: 'local_timeshift'}
-                    ]).done(function(strings) {
-                        Notification.alert(strings[0], strings[1], 'OK').then(function() {
-                            hasUnsavedChanges = false;
-                            window.location.reload();
-                            return true;
-                        }).catch(function() {
-                            return false;
-                        });
+                    Notification.alert(strSuccess, strSuccessSaved, strOk).then(function() {
+                        hasUnsavedChanges = false;
+                        window.location.reload();
+                        return true;
+                    }).catch(function() {
+                        return false;
                     });
                 } else {
-                    var msg = (response && response.message) ? response.message : 'Error updating database records.';
-                    Notification.alert('Error', msg, 'OK');
+                    var msg = (response && response.message) ? response.message : strErrorUpdate;
+                    Notification.alert(strError, msg, strOk);
                     btnSaveNodes.prop('disabled', false).text(originalText);
                 }
-            }).fail(function(ex) {
-                window.console.error(ex);
-                Notification.alert('Error', 'AJAX HTTP Error', 'OK');
-                btnSaveNodes.prop('disabled', false).text(originalText);
-            });
+            }).fail(Notification.exception);
         });
 
         // Find & Replace Handler
