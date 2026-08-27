@@ -255,8 +255,6 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             $('#timeshift-table tbody tr.timeshift-activity-row').each(function() {
                 var row = $(this);
                 var cmid = row.data('cmid');
-                var instanceid = row.data('instance');
-                var modname = row.data('modname');
 
                 var newname = row.find('.field-name').val() || '';
 
