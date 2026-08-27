@@ -90,8 +90,6 @@ class manager {
                 $status = isset($cm->visibleoncoursepage) && !$cm->visibleoncoursepage ? 2 : 1;
             }
 
-            $sectionname = get_section_name($course, $cm->sectionnum);
-
             $activities[$cm->id] = (object)[
                 'cmid' => $cm->id,
                 'modname' => $modname,
@@ -104,8 +102,6 @@ class manager {
                 'allowfromdate' => $allowfromdate,
                 'cutoffdate' => $cutoffdate,
                 'availability' => $cm->availability,
-                'sectionname' => $sectionname,
-                'sectionnum' => $cm->sectionnum,
             ];
         }
 

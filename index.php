@@ -56,17 +56,8 @@ echo $OUTPUT->header();
 $iconurl = new moodle_url('/local/timeshift/pix/icon.png');
 $helpicon = $OUTPUT->help_icon('pagedescription', 'local_timeshift');
 
-$activitiesbysection = [];
+$flatactivities = [];
 foreach ($activities as $act) {
-    $sec = $act->sectionnum;
-    if (!isset($activitiesbysection[$sec])) {
-        $activitiesbysection[$sec] = [
-            'secnum' => $sec,
-            'secname' => s($act->sectionname),
-            'activities' => [],
-        ];
-    }
-
     // Format dates for input type datetime-local (YYYY-MM-DDThh:mm).
     $allowfrom = !empty($act->allowfromdate) ? date('Y-m-d\TH:i', $act->allowfromdate) : '';
     $due = !empty($act->duedate) ? date('Y-m-d\TH:i', $act->duedate) : '';
@@ -135,7 +126,7 @@ foreach ($activities as $act) {
         $cutoffdisabled = ($act->modname === 'quiz');
     }
 
-    $activitiesbysection[$sec]['activities'][] = [
+    $flatactivities[] = [
         'cmid' => $act->cmid,
         'instance' => $act->instance,
         'modname' => $act->modname,
@@ -156,7 +147,7 @@ $templatedata = [
     'helpicon' => $helpicon,
     'totalactivities' => count($activities),
     'courseid' => $courseid,
-    'sections' => array_values($activitiesbysection),
+    'activities' => $flatactivities,
 ];
 
 echo $OUTPUT->render_from_template('local_timeshift/main_view', $templatedata);

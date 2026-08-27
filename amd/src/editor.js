@@ -105,7 +105,6 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             var nameQuery = $('#filter-name').val() ? $('#filter-name').val().toLowerCase() : '';
             var typeQuery = $('#filter-type').length ? $('#filter-type').val().toLowerCase() : '';
             var activityRows = $('#timeshift-table tbody tr.timeshift-activity-row');
-            var sectionHeaders = $('#timeshift-table tbody tr.timeshift-section-header');
 
             if (nameQuery !== '' || typeQuery !== '') {
                 $('#btn-clear-filters').css('display', 'flex');
@@ -129,27 +128,6 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                     visibleCount++;
                 } else {
                     row.hide();
-                }
-            });
-
-            // Hide empty sections
-            sectionHeaders.each(function() {
-                var header = $(this);
-                var hasVisibleActivities = false;
-                var next = header.next();
-
-                while (next.length && !next.hasClass('timeshift-section-header')) {
-                    if (next.css('display') !== 'none' && next.hasClass('timeshift-activity-row')) {
-                        hasVisibleActivities = true;
-                        break;
-                    }
-                    next = next.next();
-                }
-
-                if (hasVisibleActivities) {
-                    header.show();
-                } else {
-                    header.hide();
                 }
             });
 
@@ -297,7 +275,10 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                     Notification.alert(strError, msg, strOk);
                     btnSaveNodes.prop('disabled', false).text(originalText);
                 }
-            }).fail(Notification.exception);
+            }).fail(function(ex) {
+                btnSaveNodes.prop('disabled', false).text(originalText);
+                Notification.exception(ex);
+            });
         });
 
         // Find & Replace Handler
