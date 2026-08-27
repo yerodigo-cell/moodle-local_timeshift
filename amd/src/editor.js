@@ -26,13 +26,11 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
         var strSingular = '';
         var strPlural = '';
         var strSaving = 'Saving...';
-        var strError = 'Error';
         var strErrorUpdate = 'Error updating database records.';
         var strConfirmDiscard = 'Confirm discard';
         var strDiscardWarning = 'Are you sure you want to discard all unsaved changes?';
         var strDiscard = 'Discard';
         var strCancel = 'Cancel';
-        var strOk = 'OK';
         var hasUnsavedChanges = false;
 
         // Fetch strings for the UI
@@ -40,24 +38,20 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             {key: 'activitiesselected_singular', component: 'local_timeshift'},
             {key: 'activitiesselected_plural', component: 'local_timeshift'},
             {key: 'saving', component: 'local_timeshift'},
-            {key: 'error', component: 'local_timeshift'},
             {key: 'errorupdate', component: 'local_timeshift'},
             {key: 'confirmdiscard', component: 'local_timeshift'},
             {key: 'discardchangeswarning', component: 'local_timeshift'},
             {key: 'discard', component: 'local_timeshift'},
-            {key: 'cancel', component: 'local_timeshift'},
-            {key: 'ok', component: 'moodle'}
+            {key: 'cancel', component: 'local_timeshift'}
         ]).done(function(strings) {
             strSingular = strings[0];
             strPlural = strings[1];
             strSaving = strings[2];
-            strError = strings[3];
-            strErrorUpdate = strings[4];
-            strConfirmDiscard = strings[5];
-            strDiscardWarning = strings[6];
-            strDiscard = strings[7];
-            strCancel = strings[8];
-            strOk = strings[9];
+            strErrorUpdate = strings[3];
+            strConfirmDiscard = strings[4];
+            strDiscardWarning = strings[5];
+            strDiscard = strings[6];
+            strCancel = strings[7];
         });
 
         // Warn user before leaving page if there are unsaved changes
@@ -247,13 +241,20 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                 });
             });
 
-            var promises = Ajax.call([{
-                methodname: 'local_timeshift_update_activities',
-                args: {
-                    courseid: courseid,
-                    updates: updates
-                }
-            }]);
+            var promises;
+            try {
+                promises = Ajax.call([{
+                    methodname: 'local_timeshift_update_activities',
+                    args: {
+                        courseid: courseid,
+                        updates: updates
+                    }
+                }]);
+            } catch (err) {
+                btnSaveNodes.prop('disabled', false).text(originalText);
+                window.alert("Synchronous Ajax Error: " + (err.message || err));
+                return;
+            }
 
             promises[0].done(function(response) {
                 if (response && response.success) {
@@ -262,23 +263,11 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                 } else {
                     var msg = (response && response.message) ? response.message : strErrorUpdate;
                     btnSaveNodes.prop('disabled', false).text(originalText);
-                    if (Notification && Notification.alert) {
-                        Notification.alert(strError, msg, strOk);
-                    } else {
-                        window.alert(strError + ": " + msg);
-                    }
+                    window.alert("Backend Error: " + msg);
                 }
             }).fail(function(ex) {
                 btnSaveNodes.prop('disabled', false).text(originalText);
-                if (Notification && Notification.exception) {
-                    try {
-                        Notification.exception(ex);
-                    } catch (e) {
-                        window.alert("Exception: " + (ex.message || ex));
-                    }
-                } else {
-                    window.alert("Exception: " + (ex.message || ex));
-                }
+                window.alert("Network/Promise Error: " + (ex.message || ex.error || ex));
             });
         });
 
