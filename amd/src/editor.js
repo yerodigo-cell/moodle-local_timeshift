@@ -26,8 +26,6 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
         var strSingular = '';
         var strPlural = '';
         var strSaving = 'Saving...';
-        var strSuccess = 'Success';
-        var strSuccessSaved = 'Changes successfully saved.';
         var strError = 'Error';
         var strErrorUpdate = 'Error updating database records.';
         var strConfirmDiscard = 'Confirm discard';
@@ -42,8 +40,6 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             {key: 'activitiesselected_singular', component: 'local_timeshift'},
             {key: 'activitiesselected_plural', component: 'local_timeshift'},
             {key: 'saving', component: 'local_timeshift'},
-            {key: 'success', component: 'local_timeshift'},
-            {key: 'successsaved', component: 'local_timeshift'},
             {key: 'error', component: 'local_timeshift'},
             {key: 'errorupdate', component: 'local_timeshift'},
             {key: 'confirmdiscard', component: 'local_timeshift'},
@@ -55,15 +51,13 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             strSingular = strings[0];
             strPlural = strings[1];
             strSaving = strings[2];
-            strSuccess = strings[3];
-            strSuccessSaved = strings[4];
-            strError = strings[5];
-            strErrorUpdate = strings[6];
-            strConfirmDiscard = strings[7];
-            strDiscardWarning = strings[8];
-            strDiscard = strings[9];
-            strCancel = strings[10];
-            strOk = strings[11];
+            strError = strings[3];
+            strErrorUpdate = strings[4];
+            strConfirmDiscard = strings[5];
+            strDiscardWarning = strings[6];
+            strDiscard = strings[7];
+            strCancel = strings[8];
+            strOk = strings[9];
         });
 
         // Warn user before leaving page if there are unsaved changes
@@ -263,21 +257,28 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
 
             promises[0].done(function(response) {
                 if (response && response.success) {
-                    Notification.alert(strSuccess, strSuccessSaved, strOk).then(function() {
-                        hasUnsavedChanges = false;
-                        window.location.reload();
-                        return true;
-                    }).catch(function() {
-                        return false;
-                    });
+                    hasUnsavedChanges = false;
+                    window.location.reload();
                 } else {
                     var msg = (response && response.message) ? response.message : strErrorUpdate;
-                    Notification.alert(strError, msg, strOk);
                     btnSaveNodes.prop('disabled', false).text(originalText);
+                    if (Notification && Notification.alert) {
+                        Notification.alert(strError, msg, strOk);
+                    } else {
+                        window.alert(strError + ": " + msg);
+                    }
                 }
             }).fail(function(ex) {
                 btnSaveNodes.prop('disabled', false).text(originalText);
-                Notification.exception(ex);
+                if (Notification && Notification.exception) {
+                    try {
+                        Notification.exception(ex);
+                    } catch (e) {
+                        window.alert("Exception: " + (ex.message || ex));
+                    }
+                } else {
+                    window.alert("Exception: " + (ex.message || ex));
+                }
             });
         });
 
