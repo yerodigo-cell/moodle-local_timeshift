@@ -252,7 +252,6 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                 }]);
             } catch (err) {
                 btnSaveNodes.prop('disabled', false).text(originalText);
-                window.alert("Synchronous Ajax Error: " + (err.message || err));
                 return;
             }
 
@@ -263,11 +262,19 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                 } else {
                     var msg = (response && response.message) ? response.message : strErrorUpdate;
                     btnSaveNodes.prop('disabled', false).text(originalText);
-                    window.alert("Backend Error: " + msg);
+                    if (Notification && Notification.alert) {
+                        Notification.alert(strErrorUpdate, msg, strCancel);
+                    }
                 }
             }).fail(function(ex) {
                 btnSaveNodes.prop('disabled', false).text(originalText);
-                window.alert("Network/Promise Error: " + (ex.message || ex.error || ex));
+                if (Notification && Notification.exception) {
+                    try {
+                        Notification.exception(ex);
+                    } catch (e) {
+                        // Ignore
+                    }
+                }
             });
         });
 
