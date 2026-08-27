@@ -112,6 +112,17 @@ class manager {
         return $activities;
     }
 
+    /**
+     * Safely updates the name and dates of an activity.
+     *
+     * @param int $cmid The course module ID
+     * @param int $courseid The course ID to validate against
+     * @param string $newname The new name of the activity
+     * @param int|null $duedate The new due date
+     * @param int|null $allowfromdate The new allow from date
+     * @param int|null $cutoffdate The new cutoff date
+     * @return bool True if successful
+     */
     public static function update_activity(
         $cmid,
         $courseid,

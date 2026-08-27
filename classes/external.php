@@ -32,7 +32,6 @@ require_once($CFG->libdir . '/externallib.php');
  * External functions for local_timeshift.
  */
 class external extends \external_api {
-
     /**
      * Parameters for update_activities
      *
@@ -49,7 +48,7 @@ class external extends \external_api {
                     'duedate'       => new \external_value(PARAM_INT, 'The due date', VALUE_OPTIONAL),
                     'cutoffdate'    => new \external_value(PARAM_INT, 'The cutoff date', VALUE_OPTIONAL),
                 ])
-            )
+            ),
         ]);
     }
 
