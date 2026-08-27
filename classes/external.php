@@ -60,7 +60,7 @@ class external extends \external_api {
      * @return array
      */
     public static function update_activities($courseid, $updates) {
-        global $DB;
+        global $DB, $CFG;
 
         $params = self::validate_parameters(self::update_activities_parameters(), [
             'courseid' => $courseid,
