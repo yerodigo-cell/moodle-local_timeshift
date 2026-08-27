@@ -247,9 +247,9 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                 updates.push({
                     cmid: cmid,
                     newname: newname,
-                    allowfromdate: allowfrom ? allowfrom : null,
-                    duedate: duedate ? duedate : null,
-                    cutoffdate: cutoffdate ? cutoffdate : null
+                    allowfromdate: allowfrom,
+                    duedate: duedate,
+                    cutoffdate: cutoffdate
                 });
             });
 
