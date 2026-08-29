@@ -100,9 +100,8 @@ $string['subtractfromdates'] = 'Restar de las fechas';
 $string['success'] = 'Éxito';
 $string['successsaved'] = 'Cambios guardados con éxito.';
 $string['texttofind'] = 'Texto a buscar...';
+$string['timeshift:manage'] = 'Gestionar Timeshift';
 $string['totalactivities'] = 'Total de actividades:';
 $string['type'] = 'Tipo';
 $string['visible'] = 'Visible';
 $string['weeks'] = 'Semanas';
-$string['timeshift:manage'] = 'Gestionar Timeshift';
-

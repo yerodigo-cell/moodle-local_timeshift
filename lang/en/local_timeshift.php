@@ -105,9 +105,8 @@ $string['subtractfromdates'] = 'Subtract from dates';
 $string['success'] = 'Success';
 $string['successsaved'] = 'Changes successfully saved.';
 $string['texttofind'] = 'Text to find...';
+$string['timeshift:manage'] = 'Manage Timeshift';
 $string['totalactivities'] = 'Total activities:';
 $string['type'] = 'Type';
 $string['visible'] = 'Visible';
 $string['weeks'] = 'Weeks';
-$string['timeshift:manage'] = 'Manage Timeshift';
-
