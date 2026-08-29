@@ -71,6 +71,7 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                 e.returnValue = strCoreChangesMade || 'You have unsaved changes.';
                 return e.returnValue;
             }
+            return undefined;
         });
 
         // Robust manual fallback for link clicks. If Moodle's ChangeChecker misses a link click
