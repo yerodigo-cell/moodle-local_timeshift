@@ -72,7 +72,7 @@ class external extends \external_api {
 
         $context = \context_course::instance($courseid);
         self::validate_context($context);
-        require_capability('moodle/course:update', $context);
+        require_capability('moodle/course:manageactivities', $context);
 
         $success = true;
         $errormsg = '';

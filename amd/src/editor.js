@@ -31,6 +31,9 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
         var strDiscardWarning = 'Are you sure you want to discard all unsaved changes?';
         var strDiscard = 'Discard';
         var strCancel = 'Cancel';
+        var strCoreConfirm = 'Confirm';
+        var strCoreChangesMade = 'You have made changes. Are you sure you want to navigate away and lose your changes?';
+        var strCoreYes = 'Yes';
         var hasUnsavedChanges = false;
 
         // Fetch strings for the UI
@@ -42,7 +45,10 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             {key: 'confirmdiscard', component: 'local_timeshift'},
             {key: 'discardchangeswarning', component: 'local_timeshift'},
             {key: 'discard', component: 'local_timeshift'},
-            {key: 'cancel', component: 'local_timeshift'}
+            {key: 'cancel', component: 'local_timeshift'},
+            {key: 'confirm', component: 'core'},
+            {key: 'changesmadereallygoaway', component: 'core'},
+            {key: 'yes', component: 'core'}
         ]).done(function(strings) {
             strSingular = strings[0];
             strPlural = strings[1];
@@ -52,15 +58,72 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             strDiscardWarning = strings[5];
             strDiscard = strings[6];
             strCancel = strings[7];
+            strCoreConfirm = strings[8];
+            strCoreChangesMade = strings[9];
+            strCoreYes = strings[10];
         });
 
-        // Warn user before leaving page if there are unsaved changes
+        // Use a standard beforeunload listener to warn users if they try to close the tab or use the back button.
+        // We manage this manually so we can easily unbind it during intentional reloads/saves.
         $(window).on('beforeunload', function(e) {
             if (hasUnsavedChanges) {
                 e.preventDefault();
-                e.returnValue = ''; // Required for some browsers
+                e.returnValue = strCoreChangesMade || 'You have unsaved changes.';
+                return e.returnValue;
             }
         });
+
+        // Robust manual fallback for link clicks. If Moodle's ChangeChecker misses a link click
+        // (e.g. because of custom theme navigation or Bootstrap tabs), this capture-phase listener
+        // ensures we intercept the navigation and show the Moodle modal instead of the browser popup.
+        document.addEventListener('click', function(e) {
+            if (hasUnsavedChanges) {
+                var link = e.target.closest('a');
+                if (link) {
+                    var hrefAttr = link.getAttribute('href');
+                    var targetAttr = link.getAttribute('target');
+                    // eslint-disable-next-line no-script-url
+                    if (hrefAttr && !hrefAttr.startsWith('#') && hrefAttr.indexOf('javascript:') !== 0 && targetAttr !== '_blank') {
+                        // It's a real navigation link. Intercept it.
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                    // Show Moodle's standard save/cancel dialog using the exact core strings
+                    Notification.saveCancel(
+                        strCoreConfirm,
+                        strCoreChangesMade,
+                        strCoreYes,
+                        function() {
+                            // User clicked Yes/Abandonar. Let them leave.
+                            hasUnsavedChanges = false;
+                            clearDirtyState(); // Clear form pristine state so it doesn't block navigation
+                            window.location.href = link.href;
+                        },
+                        function() {
+                            // Cancelled, do nothing.
+                        }
+                    );
+                }
+            }
+        }
+        }, true); // Use capture phase to run before any other listener can stop propagation
+
+        /**
+         * Clears the dirty state flags and unbinds beforeunload.
+         */
+        function clearDirtyState() {
+            hasUnsavedChanges = false;
+            window.onbeforeunload = null;
+            $(window).off('beforeunload');
+        }
+
+        /**
+         * Reloads the page without triggering the unsaved changes prompt.
+         */
+        function reloadWithoutPrompt() {
+            clearDirtyState();
+            window.location.reload();
+        }
 
         /**
          * Mark field as modified
@@ -203,7 +266,7 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                 strCancel,
                 function() {
                     hasUnsavedChanges = false;
-                    window.location.reload();
+                    reloadWithoutPrompt();
                 }
             );
         });
@@ -258,7 +321,7 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             promises[0].done(function(response) {
                 if (response && response.success) {
                     hasUnsavedChanges = false;
-                    window.location.reload();
+                    reloadWithoutPrompt();
                 } else {
                     var msg = (response && response.message) ? response.message : strErrorUpdate;
                     btnSaveNodes.prop('disabled', false).text(originalText);

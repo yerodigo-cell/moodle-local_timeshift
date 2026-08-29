@@ -109,3 +109,5 @@ $string['totalactivities'] = 'Total activities:';
 $string['type'] = 'Type';
 $string['visible'] = 'Visible';
 $string['weeks'] = 'Weeks';
+$string['timeshift:manage'] = 'Manage Timeshift';
+

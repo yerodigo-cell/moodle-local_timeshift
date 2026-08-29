@@ -31,7 +31,7 @@
  * @param context_course $context The course context
  */
 function local_timeshift_extend_navigation_course($navigation, $course, $context) {
-    if (has_capability('moodle/course:update', $context)) {
+    if (has_capability('moodle/course:manageactivities', $context) || has_capability('moodle/course:update', $context)) {
         $url = new moodle_url('/local/timeshift/index.php', ['courseid' => $course->id]);
         $node = navigation_node::create(
             get_string('pagetitle', 'local_timeshift'),

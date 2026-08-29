@@ -18,7 +18,7 @@
         <span style="display: flex; align-items: center; margin-top: 4px;">{{{helpicon}}}</span>
     </h3>
 
-    <div id="timeshift-main-view">
+    <form id="timeshift-main-view" onsubmit="return false;">
         <div style="margin-bottom: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
                 <div style="position: relative; width: 100%; max-width: 250px; min-width: 140px;">
@@ -116,7 +116,7 @@
                 <button type="button" class="btn btn-timeshift-save btn-action-save" style="border-radius: 6px; padding: 8px 24px; font-weight: 500;">{{#str}} savechanges, local_timeshift {{/str}}</button>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal fade" id="findReplaceModal" tabindex="-1" role="dialog" aria-hidden="true">

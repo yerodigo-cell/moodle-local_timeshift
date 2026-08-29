@@ -26,13 +26,12 @@ require_once('../../config.php');
 // phpcs:disable moodle.Files.LineLength.TooLong
 // phpcs:disable moodle.Files.LineLength.MaxExceeded
 // phpcs:disable moodle.Commenting.MissingDocblock.File
-require_once($CFG->dirroot . '/local/timeshift/classes/manager.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 
 require_login($courseid);
 $context = context_course::instance($courseid);
-require_capability('moodle/course:update', $context);
+require_capability('moodle/course:manageactivities', $context);
 
 $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 

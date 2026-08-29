@@ -150,6 +150,17 @@ class manager {
                     if ($oldname !== $newname) {
                         $record->name = $newname;
                         $DB->update_record($table, $record);
+
+                        // Sync gradebook item name using the module's native API.
+                        global $CFG;
+                        $modlib = $CFG->dirroot . '/mod/' . $modname . '/lib.php';
+                        if (file_exists($modlib)) {
+                            require_once($modlib);
+                            $gradeupdatefunc = $modname . '_grade_item_update';
+                            if (function_exists($gradeupdatefunc)) {
+                                $gradeupdatefunc($record);
+                            }
+                        }
                     }
                 }
             }
@@ -247,6 +258,11 @@ class manager {
             if ($cutoffdate !== null) {
                 self::sync_calendar_event($modname, $instanceid, $courseid, 'cutoff', $cutoffdate, $oldname, $newname);
             }
+        }
+
+        // Trigger course module updated event.
+        if (class_exists('\core\event\course_module_updated')) {
+            \core\event\course_module_updated::create_from_cm($cm, \context_module::instance($cmid))->trigger();
         }
 
         return true;
