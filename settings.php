@@ -32,6 +32,7 @@ if ($hassiteconfig) {
 
     $pluginname = get_string('pluginname', 'local_timeshift');
     $liteinstalled = get_string('lite_installed', 'local_timeshift');
+    $upgradebtn = get_string('upgrade_button', 'local_timeshift');
 
     $html = '<div style="text-align:center; padding:20px; background-color: #f8f9fa; ' .
             'border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 20px;">
@@ -39,7 +40,11 @@ if ($hassiteconfig) {
                 'style="max-width:150px; margin-bottom:15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
                 <h3 style="color: #495057;">' . $pluginname . '</h3>
                 <p style="color: #495057; font-size: 16px;">' . $liteinstalled . '</p>
-
+                <div style="margin-top: 25px;">
+                    <a href="https://edupluginsstudio.com/timeshift-pro#pricing" target="_blank" style="background: #166db7; border: 1px solid #166db7; font-size: 1.15rem; padding: 12px 30px; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(22, 109, 183, 0.3); transition: transform 0.2s; color: #fff; text-decoration: none;">
+                        ' . $upgradebtn . '
+                    </a>
+                </div>
              </div>';
 
     $settings->add(new admin_setting_heading('local_timeshift_lite_info', '', $html));
