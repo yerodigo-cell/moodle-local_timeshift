@@ -41,7 +41,12 @@ if ($hassiteconfig) {
                 <h3 style="color: #495057;">' . $pluginname . '</h3>
                 <p style="color: #495057; font-size: 16px;">' . $liteinstalled . '</p>
                 <div style="margin-top: 25px;">
-                    <a href="https://edupluginsstudio.com/timeshift-pro#pricing" target="_blank" style="background: #166db7; border: 1px solid #166db7; font-size: 1.15rem; padding: 12px 30px; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(22, 109, 183, 0.3); transition: transform 0.2s; color: #fff; text-decoration: none;">
+                    <a href="https://edupluginsstudio.com/timeshift-pro#pricing" target="_blank" ' .
+                    'style="background: #166db7; border: 1px solid #166db7; font-size: 1.15rem; ' .
+                    'padding: 12px 30px; border-radius: 8px; font-weight: 700; display: inline-flex; ' .
+                    'align-items: center; justify-content: center; ' .
+                    'box-shadow: 0 4px 12px rgba(22, 109, 183, 0.3); transition: transform 0.2s; ' .
+                    'color: #fff; text-decoration: none;">
                         ' . $upgradebtn . '
                     </a>
                 </div>
