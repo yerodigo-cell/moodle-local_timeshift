@@ -146,6 +146,59 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
         // Attach listener to all editable fields
         $('.field-name, .field-status, .field-allowfrom, .field-duedate, .field-cutoffdate').on('change input', function() {
             markFieldAsModified(this);
+            validateRowDates($(this).closest('tr'));
+        });
+
+        /**
+         * Validates dates within a row and highlights conflicts
+         *
+         * @param {jQuery} row The table row element
+         */
+        function validateRowDates(row) {
+            var allowInput = row.find('.field-allowfrom');
+            var dueInput = row.find('.field-duedate');
+            var cutoffInput = row.find('.field-cutoffdate');
+
+            var allowDate = allowInput.length && allowInput.val() ? new Date(allowInput.val()).getTime() : null;
+            var dueDate = dueInput.length && dueInput.val() ? new Date(dueInput.val()).getTime() : null;
+            var cutoffDate = cutoffInput.length && cutoffInput.val() ? new Date(cutoffInput.val()).getTime() : null;
+
+            // Reset invalid state
+            allowInput.removeClass('is-invalid').removeAttr('title');
+            dueInput.removeClass('is-invalid').removeAttr('title');
+            cutoffInput.removeClass('is-invalid').removeAttr('title');
+
+            var hasError = false;
+
+            if (allowDate && dueDate && allowDate > dueDate) {
+                allowInput.addClass('is-invalid').attr('title', 'Open date cannot be after due date');
+                dueInput.addClass('is-invalid').attr('title', 'Due date cannot be before open date');
+                hasError = true;
+            }
+
+            if (dueDate && cutoffDate && dueDate > cutoffDate) {
+                dueInput.addClass('is-invalid').attr('title', 'Due date cannot be after cutoff date');
+                cutoffInput.addClass('is-invalid').attr('title', 'Cutoff date cannot be before due date');
+                hasError = true;
+            }
+
+            if (allowDate && cutoffDate && allowDate > cutoffDate) {
+                allowInput.addClass('is-invalid').attr('title', 'Open date cannot be after cutoff date');
+                cutoffInput.addClass('is-invalid').attr('title', 'Cutoff date cannot be before open date');
+                hasError = true;
+            }
+
+            // Disable save button if there are errors anywhere in the table
+            if ($('#timeshift-table .is-invalid').length > 0) {
+                $('.btn-action-save').prop('disabled', true);
+            } else {
+                $('.btn-action-save').prop('disabled', false);
+            }
+        }
+
+        // Run validation on all rows at startup to catch any dates that were already saved with conflicts
+        $('#timeshift-table tbody tr.timeshift-activity-row').each(function() {
+            validateRowDates($(this));
         });
 
         // Filtering logic
@@ -304,6 +357,14 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                     cutoffdate: cutoffdate
                 });
             });
+
+            if ($('#timeshift-table .is-invalid').length > 0) {
+                btnSaveNodes.prop('disabled', true).text(originalText);
+                if (Notification && Notification.alert) {
+                    Notification.alert('Validation Error', 'Please fix the highlighted date conflicts before saving.', strCancel);
+                }
+                return;
+            }
 
             var promises;
             try {

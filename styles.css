@@ -139,6 +139,11 @@
     border-color: #86b7fe;
     box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, .25);
 }
+.timeshift-clean-table .form-control.is-invalid {
+    border-color: #dc3545 !important;
+    background-color: #fff8f8 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
 .timeshift-clean-table input[type="checkbox"] {
     width: 16px;
     height: 16px;
