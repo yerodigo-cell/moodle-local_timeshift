@@ -168,24 +168,19 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             dueInput.removeClass('is-invalid').removeAttr('title');
             cutoffInput.removeClass('is-invalid').removeAttr('title');
 
-            var hasError = false;
-
             if (allowDate && dueDate && allowDate > dueDate) {
                 allowInput.addClass('is-invalid').attr('title', 'Open date cannot be after due date');
                 dueInput.addClass('is-invalid').attr('title', 'Due date cannot be before open date');
-                hasError = true;
             }
 
             if (dueDate && cutoffDate && dueDate > cutoffDate) {
                 dueInput.addClass('is-invalid').attr('title', 'Due date cannot be after cutoff date');
                 cutoffInput.addClass('is-invalid').attr('title', 'Cutoff date cannot be before due date');
-                hasError = true;
             }
 
             if (allowDate && cutoffDate && allowDate > cutoffDate) {
                 allowInput.addClass('is-invalid').attr('title', 'Open date cannot be after cutoff date');
                 cutoffInput.addClass('is-invalid').attr('title', 'Cutoff date cannot be before open date');
-                hasError = true;
             }
 
             // Disable save button if there are errors anywhere in the table
