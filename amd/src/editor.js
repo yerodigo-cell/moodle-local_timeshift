@@ -532,6 +532,12 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                     handle: '.drag-handle',
                 filter: '.timeshift-section-header',
                 animation: 150,
+                onMove: function(evt) {
+                    var firstRow = tableBody.firstElementChild;
+                    if (evt.related === firstRow && !evt.willInsertAfter) {
+                        return false;
+                    }
+                },
                 onStart: function(evt) {
                     var fName = document.getElementById('filter-name');
                     if (fName && fName.value !== '') {
