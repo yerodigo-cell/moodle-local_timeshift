@@ -58,6 +58,7 @@ class external extends \external_api {
      *
      * @param int $courseid
      * @param array $updates
+     * @param string $reorders JSON string of reorder operations
      * @return array
      */
     public static function update_activities($courseid, $updates, $reorders = '') {

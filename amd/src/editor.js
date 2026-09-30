@@ -527,7 +527,9 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                 if (!Sortable && window.Sortable) {
                     Sortable = window.Sortable;
                 }
-                if (!Sortable) return;
+                if (!Sortable) {
+                    return;
+                }
                 Sortable.create(tableBody, {
                     handle: '.drag-handle',
                 filter: '.timeshift-section-header',
@@ -537,20 +539,27 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                     if (evt.related === firstRow && !evt.willInsertAfter) {
                         return false;
                     }
+                    return true;
                 },
                 onStart: function(evt) {
                     var fName = document.getElementById('filter-name');
                     if (fName && fName.value !== '') {
                         if (Notification && Notification.alert) {
-                            Notification.alert('Notice', 'Drag and drop reordering is disabled while filters are active. Please clear filters first.', 'OK');
+                            Notification.alert('Notice',
+                                'Drag and drop reordering is disabled while filters are active. Please clear filters first.',
+                                'OK');
                         }
                         evt.preventDefault();
                     }
                 },
                 onEnd: function(evt) {
-                    if (evt.oldIndex === evt.newIndex) return;
+                    if (evt.oldIndex === evt.newIndex) {
+                        return;
+                    }
                     var item = evt.item;
-                    if (!item.classList.contains('timeshift-activity-row')) return;
+                    if (!item.classList.contains('timeshift-activity-row')) {
+                        return;
+                    }
 
                     var prevRow = item.previousElementSibling;
                     var nextRow = item.nextElementSibling;
@@ -571,13 +580,22 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                     }
 
                     var cmid = parseInt(item.dataset.cmid, 10);
-                    if (!cmid || isNaN(cmid)) return;
+                    if (!cmid || isNaN(cmid)) {
+                        return;
+                    }
 
-                    pendingReorders.push({cmid: cmid, beforecmid: beforecmid, targetcmid: targetcmid, targetsectionnum: targetsectionnum});
+                    pendingReorders.push({
+                        cmid: cmid,
+                        beforecmid: beforecmid,
+                        targetcmid: targetcmid,
+                        targetsectionnum: targetsectionnum
+                    });
 
                     hasUnsavedChanges = true;
                     var floatingBtn = document.getElementById('floating-save-container');
-                    if (floatingBtn) floatingBtn.style.display = 'block';
+                    if (floatingBtn) {
+                        floatingBtn.style.display = 'block';
+                    }
 
                     var dragCell = item.querySelector('.drag-handle-cell');
                     if (dragCell) {
@@ -586,7 +604,9 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
 
                     item.style.transition = 'background-color 0.5s';
                     item.style.backgroundColor = '#e8f5e9';
-                    setTimeout(function(){ item.style.backgroundColor = ''; }, 1000);
+                    setTimeout(function() {
+                        item.style.backgroundColor = '';
+                    }, 1000);
                 }
             });
             });
