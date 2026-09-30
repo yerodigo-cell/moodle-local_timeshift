@@ -23,7 +23,7 @@ Need to manage massive courses? **TimeShift Pro** removes all limits and adds ad
 * **Find & Replace:** Search and replace text across all activity names in bulk (perfect for updating years, e.g., "Exam 2025" to "Exam 2026").
 * **Advanced Filtering:** Instantly isolate activities by type or section. Stop scrolling through massive courses.
 * **Bulk Deletion & Visibility:** Select multiple activities to delete or change their visibility status (Show, Hide, Stealth) simultaneously.
-* **Drag-and-Drop Reordering:** Organize your course contents easily directly from the TimeShift interface.
+* **Multiple Drag-and-Drop Reordering:** Organize your course contents easily directly from the TimeShift interface.
 * **Restrictions Control:** Manage activity access restrictions with a simplified, centralized UI.
 
 👉 **[Discover TimeShift Pro and get your license here](https://edupluginsstudio.com/timeshift-pro#pricing)**
