@@ -559,7 +559,8 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                         targetcmid = parseInt(prevRow.dataset.cmid, 10) || 0;
                     } else {
                         if (prevRow && prevRow.classList.contains('timeshift-section-header')) {
-                            targetsectionnum = parseInt(prevRow.dataset.sectionnum, 10) || -1;
+                            var parsedSecNum = parseInt(prevRow.dataset.sectionnum, 10);
+                            targetsectionnum = isNaN(parsedSecNum) ? -1 : parsedSecNum;
                         }
                     }
 
