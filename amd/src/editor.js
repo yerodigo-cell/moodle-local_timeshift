@@ -531,136 +531,84 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                     return;
                 }
                 Sortable.create(tableBody, {
-                    multiDrag: true,
-                    selectedClass: 'timeshift-row-selected',
-                    fallbackClass: 'timeshift-sortable-fallback',
                     handle: '.drag-handle',
-                    filter: '.timeshift-section-header, input, select, textarea, button, a',
-                    preventOnFilter: false,
-                    animation: 150,
-                    onMove: function(evt) {
-                        var firstRow = tableBody.firstElementChild;
-                        if (evt.related === firstRow && !evt.willInsertAfter) {
-                            return false;
+                filter: '.timeshift-section-header',
+                animation: 150,
+                onMove: function(evt) {
+                    var firstRow = tableBody.firstElementChild;
+                    if (evt.related === firstRow && !evt.willInsertAfter) {
+                        return false;
+                    }
+                    return true;
+                },
+                onStart: function(evt) {
+                    var fName = document.getElementById('filter-name');
+                    if (fName && fName.value !== '') {
+                        if (Notification && Notification.alert) {
+                            Notification.alert('Notice',
+                                'Drag and drop reordering is disabled while filters are active. Please clear filters first.',
+                                'OK');
                         }
-                        return true;
-                    },
-                    onStart: function(evt) {
-                        var fName = document.getElementById('filter-name');
-                        var fType = document.getElementById('filter-type');
-                        if ((fName && fName.value !== '') || (fType && fType.value !== '')) {
-                            if (Notification && Notification.alert) {
-                                Notification.alert('Notice',
-                                    'Drag and drop reordering is disabled while filters are active. Please clear filters first.',
-                                    'OK');
-                            }
-                            evt.preventDefault();
-                        }
-                        var items = evt.items && evt.items.length > 0 ? evt.items : [evt.item];
-                        if (items.length > 1) {
-                            var badge = document.createElement('div');
-                            badge.className = 'timeshift-drag-badge';
-                            badge.innerHTML = items.length;
-                            var dragCell = evt.item.querySelector('.drag-handle-cell');
-                            if (dragCell) {
-                                dragCell.style.position = 'relative';
-                                dragCell.style.zIndex = '999999';
-                                dragCell.style.overflow = 'visible';
-                                dragCell.appendChild(badge);
-                            }
-                            setTimeout(function() {
-                                var fallbackEl = document.querySelector('.timeshift-sortable-fallback');
-                                if (fallbackEl) {
-                                    var fallbackDragCell = fallbackEl.querySelector('.drag-handle-cell');
-                                    if (fallbackDragCell) {
-                                        fallbackDragCell.style.position = 'relative';
-                                        fallbackDragCell.style.zIndex = '999999';
-                                        fallbackDragCell.style.overflow = 'visible';
-                                        fallbackDragCell.appendChild(badge.cloneNode(true));
-                                    }
-                                }
-                            }, 0);
-                        }
-                    },
-                    onEnd: function(evt) {
-                        var badge = evt.item.querySelector('.timeshift-drag-badge');
-                        if (badge) {
-                            badge.remove();
-                        }
-                        var items = evt.items && evt.items.length > 0 ? evt.items : [evt.item];
-                        if (evt.oldIndex === evt.newIndex && items.length === 1) {
-                            items[0].classList.remove('timeshift-row-selected');
-                            var cb = items[0].querySelector('.row-checkbox');
-                            if (cb) {
-                                cb.checked = false;
-                                cb.dispatchEvent(new Event('change'));
-                            }
-                            return;
-                        }
+                        evt.preventDefault();
+                    }
+                },
+                onEnd: function(evt) {
+                    if (evt.oldIndex === evt.newIndex) {
+                        return;
+                    }
+                    var item = evt.item;
+                    if (!item.classList.contains('timeshift-activity-row')) {
+                        return;
+                    }
 
-                        var firstItem = items[0];
-                        var lastItem = items[items.length - 1];
-                        var prevRow = firstItem.previousElementSibling;
-                        var nextRow = lastItem.nextElementSibling;
-                        var targetcmid = 0;
-                        var beforecmid = 0;
-                        var targetsectionnum = -1;
+                    var prevRow = item.previousElementSibling;
+                    var nextRow = item.nextElementSibling;
 
-                        /**
-                         * Process a dragged item.
-                         * @param {Element} item
-                         * @param {Number} bCmid
-                         * @param {Number} tCmid
-                         * @param {Number} tSecnum
-                         */
-                        function processDraggedItem(item, bCmid, tCmid, tSecnum) {
-                            if (!item.classList.contains('timeshift-activity-row')) {
-                                return;
-                            }
-                            var cmid = parseInt(item.dataset.cmid, 10);
-                            if (!cmid || isNaN(cmid)) {
-                                return;
-                            }
-                            pendingReorders.push({
-                                cmid: cmid,
-                                beforecmid: bCmid,
-                                targetcmid: tCmid,
-                                targetsectionnum: tSecnum
-                            });
-                            hasUnsavedChanges = true;
-                            var floatingBtn = document.getElementById('floating-save-container');
-                            if (floatingBtn) {
-                                floatingBtn.style.display = 'block';
-                            }
-                            var dragCell = item.querySelector('.drag-handle-cell');
-                            if (dragCell) {
-                                dragCell.classList.add('td-modified');
-                            }
-                            item.style.transition = 'background-color 0.5s';
-                            item.style.backgroundColor = '#e8f5e9';
-                            setTimeout(function() {
-                                item.style.backgroundColor = '';
-                            }, 1000);
-                        }
+                    var targetcmid = 0;
+                    var beforecmid = 0;
+                    var targetsectionnum = -1;
 
-                        if (nextRow && nextRow.classList.contains('timeshift-activity-row')) {
-                            beforecmid = parseInt(nextRow.dataset.cmid, 10) || 0;
-                            for (var k = items.length - 1; k >= 0; k--) {
-                                processDraggedItem(items[k], beforecmid, 0, -1);
-                            }
-                        } else {
-                            if (prevRow && prevRow.classList.contains('timeshift-activity-row')) {
-                                targetcmid = parseInt(prevRow.dataset.cmid, 10) || 0;
-                            } else if (prevRow && prevRow.classList.contains('timeshift-section-header')) {
-                                var parsedSecNum = parseInt(prevRow.dataset.sectionnum, 10);
-                                targetsectionnum = isNaN(parsedSecNum) ? -1 : parsedSecNum;
-                            }
-                            for (var m = 0; m < items.length; m++) {
-                                processDraggedItem(items[m], 0, targetcmid, targetsectionnum);
-                            }
+                    if (nextRow && nextRow.classList.contains('timeshift-activity-row')) {
+                        beforecmid = parseInt(nextRow.dataset.cmid, 10) || 0;
+                    } else if (prevRow && prevRow.classList.contains('timeshift-activity-row')) {
+                        targetcmid = parseInt(prevRow.dataset.cmid, 10) || 0;
+                    } else {
+                        if (prevRow && prevRow.classList.contains('timeshift-section-header')) {
+                            var parsedSecNum = parseInt(prevRow.dataset.sectionnum, 10);
+                            targetsectionnum = isNaN(parsedSecNum) ? -1 : parsedSecNum;
                         }
                     }
-                });
+
+                    var cmid = parseInt(item.dataset.cmid, 10);
+                    if (!cmid || isNaN(cmid)) {
+                        return;
+                    }
+
+                    pendingReorders.push({
+                        cmid: cmid,
+                        beforecmid: beforecmid,
+                        targetcmid: targetcmid,
+                        targetsectionnum: targetsectionnum
+                    });
+
+                    hasUnsavedChanges = true;
+                    var floatingBtn = document.getElementById('floating-save-container');
+                    if (floatingBtn) {
+                        floatingBtn.style.display = 'block';
+                    }
+
+                    var dragCell = item.querySelector('.drag-handle-cell');
+                    if (dragCell) {
+                        dragCell.classList.add('td-modified');
+                    }
+
+                    item.style.transition = 'background-color 0.5s';
+                    item.style.backgroundColor = '#e8f5e9';
+                    setTimeout(function() {
+                        item.style.backgroundColor = '';
+                    }, 1000);
+                }
+            });
             });
         }
     };
