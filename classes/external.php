@@ -49,6 +49,7 @@ class external extends \external_api {
                     'cutoffdate'    => new \external_value(PARAM_INT, 'The cutoff date', VALUE_OPTIONAL),
                 ])
             ),
+            'reorders' => new \external_value(PARAM_RAW, 'JSON string of reorders', VALUE_DEFAULT, ''),
         ]);
     }
 
@@ -59,16 +60,18 @@ class external extends \external_api {
      * @param array $updates
      * @return array
      */
-    public static function update_activities($courseid, $updates) {
+    public static function update_activities($courseid, $updates, $reorders = '') {
         global $DB, $CFG;
 
         $params = self::validate_parameters(self::update_activities_parameters(), [
             'courseid' => $courseid,
             'updates'  => $updates,
+            'reorders' => $reorders,
         ]);
 
         $courseid = $params['courseid'];
         $updates = $params['updates'];
+        $reordersarray = $params['reorders'] ? json_decode($params['reorders'], true) : [];
 
         $context = \context_course::instance($courseid);
         self::validate_context($context);
@@ -78,6 +81,53 @@ class external extends \external_api {
         $errormsg = '';
 
         try {
+            require_once($CFG->dirroot . '/course/lib.php');
+            if (is_array($reordersarray) && !empty($reordersarray)) {
+                foreach ($reordersarray as $move) {
+                    $cmid = clean_param($move['cmid'], PARAM_INT);
+                    if (!$cmid) {
+                        continue;
+                    }
+                    $beforecmid = isset($move['beforecmid']) ? clean_param($move['beforecmid'], PARAM_INT) : 0;
+
+                    $mod = get_coursemodule_from_id('', $cmid, $courseid, true, IGNORE_MISSING);
+                    if (!$mod) {
+                        continue;
+                    }
+
+                    if ($beforecmid) {
+                        $beforemod = get_coursemodule_from_id('', $beforecmid, $courseid, true, IGNORE_MISSING);
+                        if ($beforemod) {
+                            $section = $DB->get_record('course_sections', ['id' => $beforemod->section], '*', IGNORE_MISSING);
+                            if ($section) {
+                                moveto_module($mod, $section, $beforemod);
+                            }
+                        }
+                    } else {
+                        if (isset($move['targetcmid']) && $move['targetcmid'] > 0) {
+                            $targetcmid = clean_param($move['targetcmid'], PARAM_INT);
+                            $targetmod = get_coursemodule_from_id('', $targetcmid, $courseid, true, IGNORE_MISSING);
+                            if ($targetmod) {
+                                $section = $DB->get_record('course_sections', ['id' => $targetmod->section], '*', IGNORE_MISSING);
+                                if ($section) {
+                                    moveto_module($mod, $section, null);
+                                }
+                            }
+                        } else if (isset($move['targetsectionnum']) && $move['targetsectionnum'] >= 0) {
+                            $targetsectionnum = clean_param($move['targetsectionnum'], PARAM_INT);
+                            $section = $DB->get_record(
+                                'course_sections',
+                                ['course' => $courseid, 'section' => $targetsectionnum],
+                                '*',
+                                IGNORE_MISSING
+                            );
+                            if ($section) {
+                                moveto_module($mod, $section, null);
+                            }
+                        }
+                    }
+                }
+            }
             foreach ($updates as $update) {
                 $cmid = $update['cmid'];
                 $newname = isset($update['newname']) ? $update['newname'] : '';

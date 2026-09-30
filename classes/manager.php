@@ -102,6 +102,7 @@ class manager {
                 'allowfromdate' => $allowfromdate,
                 'cutoffdate' => $cutoffdate,
                 'availability' => $cm->availability,
+                'sectionnum' => $cm->sectionnum,
             ];
         }
 

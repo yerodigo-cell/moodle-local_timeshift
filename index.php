@@ -55,89 +55,171 @@ echo $OUTPUT->header();
 $iconurl = new moodle_url('/local/timeshift/pix/icon.png');
 $helpicon = $OUTPUT->help_icon('pagedescription', 'local_timeshift');
 
-$flatactivities = [];
+$activitiesbysection = [];
 foreach ($activities as $act) {
-    // Format dates for input type datetime-local (YYYY-MM-DDThh:mm).
-    $allowfrom = !empty($act->allowfromdate) ? date('Y-m-d\TH:i', $act->allowfromdate) : '';
-    $due = !empty($act->duedate) ? date('Y-m-d\TH:i', $act->duedate) : '';
-    $cutoff = !empty($act->cutoffdate) ? date('Y-m-d\TH:i', $act->cutoffdate) : '';
+    $sec = $act->sectionnum;
+    if (!isset($activitiesbysection[$sec])) {
+        $activitiesbysection[$sec] = [];
+    }
+    $activitiesbysection[$sec][] = $act;
+}
 
-    $iconhtml = '';
-    if (!empty($act->iconurl)) {
-        // Determine icon color based on Moodle 4 module categories.
-        $modpurposes = [
-            // Assessment.
-            'assign' => 'assessment', 'quiz' => 'assessment', 'workshop' => 'assessment', 'certificatebeautiful' => 'assessment', 'coursecertificate' => 'assessment',
-            // Communication.
-            'choice' => 'communication', 'feedback' => 'communication', 'chat' => 'communication', 'bigbluebuttonbn' => 'communication', 'zoom' => 'communication',
-            // Content.
-            'book' => 'content', 'folder' => 'content', 'label' => 'content', 'page' => 'content', 'qbank' => 'content', 'resource' => 'content', 'url' => 'content', 'emubook' => 'content', 'videotrack' => 'content', 'codeframe' => 'content',
-            // Collaboration.
-            'data' => 'collaboration', 'database' => 'collaboration', 'forum' => 'collaboration', 'glossary' => 'collaboration', 'wiki' => 'collaboration', 'diary' => 'collaboration',
-            // Interactive content.
-            'h5pactivity' => 'interactive_content', 'imscp' => 'interactive_content', 'lesson' => 'interactive_content', 'scorm' => 'interactive_content',
-            // Administration & Other.
-            'attendance' => 'administration', 'lti' => 'other',
-            // Custom.
-            'hvp' => 'hvp_black',
-        ];
-        $purposecolors = [
-            'assessment' => '#fa0086',
-            'communication' => '#fe5701',
-            'content' => '#00a5ad',
-            'collaboration' => '#6f46f7',
-            'interactive_content' => '#3c73b8',
-            'hvp_black' => '#212529',
-            'administration' => '#5d63f6',
-            'other' => '#6c757d',
-            'default' => '#6c757d',
-        ];
-        $purpose = isset($modpurposes[$act->modname]) ? $modpurposes[$act->modname] : 'default';
-        $iconbg = $purposecolors[$purpose];
+$allsectionsraw = $modinfo->get_section_info_all();
 
-        if ($act->modname === 'hvp') {
-            // HVP plugin comes with its own colored square icon, so we don't wrap it or invert it.
-            $iconhtml = '<img src="' . $act->iconurl . '" alt="' . $act->modname . ' icon" style="width: 32px; height: 32px; border-radius: 6px;">';
-        } else {
-            $iconbglight = $iconbg . '26'; // 15% opacity hex alpha
-            $iconhtml = '<div style="background-color: ' . $iconbglight . '; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">';
-            $iconhtml .= '<div style="background-color: ' . $iconbg . '; width: 20px; height: 20px; -webkit-mask-image: url(' . $act->iconurl . '); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; mask-image: url(' . $act->iconurl . '); mask-size: contain; mask-repeat: no-repeat;"></div>';
-            $iconhtml .= '</div>';
+// Reorder sections so delegated sections (e.g. subsections) appear immediately after they are defined in their parent section.
+$orderedsecnums = [];
+foreach ($allsectionsraw as $secnum => $sectioninfo) {
+    // Only process root sections first.
+    if (empty($sectioninfo->component)) {
+        $orderedsecnums[] = $secnum;
+        if (!empty($sectioninfo->sequence)) {
+            $cmids = explode(',', $sectioninfo->sequence);
+            foreach ($cmids as $cmid) {
+                if (empty($cmid) || !isset($modinfo->cms[$cmid])) {
+                    continue;
+                }
+                $cm = $modinfo->cms[$cmid];
+                if ($cm->modname === 'subsection') {
+                    // Find the delegated section for this subsection.
+                    foreach ($allsectionsraw as $subsecnum => $subsecinfo) {
+                        if ($subsecinfo->component === 'mod_subsection' && ($subsecinfo->itemid == $cm->id || $subsecinfo->itemid == $cm->instance)) {
+                            $orderedsecnums[] = $subsecnum;
+                        }
+                    }
+                }
+            }
         }
     }
+}
 
-    $displayname = isset($act->modfullname) ? $act->modfullname : ucfirst($act->modname);
-    // Explicitly handle H5pactivity just in case the localized string still says H5P activity.
-    if (strtolower($displayname) === 'h5pactivity' || strtolower($displayname) === 'h5p activity') {
-        $displayname = 'H5p';
+// Add any remaining sections (fallback for unexpected delegated sections).
+foreach ($allsectionsraw as $secnum => $sectioninfo) {
+    if (!in_array($secnum, $orderedsecnums)) {
+        $orderedsecnums[] = $secnum;
     }
-    if ($act->modname === 'label') {
-        $displayname = 'Label';
+}
+
+$sectionsdata = [];
+
+foreach ($orderedsecnums as $secnum) {
+    $sectioninfo = $allsectionsraw[$secnum];
+    $sectionacts = isset($activitiesbysection[$secnum]) ? $activitiesbysection[$secnum] : [];
+
+    $issubsection = !empty($sectioninfo->component);
+    $secname = get_section_name($course, $sectioninfo);
+
+    if ($issubsection) {
+        $rowbg = '#ffffff';
+        $paddingleft = '30px';
+        $prefix = '<i class="fa fa-level-up fa-rotate-90 text-muted" style="margin-right: 8px; font-size: 14px;"></i>';
+        $borderleft = 'border-left: 4px solid #ced4da;';
+    } else {
+        $rowbg = '#f8f9fa';
+        $paddingleft = '20px';
+        $prefix = '';
+        $borderleft = '';
     }
 
-    $hasdates = false;
-    $allowdisabled = false;
-    $cutoffdisabled = false;
-    // Dates editable for assign/quiz/forum. Others can be extended later.
-    if ($act->modname === 'assign' || $act->modname === 'quiz' || $act->modname === 'forum') {
-        $hasdates = true;
-        $allowdisabled = ($act->modname === 'forum');
-        $cutoffdisabled = ($act->modname === 'quiz');
+    $formattedacts = [];
+    foreach ($sectionacts as $act) {
+        // Format dates for input type datetime-local (YYYY-MM-DDThh:mm).
+        $allowfrom = !empty($act->allowfromdate) ? date('Y-m-d\TH:i', $act->allowfromdate) : '';
+        $due = !empty($act->duedate) ? date('Y-m-d\TH:i', $act->duedate) : '';
+        $cutoff = !empty($act->cutoffdate) ? date('Y-m-d\TH:i', $act->cutoffdate) : '';
+
+        $iconhtml = '';
+        if (!empty($act->iconurl)) {
+            // Determine icon color based on Moodle 4 module categories.
+            $modpurposes = [
+                // Assessment.
+                'assign' => 'assessment', 'quiz' => 'assessment', 'workshop' => 'assessment', 'certificatebeautiful' => 'assessment', 'coursecertificate' => 'assessment',
+                // Communication.
+                'choice' => 'communication', 'feedback' => 'communication', 'chat' => 'communication', 'bigbluebuttonbn' => 'communication', 'zoom' => 'communication',
+                // Content.
+                'book' => 'content', 'folder' => 'content', 'label' => 'content', 'page' => 'content', 'qbank' => 'content', 'resource' => 'content', 'url' => 'content', 'emubook' => 'content', 'videotrack' => 'content', 'codeframe' => 'content',
+                // Collaboration.
+                'data' => 'collaboration', 'database' => 'collaboration', 'forum' => 'collaboration', 'glossary' => 'collaboration', 'wiki' => 'collaboration', 'diary' => 'collaboration',
+                // Interactive content.
+                'h5pactivity' => 'interactive_content', 'imscp' => 'interactive_content', 'lesson' => 'interactive_content', 'scorm' => 'interactive_content',
+                // Administration & Other.
+                'attendance' => 'administration', 'lti' => 'other',
+                // Custom.
+                'hvp' => 'hvp_black',
+            ];
+            $purposecolors = [
+                'assessment' => '#fa0086',
+                'communication' => '#fe5701',
+                'content' => '#00a5ad',
+                'collaboration' => '#6f46f7',
+                'interactive_content' => '#3c73b8',
+                'hvp_black' => '#212529',
+                'administration' => '#5d63f6',
+                'other' => '#6c757d',
+                'default' => '#6c757d',
+            ];
+            $purpose = isset($modpurposes[$act->modname]) ? $modpurposes[$act->modname] : 'default';
+            $iconbg = $purposecolors[$purpose];
+
+            if ($act->modname === 'hvp') {
+                // HVP plugin comes with its own colored square icon, so we don't wrap it or invert it.
+                $iconhtml = '<img src="' . $act->iconurl . '" alt="' . $act->modname . ' icon" style="width: 32px; height: 32px; border-radius: 6px;">';
+            } else {
+                $iconbglight = $iconbg . '26'; // 15% opacity hex alpha
+                $iconhtml = '<div style="background-color: ' . $iconbglight . '; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">';
+                $iconhtml .= '<div style="background-color: ' . $iconbg . '; width: 20px; height: 20px; -webkit-mask-image: url(' . $act->iconurl . '); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; mask-image: url(' . $act->iconurl . '); mask-size: contain; mask-repeat: no-repeat;"></div>';
+                $iconhtml .= '</div>';
+            }
+        }
+
+        $displayname = isset($act->modfullname) ? $act->modfullname : ucfirst($act->modname);
+        // Explicitly handle H5pactivity just in case the localized string still says H5P activity.
+        if (strtolower($displayname) === 'h5pactivity' || strtolower($displayname) === 'h5p activity') {
+            $displayname = 'H5p';
+        }
+        if ($act->modname === 'label') {
+            $displayname = 'Label';
+        }
+
+        $hasdates = false;
+        $allowdisabled = false;
+        $cutoffdisabled = false;
+        // Dates editable for assign/quiz/forum. Others can be extended later.
+        if ($act->modname === 'assign' || $act->modname === 'quiz' || $act->modname === 'forum') {
+            $hasdates = true;
+            $allowdisabled = ($act->modname === 'forum');
+            $cutoffdisabled = ($act->modname === 'quiz');
+        }
+
+        $actrowstyle = $issubsection ? 'background-color: #fcfcfc;' : '';
+        $typepadding = $issubsection ? 'padding-left: 30px;' : '';
+
+        $formattedacts[] = [
+            'cmid' => $act->cmid,
+            'instance' => $act->instance,
+            'modname' => $act->modname,
+            'iconhtml' => $iconhtml,
+            'displayname' => $displayname,
+            'name' => s($act->name),
+            'hasdates' => $hasdates,
+            'allowdisabled' => $allowdisabled,
+            'cutoffdisabled' => $cutoffdisabled,
+            'allowfrom' => $allowfrom,
+            'due' => $due,
+            'cutoff' => $cutoff,
+            'actrowstyle' => $actrowstyle,
+            'borderleft' => $borderleft,
+            'typepadding' => $typepadding,
+        ];
     }
 
-    $flatactivities[] = [
-        'cmid' => $act->cmid,
-        'instance' => $act->instance,
-        'modname' => $act->modname,
-        'iconhtml' => $iconhtml,
-        'displayname' => $displayname,
-        'name' => s($act->name),
-        'hasdates' => $hasdates,
-        'allowdisabled' => $allowdisabled,
-        'cutoffdisabled' => $cutoffdisabled,
-        'allowfrom' => $allowfrom,
-        'due' => $due,
-        'cutoff' => $cutoff,
+    $sectionsdata[] = [
+        'secnum' => $secnum,
+        'secname' => s($secname),
+        'rowbg' => $rowbg,
+        'paddingleft' => $paddingleft,
+        'prefix' => $prefix,
+        'borderleft' => $borderleft,
+        'activities' => $formattedacts,
     ];
 }
 
@@ -146,9 +228,11 @@ $templatedata = [
     'helpicon' => $helpicon,
     'totalactivities' => count($activities),
     'courseid' => $courseid,
-    'activities' => $flatactivities,
+    'sections' => $sectionsdata,
 ];
 
 echo $OUTPUT->render_from_template('local_timeshift/main_view', $templatedata);
+
+
 
 echo $OUTPUT->footer();

@@ -35,6 +35,7 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
         var strCoreChangesMade = 'You have made changes. Are you sure you want to navigate away and lose your changes?';
         var strCoreYes = 'Yes';
         var hasUnsavedChanges = false;
+        var pendingReorders = [];
 
         // Fetch strings for the UI
         str.get_strings([
@@ -367,7 +368,8 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
                     methodname: 'local_timeshift_update_activities',
                     args: {
                         courseid: courseid,
-                        updates: updates
+                        updates: updates,
+                        reorders: JSON.stringify(pendingReorders)
                     }
                 }]);
             } catch (err) {
@@ -516,6 +518,71 @@ define(['jquery', 'core/config', 'core/notification', 'core/str', 'core/ajax'], 
             var tzoffset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds
             var localISOTime = (new Date(dateObj - tzoffset)).toISOString().slice(0, 16);
             return localISOTime;
+        }
+
+        // Drag and Drop Logic using SortableJS
+        var tableBody = document.querySelector('#timeshift-table tbody');
+        if (tableBody) {
+            require(['https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js'], function(Sortable) {
+                if (!Sortable && window.Sortable) {
+                    Sortable = window.Sortable;
+                }
+                if (!Sortable) return;
+                Sortable.create(tableBody, {
+                    handle: '.drag-handle',
+                filter: '.timeshift-section-header',
+                animation: 150,
+                onStart: function(evt) {
+                    var fName = document.getElementById('filter-name');
+                    if (fName && fName.value !== '') {
+                        if (Notification && Notification.alert) {
+                            Notification.alert('Notice', 'Drag and drop reordering is disabled while filters are active. Please clear filters first.', 'OK');
+                        }
+                        evt.preventDefault();
+                    }
+                },
+                onEnd: function(evt) {
+                    if (evt.oldIndex === evt.newIndex) return;
+                    var item = evt.item;
+                    if (!item.classList.contains('timeshift-activity-row')) return;
+
+                    var prevRow = item.previousElementSibling;
+                    var nextRow = item.nextElementSibling;
+
+                    var targetcmid = 0;
+                    var beforecmid = 0;
+                    var targetsectionnum = -1;
+
+                    if (nextRow && nextRow.classList.contains('timeshift-activity-row')) {
+                        beforecmid = parseInt(nextRow.dataset.cmid, 10) || 0;
+                    } else if (prevRow && prevRow.classList.contains('timeshift-activity-row')) {
+                        targetcmid = parseInt(prevRow.dataset.cmid, 10) || 0;
+                    } else {
+                        if (prevRow && prevRow.classList.contains('timeshift-section-header')) {
+                            targetsectionnum = parseInt(prevRow.dataset.sectionnum, 10) || -1;
+                        }
+                    }
+
+                    var cmid = parseInt(item.dataset.cmid, 10);
+                    if (!cmid || isNaN(cmid)) return;
+
+                    pendingReorders.push({cmid: cmid, beforecmid: beforecmid, targetcmid: targetcmid, targetsectionnum: targetsectionnum});
+
+                    hasUnsavedChanges = true;
+                    var floatingBtn = document.getElementById('floating-save-container');
+                    if (floatingBtn) floatingBtn.style.display = 'block';
+
+                    var dragCell = item.querySelector('.drag-handle-cell');
+                    if (dragCell) {
+                        dragCell.classList.add('td-modified');
+                    }
+
+                    item.style.transition = 'background-color 0.5s';
+                    item.style.backgroundColor = '#e8f5e9';
+                    setTimeout(function(){ item.style.backgroundColor = ''; }, 1000);
+                }
+            });
+            });
         }
     };
 

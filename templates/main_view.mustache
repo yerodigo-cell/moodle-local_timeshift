@@ -66,6 +66,7 @@
             <table class="table timeshift-clean-table" id="timeshift-table">
                 <thead>
                     <tr>
+                        <th style="width: 30px; text-align: center;"></th>
                         <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-checkbox"></th>
                         <th>{{#str}} type, local_timeshift {{/str}}</th>
                         <th>{{#str}} activity, local_timeshift {{/str}}</th>
@@ -75,10 +76,17 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{#sections}}
+                    <tr class="table-light timeshift-section-header" data-sectionnum="{{secnum}}" style="background-color: {{rowbg}};">
+                        <td colspan="7" style="font-weight: 600; color: #495057; padding-left: {{paddingleft}}; vertical-align: middle; {{borderleft}}">
+                            {{{prefix}}}{{secname}}
+                        </td>
+                    </tr>
                     {{#activities}}
-                    <tr class="timeshift-activity-row" data-cmid="{{cmid}}" data-instance="{{instance}}" data-modname="{{modname}}">
-                        <td style="vertical-align: middle; text-align: center;"><input type="checkbox" class="row-checkbox"></td>
-                        <td style="vertical-align: middle;">
+                    <tr class="timeshift-activity-row" data-cmid="{{cmid}}" data-instance="{{instance}}" data-modname="{{modname}}" style="{{actrowstyle}}">
+                        <td style="vertical-align: middle; text-align: center; cursor: grab; {{borderleft}}" class="drag-handle-cell"><i class="fa fa-bars text-muted drag-handle"></i></td>
+                        <td style="vertical-align: middle; text-align: center; {{borderleft}}"><input type="checkbox" class="row-checkbox"></td>
+                        <td style="vertical-align: middle; {{typepadding}}">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 {{#iconhtml}}
                                 {{{iconhtml}}}
@@ -113,6 +121,7 @@
                         {{/hasdates}}
                     </tr>
                     {{/activities}}
+                    {{/sections}}
                 </tbody>
             </table>
         </div>
