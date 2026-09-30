@@ -10,6 +10,8 @@ The standard version available on Moodle.org includes essential tools to improve
 * **Inline Editing:** Quickly adjust dates directly from the table without loading individual activity settings pages.
 * **Activity Overview:** Easily identify which activities have dates set and which ones don't at a glance.
 * **Responsive Design:** A fully mobile-optimized interface for checking your course on the go.
+* **Section View:** Activities are logically grouped under their respective topics or sections for better context.
+* **Drag-and-Drop Reordering:** Rearrange individual activities within their sections using a simple drag-and-drop interface.
 
 ---
 
