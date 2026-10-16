@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_timeshift';
-$plugin->version   = 2026093000;
+$plugin->version   = 2026101600;
 $plugin->requires  = 2022112800;
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.1';
+$plugin->release   = '1.1.1';
 $plugin->supported = [401, 405];

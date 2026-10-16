@@ -29,6 +29,17 @@ namespace local_timeshift;
  */
 class manager {
     /**
+     * Checks if the current Moodle version supports the 'duedate' field in the quiz table (Moodle 5.3+).
+     *
+     * @return bool True if the quiz table has a duedate column
+     */
+    public static function quiz_supports_duedate() {
+        global $DB;
+        $columns = $DB->get_columns('quiz');
+        return is_array($columns) && array_key_exists('duedate', $columns);
+    }
+
+    /**
      * Retrieves all supported activities of a course with their current dates.
      *
      * @param int $courseid The course ID
@@ -40,6 +51,7 @@ class manager {
         $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
         $modinfo = get_fast_modinfo($course);
         $activities = [];
+        $quizsupportsduedate = self::quiz_supports_duedate();
 
         foreach ($modinfo->cms as $cm) {
             if ($cm->deletioninprogress) {
@@ -70,10 +82,16 @@ class manager {
                     }
                 }
             } else if ($modname === 'quiz') {
-                $quiz = $DB->get_record('quiz', ['id' => $instanceid], 'timeclose, timeopen');
+                $fields = $quizsupportsduedate ? 'timeopen, duedate, timeclose' : 'timeopen, timeclose';
+                $quiz = $DB->get_record('quiz', ['id' => $instanceid], $fields);
                 if ($quiz) {
-                    $duedate = $quiz->timeclose;
                     $allowfromdate = $quiz->timeopen;
+                    if ($quizsupportsduedate) {
+                        $duedate = $quiz->duedate;
+                        $cutoffdate = $quiz->timeclose;
+                    } else {
+                        $duedate = $quiz->timeclose;
+                    }
                 }
             } else if ($modname === 'forum') {
                 $forum = $DB->get_record('forum', ['id' => $instanceid]);
@@ -193,13 +211,24 @@ class manager {
             $quiz = $DB->get_record('quiz', ['id' => $instanceid], '*', IGNORE_MISSING);
             if ($quiz) {
                 $needsupdate = false;
-                if ($duedate !== null) {
-                    $quiz->timeclose = $duedate;
-                    $needsupdate = true;
-                }
                 if ($allowfromdate !== null) {
                     $quiz->timeopen = $allowfromdate;
                     $needsupdate = true;
+                }
+                if (self::quiz_supports_duedate()) {
+                    if ($duedate !== null) {
+                        $quiz->duedate = $duedate;
+                        $needsupdate = true;
+                    }
+                    if ($cutoffdate !== null) {
+                        $quiz->timeclose = $cutoffdate;
+                        $needsupdate = true;
+                    }
+                } else {
+                    if ($duedate !== null) {
+                        $quiz->timeclose = $duedate;
+                        $needsupdate = true;
+                    }
                 }
 
                 if ($needsupdate) {
@@ -246,11 +275,20 @@ class manager {
                 self::sync_calendar_event($modname, $instanceid, $courseid, 'cutoff', $cutoffdate, $oldname, $newname);
             }
         } else if ($modname === 'quiz') {
-            if ($duedate !== null) {
-                self::sync_calendar_event($modname, $instanceid, $courseid, 'close', $duedate, $oldname, $newname);
-            }
             if ($allowfromdate !== null) {
                 self::sync_calendar_event($modname, $instanceid, $courseid, 'open', $allowfromdate, $oldname, $newname);
+            }
+            if (self::quiz_supports_duedate()) {
+                if ($duedate !== null) {
+                    self::sync_calendar_event($modname, $instanceid, $courseid, 'due', $duedate, $oldname, $newname);
+                }
+                if ($cutoffdate !== null) {
+                    self::sync_calendar_event($modname, $instanceid, $courseid, 'close', $cutoffdate, $oldname, $newname);
+                }
+            } else {
+                if ($duedate !== null) {
+                    self::sync_calendar_event($modname, $instanceid, $courseid, 'close', $duedate, $oldname, $newname);
+                }
             }
         } else if ($modname === 'forum') {
             if ($duedate !== null) {
@@ -296,6 +334,9 @@ class manager {
                     $updated = false;
                     if ($event->timestart != $timestamp) {
                         $event->timestart = $timestamp;
+                        if (property_exists($event, 'timesort')) {
+                            $event->timesort = $timestamp;
+                        }
                         $updated = true;
                     }
                     if (!empty($newname) && !empty($oldname) && $newname !== $oldname) {
@@ -304,8 +345,10 @@ class manager {
                         } else {
                             // Fallback if strpos fails (e.g. Moodle didn't store the exact old name).
                             $namesuffix = '';
-                            if ($eventtype === 'due' || $eventtype === 'close') {
+                            if ($eventtype === 'due') {
                                 $namesuffix = ' is due';
+                            } else if ($eventtype === 'close') {
+                                $namesuffix = self::quiz_supports_duedate() ? ' closes' : ' is due';
                             } else if ($eventtype === 'open' || $eventtype === 'allowsubmissionsfrom') {
                                 $namesuffix = ' opens';
                             } else if ($eventtype === 'cutoff') {
@@ -337,8 +380,10 @@ class manager {
                 // Event does not exist, so create it manually.
                 $name = !empty($newname) ? $newname : (!empty($oldname) ? $oldname : ucfirst($modname));
 
-                if ($eventtype === 'due' || $eventtype === 'close') {
+                if ($eventtype === 'due') {
                     $name .= ' is due';
+                } else if ($eventtype === 'close') {
+                    $name .= self::quiz_supports_duedate() ? ' closes' : ' is due';
                 } else if ($eventtype === 'open' || $eventtype === 'allowsubmissionsfrom') {
                     $name .= ' opens';
                 } else if ($eventtype === 'cutoff') {
@@ -363,6 +408,9 @@ class manager {
                 $newevent->timemodified = time();
 
                 $columns = $DB->get_columns('event');
+                if (array_key_exists('timesort', $columns)) {
+                    $newevent->timesort = $timestamp;
+                }
                 if (array_key_exists('priority', $columns)) {
                     $newevent->priority = null;
                 }

@@ -100,6 +100,7 @@ foreach ($allsectionsraw as $secnum => $sectioninfo) {
 }
 
 $sectionsdata = [];
+$quizsupportsduedate = \local_timeshift\manager::quiz_supports_duedate();
 
 foreach ($orderedsecnums as $secnum) {
     $sectioninfo = $allsectionsraw[$secnum];
@@ -187,7 +188,7 @@ foreach ($orderedsecnums as $secnum) {
         if ($act->modname === 'assign' || $act->modname === 'quiz' || $act->modname === 'forum') {
             $hasdates = true;
             $allowdisabled = ($act->modname === 'forum');
-            $cutoffdisabled = ($act->modname === 'quiz');
+            $cutoffdisabled = ($act->modname === 'quiz' && !$quizsupportsduedate);
         }
 
         $actrowstyle = $issubsection ? 'background-color: #fcfcfc;' : '';
